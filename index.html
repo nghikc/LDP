@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Landing page giới thiệu domain lâu năm phù hợp triển khai landing page, SEO và chiến dịch thu lead.">
+    <title>Domain Lâu Năm Cho Landing Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Domain Legacy">
+        <span class="brand-mark">DL</span>
+        <span>Domain Legacy</span>
+      </a>
+      <nav class="nav" aria-label="Điều hướng chính">
+        <a href="#domains">Domain</a>
+        <a href="#why">Lợi ích</a>
+        <a href="#contact">Liên hệ</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <img class="hero-photo" src="assets/hero-analytics.jpg" alt="Laptop hiển thị dashboard phân tích website">
+        <div class="hero-content">
+          <p class="eyebrow">Domain lâu năm cho landing page</p>
+          <h1>Khởi động chiến dịch online từ một tên miền có nền tảng tốt.</h1>
+          <p>
+            Chúng tôi tư vấn một số domain lâu năm, phù hợp để làm landing page bán hàng,
+            website vệ tinh hoặc trang thu lead cho doanh nghiệp.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#contact">Để lại thông tin</a>
+            <a class="button secondary" href="#domains">Xem domain</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="domains" class="section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Domain nổi bật</p>
+            <h2>Tên miền đang có, chọn ngay nhóm phù hợp.</h2>
+            <p class="section-help">Lọc theo lĩnh vực để xem nhanh các domain còn trống. Ưng cái nào, bấm liên hệ để được báo giá.</p>
+          </div>
+        </div>
+        <div class="domain-filters" id="domainFilters" role="tablist" aria-label="Lọc domain theo nhóm">
+          <button class="chip is-active" type="button" data-filter="all" aria-pressed="true">Tất cả</button>
+          <button class="chip" type="button" data-filter="office" aria-pressed="false">Văn phòng</button>
+          <button class="chip" type="button" data-filter="tech" aria-pressed="false">Công nghệ</button>
+          <button class="chip" type="button" data-filter="service" aria-pressed="false">Dịch vụ</button>
+        </div>
+        <div class="domain-grid" id="domainGrid" aria-live="polite"></div>
+      </section>
+
+      <section id="why" class="section why">
+        <div>
+          <p class="eyebrow">Vì sao nên cân nhắc?</p>
+          <h2>Ngắn gọn, minh bạch, tập trung vào hiệu quả.</h2>
+        </div>
+        <div class="benefits">
+          <div>
+            <strong>Tuổi đời rõ ràng</strong>
+            <span>Kiểm tra lịch sử cơ bản trước khi tư vấn.</span>
+          </div>
+          <div>
+            <strong>Phù hợp ngành hàng</strong>
+            <span>Ưu tiên tên miền sát lĩnh vực kinh doanh.</span>
+          </div>
+          <div>
+            <strong>Dễ triển khai landing page</strong>
+            <span>Có thể dùng cho SEO, quảng cáo hoặc thu lead.</span>
+          </div>
+          <div>
+            <strong>Bàn giao gọn</strong>
+            <span>Hỗ trợ chuyển quyền quản trị và cấu hình ban đầu.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery">
+        <img src="assets/domain-consulting.jpg" alt="Đội ngũ làm việc với laptop">
+        <div>
+          <p class="eyebrow">Tư vấn theo nhu cầu</p>
+          <h2>Cho biết ngành hàng của bạn, chúng tôi sẽ gợi ý domain phù hợp.</h2>
+          <p>
+            Bạn có thể dùng domain để làm landing page bán hàng, chiến dịch quảng cáo,
+            website vệ tinh hoặc trang nhận thông tin khách hàng.
+          </p>
+        </div>
+      </section>
+
+      <section id="contact" class="lead-section">
+        <div class="lead-copy">
+          <p class="eyebrow">Nhận tư vấn</p>
+          <h2>Để lại email hoặc số điện thoại.</h2>
+          <p>Chúng tôi sẽ liên hệ lại để gửi danh sách domain và phương án triển khai phù hợp.</p>
+        </div>
+        <form class="lead-form" id="leadForm" novalidate>
+          <label>
+            Họ tên
+            <input type="text" name="name" autocomplete="name" placeholder="Nguyễn Văn A" required>
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" autocomplete="email" placeholder="email@congty.vn">
+          </label>
+          <label>
+            Số điện thoại
+            <input type="tel" name="phone" autocomplete="tel" placeholder="090 000 0000">
+          </label>
+          <label>
+            Ngành hàng
+            <select name="category" required>
+              <option value="">Chọn ngành hàng</option>
+              <option>Thiết bị văn phòng</option>
+              <option>Linh kiện máy tính</option>
+              <option>Dịch vụ sửa chữa</option>
+              <option>Thương mại điện tử</option>
+              <option>Ngành khác</option>
+            </select>
+          </label>
+          <label class="full">
+            Ghi chú
+            <textarea name="message" rows="3" placeholder="Nhu cầu của bạn"></textarea>
+          </label>
+          <p class="form-note">Vui lòng nhập ít nhất email hoặc số điện thoại.</p>
+          <button class="button primary full" type="submit">Gửi thông tin</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Domain Legacy - Domain lâu năm cho landing page và chiến dịch thu lead.</p>
+      <a href="#contact">Nhận tư vấn</a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
