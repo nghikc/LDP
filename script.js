@@ -10,6 +10,46 @@ const statusEl = document.querySelector("#formStatus");
 const submitBtn = form ? form.querySelector("button[type='submit']") : null;
 const domainName = form ? (form.dataset.domain || "") : "";
 
+// ------------------------------------------------------------
+//  Popup form (chỉ dùng trên bản mobile)
+// ------------------------------------------------------------
+const openFormBtn = document.querySelector("#openForm");
+const closeFormBtn = document.querySelector("#closeForm");
+const formBackdrop = document.querySelector("#formBackdrop");
+
+function openFormModal() {
+  document.body.classList.add("form-open");
+  if (formBackdrop) {
+    formBackdrop.hidden = false;
+  }
+  const nameField = form ? form.querySelector("[name='name']") : null;
+  if (nameField) {
+    window.setTimeout(() => nameField.focus({ preventScroll: true }), 50);
+  }
+}
+
+function closeFormModal() {
+  document.body.classList.remove("form-open");
+  if (formBackdrop) {
+    formBackdrop.hidden = true;
+  }
+}
+
+if (openFormBtn) {
+  openFormBtn.addEventListener("click", openFormModal);
+}
+if (closeFormBtn) {
+  closeFormBtn.addEventListener("click", closeFormModal);
+}
+if (formBackdrop) {
+  formBackdrop.addEventListener("click", closeFormModal);
+}
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeFormModal();
+  }
+});
+
 function getLeadPayload(formData) {
   return {
     name: String(formData.get("name") || "").trim(),
