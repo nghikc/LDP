@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Landing page giới thiệu domain lâu năm phù hợp triển khai landing page, SEO và chiến dịch thu lead.">
     <title>Domain Lâu Năm Cho Landing Page</title>
+    <link rel="canonical" href="https://nghikc.github.io/LDP/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nghikc.github.io/LDP/">
+    <meta property="og:title" content="Domain lâu năm cho landing page & thu lead">
+    <meta property="og:description" content="Tư vấn các tên miền lâu năm phù hợp làm landing page bán hàng, website vệ tinh và trang thu lead cho doanh nghiệp.">
+    <meta property="og:image" content="https://nghikc.github.io/LDP/assets/hero-analytics.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Domain lâu năm cho landing page & thu lead">
+    <meta name="twitter:description" content="Tư vấn các tên miền lâu năm phù hợp làm landing page bán hàng, website vệ tinh và trang thu lead.">
+    <meta name="twitter:image" content="https://nghikc.github.io/LDP/assets/hero-analytics.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,7 +38,7 @@
 
     <main id="top">
       <section class="hero">
-        <img class="hero-photo" src="assets/hero-analytics.jpg" alt="Laptop hiển thị dashboard phân tích website">
+        <img class="hero-photo" src="assets/hero-analytics.jpg" alt="Laptop hiển thị dashboard phân tích website" fetchpriority="high">
         <div class="hero-content">
           <p class="eyebrow">Domain lâu năm cho landing page</p>
           <h1>Khởi động chiến dịch online từ một tên miền có nền tảng tốt.</h1>
@@ -48,7 +61,7 @@
             <p class="section-help">Lọc theo lĩnh vực để xem nhanh các domain còn trống. Ưng cái nào, bấm liên hệ để được báo giá.</p>
           </div>
         </div>
-        <div class="domain-filters" id="domainFilters" role="tablist" aria-label="Lọc domain theo nhóm">
+        <div class="domain-filters" id="domainFilters" role="group" aria-label="Lọc domain theo nhóm">
           <button class="chip is-active" type="button" data-filter="all" aria-pressed="true">Tất cả</button>
           <button class="chip" type="button" data-filter="office" aria-pressed="false">Văn phòng</button>
           <button class="chip" type="button" data-filter="tech" aria-pressed="false">Công nghệ</button>
@@ -83,7 +96,7 @@
       </section>
 
       <section class="section gallery">
-        <img src="assets/domain-consulting.jpg" alt="Đội ngũ làm việc với laptop">
+        <img src="assets/domain-consulting.jpg" alt="Đội ngũ làm việc với laptop" loading="lazy">
         <div>
           <p class="eyebrow">Tư vấn theo nhu cầu</p>
           <h2>Cho biết ngành hàng của bạn, chúng tôi sẽ gợi ý domain phù hợp.</h2>
@@ -99,6 +112,18 @@
           <p class="eyebrow">Nhận tư vấn</p>
           <h2>Để lại email hoặc số điện thoại.</h2>
           <p>Chúng tôi sẽ liên hệ lại để gửi danh sách domain và phương án triển khai phù hợp.</p>
+          <!-- TODO: thay số điện thoại / Zalo / email thật của bạn vào đây -->
+          <div class="contact-direct">
+            <a class="contact-link" href="tel:+84900000000">
+              <span aria-hidden="true">📞</span> 0900 000 000
+            </a>
+            <a class="contact-link" href="https://zalo.me/0900000000" target="_blank" rel="noopener">
+              <span aria-hidden="true">💬</span> Chat Zalo
+            </a>
+            <a class="contact-link" href="mailto:lienhe@domainlegacy.vn">
+              <span aria-hidden="true">✉️</span> lienhe@domainlegacy.vn
+            </a>
+          </div>
         </div>
         <form class="lead-form" id="leadForm" novalidate>
           <label>
@@ -128,7 +153,7 @@
             Ghi chú
             <textarea name="message" rows="3" placeholder="Nhu cầu của bạn"></textarea>
           </label>
-          <p class="form-note">Vui lòng nhập ít nhất email hoặc số điện thoại.</p>
+          <p class="form-note">Vui lòng nhập ít nhất email hoặc số điện thoại. Thông tin của bạn chỉ dùng để liên hệ tư vấn, không chia sẻ cho bên thứ ba.</p>
           <button class="button primary full" type="submit">Gửi thông tin</button>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>

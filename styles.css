@@ -199,9 +199,6 @@ h3 {
 }
 
 .section-heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
   margin-bottom: 30px;
 }
 
@@ -278,12 +275,79 @@ h3 {
   transform: translateY(-3px);
 }
 
+.domain-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
 .domain-card h3 {
   margin: 0;
   overflow-wrap: anywhere;
   font-size: 24px;
   line-height: 1.15;
   color: var(--ink);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-available {
+  color: var(--green);
+  background: #d9eee9;
+}
+
+.status-sold {
+  color: var(--red);
+  background: #fbe6e3;
+}
+
+.domain-card.is-sold {
+  opacity: 0.72;
+}
+
+.domain-card.is-sold h3 {
+  text-decoration: line-through;
+  text-decoration-color: rgba(180, 35, 24, 0.4);
+}
+
+.domain-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.price {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.domain-card.is-sold .price {
+  color: var(--muted);
 }
 
 .tag {
@@ -343,6 +407,49 @@ h3 {
 .domain-cta:focus-visible {
   outline: 3px solid rgba(15, 118, 110, 0.2);
   outline-offset: 2px;
+}
+
+.domain-cta[disabled] {
+  color: var(--muted);
+  background: var(--soft);
+  border-color: var(--line);
+  cursor: not-allowed;
+}
+
+.domain-cta[disabled]:hover {
+  color: var(--muted);
+  background: var(--soft);
+  border-color: var(--line);
+}
+
+.domain-cta[disabled]:hover span {
+  transform: none;
+}
+
+.contact-direct {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  font-size: 15px;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.contact-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .why {
@@ -515,16 +622,14 @@ textarea:focus {
     padding-top: 58px;
   }
 
-  .section-heading,
   .why,
   .gallery,
-  .lead-section,
-  .domain-grid {
+  .lead-section {
     grid-template-columns: 1fr;
   }
 
-  .section-heading {
-    display: grid;
+  .domain-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -547,7 +652,8 @@ textarea:focus {
   }
 
   .benefits,
-  .lead-form {
+  .lead-form,
+  .domain-grid {
     grid-template-columns: 1fr;
   }
 

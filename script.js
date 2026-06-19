@@ -1,62 +1,97 @@
+// ============================================================
+//  CẤU HÌNH: dán URL Google Apps Script Web App vào đây
+//  (xem hướng dẫn deploy trong README.md). Để trống "" thì
+//  form sẽ chỉ lưu tạm trong trình duyệt (chế độ thử nghiệm).
+// ============================================================
+const FORM_ENDPOINT = "";
+
 const form = document.querySelector("#leadForm");
 const statusEl = document.querySelector("#formStatus");
+const submitBtn = form ? form.querySelector("button[type='submit']") : null;
 const domainGrid = document.querySelector("#domainGrid");
 const domainFilters = document.querySelector("#domainFilters");
 const categorySelect = form ? form.querySelector("[name='category']") : null;
 
 const domainGroupLabels = {
-  office: { label: "Văn phòng", tag: "B2B", category: "Thiết bị văn phòng" },
-  tech: { label: "Công nghệ", tag: "Ecommerce", category: "Linh kiện máy tính" },
-  service: { label: "Dịch vụ", tag: "Dịch vụ", category: "Dịch vụ sửa chữa" }
+  office: { tag: "B2B", category: "Thiết bị văn phòng" },
+  tech: { tag: "Ecommerce", category: "Linh kiện máy tính" },
+  service: { tag: "Dịch vụ", category: "Dịch vụ sửa chữa" }
 };
 
+// status: "available" (còn trống) | "sold" (đã bán)
 const domains = [
   {
     group: "office",
     name: "thietbivanphong.vn",
-    desc: "Phù hợp landing page máy in, máy photocopy và thiết bị văn phòng."
+    desc: "Phù hợp landing page máy in, máy photocopy và thiết bị văn phòng.",
+    price: "12.000.000đ",
+    status: "available"
   },
   {
     group: "office",
     name: "mayphotocopycu.vn",
-    desc: "Tập trung vào nhu cầu mua, thuê và bảo trì máy photocopy."
+    desc: "Tập trung vào nhu cầu mua, thuê và bảo trì máy photocopy.",
+    price: "8.500.000đ",
+    status: "available"
   },
   {
     group: "office",
     name: "vanphong247.vn",
-    desc: "Dễ triển khai trang dịch vụ hoặc trang thu lead cho khách doanh nghiệp."
+    desc: "Dễ triển khai trang dịch vụ hoặc trang thu lead cho khách doanh nghiệp.",
+    price: "15.000.000đ",
+    status: "sold"
   },
   {
     group: "tech",
     name: "linhkienmaytinh.vn",
-    desc: "Phù hợp danh mục linh kiện, phụ kiện và máy tính văn phòng."
+    desc: "Phù hợp danh mục linh kiện, phụ kiện và máy tính văn phòng.",
+    price: "18.000.000đ",
+    status: "available"
   },
   {
     group: "tech",
     name: "phukienpc.vn",
-    desc: "Ngắn gọn, dễ nhớ, dùng tốt cho landing page sản phẩm công nghệ."
+    desc: "Ngắn gọn, dễ nhớ, dùng tốt cho landing page sản phẩm công nghệ.",
+    price: "9.000.000đ",
+    status: "available"
   },
   {
     group: "tech",
     name: "thitruongmaytinh.vn",
-    desc: "Phù hợp website vệ tinh, tin tức hoặc trang bán hàng ngách."
+    desc: "Phù hợp website vệ tinh, tin tức hoặc trang bán hàng ngách.",
+    price: "11.000.000đ",
+    status: "available"
   },
   {
     group: "service",
     name: "suachuamayvanphong.vn",
-    desc: "Phù hợp trang nhận báo giá sửa chữa và bảo trì thiết bị."
+    desc: "Phù hợp trang nhận báo giá sửa chữa và bảo trì thiết bị.",
+    price: "7.500.000đ",
+    status: "available"
   },
   {
     group: "service",
     name: "baotrimayin.vn",
-    desc: "Tập trung dịch vụ bảo trì máy in cho công ty, văn phòng."
+    desc: "Tập trung dịch vụ bảo trì máy in cho công ty, văn phòng.",
+    price: "6.000.000đ",
+    status: "available"
   },
   {
     group: "service",
     name: "dichvukythuat.vn",
-    desc: "Có thể mở rộng cho nhiều nhóm dịch vụ kỹ thuật khác nhau."
+    desc: "Có thể mở rộng cho nhiều nhóm dịch vụ kỹ thuật khác nhau.",
+    price: "10.000.000đ",
+    status: "available"
   }
 ];
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 function renderDomains(filter = "all") {
   if (!domainGrid) {
@@ -68,15 +103,30 @@ function renderDomains(filter = "all") {
   domainGrid.innerHTML = list
     .map((item) => {
       const meta = domainGroupLabels[item.group] || {};
-      return `
-        <article class="domain-card">
-          <span class="tag">${meta.tag || ""}</span>
-          <h3>${item.name}</h3>
-          <p>${item.desc}</p>
-          <button class="domain-cta" type="button" data-domain="${item.name}" data-category="${meta.category || ""}">
+      const sold = item.status === "sold";
+      const name = escapeHtml(item.name);
+      const statusBadge = sold
+        ? `<span class="status status-sold">Đã bán</span>`
+        : `<span class="status status-available">Còn trống</span>`;
+      const cta = sold
+        ? `<button class="domain-cta" type="button" disabled aria-label="${name} đã bán">Đã bán</button>`
+        : `<button class="domain-cta" type="button" data-domain="${name}" data-category="${escapeHtml(meta.category || "")}" aria-label="Liên hệ tư vấn về ${name}">
             Liên hệ tư vấn
             <span aria-hidden="true">&rarr;</span>
-          </button>
+          </button>`;
+
+      return `
+        <article class="domain-card${sold ? " is-sold" : ""}">
+          <div class="domain-card-top">
+            <span class="tag">${escapeHtml(meta.tag || "")}</span>
+            ${statusBadge}
+          </div>
+          <h3>${name}</h3>
+          <p>${escapeHtml(item.desc)}</p>
+          <div class="domain-card-foot">
+            <span class="price">${escapeHtml(item.price || "Liên hệ")}</span>
+            ${cta}
+          </div>
         </article>
       `;
     })
@@ -110,7 +160,7 @@ function jumpToContact(domainName, category) {
 if (domainGrid) {
   domainGrid.addEventListener("click", (event) => {
     const cta = event.target.closest(".domain-cta");
-    if (!cta) {
+    if (!cta || cta.disabled) {
       return;
     }
     jumpToContact(cta.dataset.domain, cta.dataset.category);
@@ -137,6 +187,9 @@ if (domainFilters) {
 
 renderDomains("all");
 
+// ------------------------------------------------------------
+//  Form thu lead
+// ------------------------------------------------------------
 function getLeadPayload(formData) {
   return {
     name: String(formData.get("name") || "").trim(),
@@ -144,8 +197,13 @@ function getLeadPayload(formData) {
     phone: String(formData.get("phone") || "").trim(),
     category: String(formData.get("category") || "").trim(),
     message: String(formData.get("message") || "").trim(),
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    source: window.location.href
   };
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function setStatus(message, type) {
@@ -153,7 +211,36 @@ function setStatus(message, type) {
   statusEl.className = `form-status ${type}`;
 }
 
-form.addEventListener("submit", (event) => {
+// Backup phòng khi gửi mạng lỗi: lưu tạm trong trình duyệt.
+function backupLeadLocally(payload) {
+  try {
+    const leads = JSON.parse(localStorage.getItem("domainLandingLeads") || "[]");
+    leads.push(payload);
+    localStorage.setItem("domainLandingLeads", JSON.stringify(leads));
+  } catch (err) {
+    // localStorage có thể bị chặn (chế độ ẩn danh) — bỏ qua, không chặn luồng gửi.
+  }
+}
+
+async function sendLead(payload) {
+  // Apps Script Web App: dùng text/plain để tránh CORS preflight.
+  await fetch(FORM_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+}
+
+function setSubmitting(isSubmitting) {
+  if (!submitBtn) {
+    return;
+  }
+  submitBtn.disabled = isSubmitting;
+  submitBtn.textContent = isSubmitting ? "Đang gửi..." : "Gửi thông tin";
+}
+
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const payload = getLeadPayload(new FormData(form));
@@ -168,10 +255,30 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  const leads = JSON.parse(localStorage.getItem("domainLandingLeads") || "[]");
-  leads.push(payload);
-  localStorage.setItem("domainLandingLeads", JSON.stringify(leads));
+  if (payload.email && !isValidEmail(payload.email)) {
+    setStatus("Email chưa đúng định dạng, vui lòng kiểm tra lại.", "error");
+    return;
+  }
 
-  form.reset();
-  setStatus("Đã nhận thông tin. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất.", "success");
+  backupLeadLocally(payload);
+
+  // Chưa cấu hình endpoint: chạy ở chế độ thử nghiệm (chỉ lưu tạm).
+  if (!FORM_ENDPOINT) {
+    form.reset();
+    setStatus("Đã ghi nhận (chế độ thử nghiệm). Cấu hình Google Sheet để nhận lead thật.", "success");
+    return;
+  }
+
+  setSubmitting(true);
+  setStatus("Đang gửi thông tin...", "");
+
+  try {
+    await sendLead(payload);
+    form.reset();
+    setStatus("Đã nhận thông tin. Chúng tôi sẽ liên hệ lại trong thời gian sớm nhất.", "success");
+  } catch (err) {
+    setStatus("Gửi chưa thành công. Vui lòng thử lại hoặc liên hệ trực tiếp qua số điện thoại/Zalo.", "error");
+  } finally {
+    setSubmitting(false);
+  }
 });
