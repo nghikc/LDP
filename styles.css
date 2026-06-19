@@ -189,7 +189,7 @@ p {
 }
 
 /* Nút mở form & nút đóng: chỉ hiện ở bản mobile (xem media query) */
-.open-form-btn {
+.banner-copy .open-form-btn {
   display: none;
   margin-top: 22px;
   width: 100%;
@@ -343,7 +343,7 @@ textarea:focus {
   }
 
   /* Mobile: form ẩn đi, hiện nút "Nhận tư vấn" mở popup */
-  .open-form-btn {
+  .banner-copy .open-form-btn {
     display: inline-flex;
   }
 
