@@ -53,10 +53,13 @@ Landing page tĩnh giới thiệu domain lâu năm, có bộ lọc domain theo n
 
 ## Tuỳ chỉnh nhanh
 
-- **Danh sách domain / giá / trạng thái:** sửa mảng `domains` trong `script.js`
-  (`status: "available"` còn trống, `"sold"` đã bán).
-- **Liên hệ trực tiếp (SĐT/Zalo/email):** sửa khối `contact-direct` trong
-  `index.html` (đang để số mẫu `0900 000 000`).
+- **Tên miền rao bán:** sửa ở **2 chỗ** trong `index.html` — thẻ
+  `<h1 class="domain-title">` và thuộc tính `data-domain` của thẻ `<form>`
+  (giá trị `data-domain` được ghi vào cột `category` của mỗi lead).
+- **Nội dung giới thiệu / điểm bán:** sửa `.lead` và danh sách `.points`
+  trong `index.html`.
+- **Liên hệ trực tiếp (SĐT/Zalo):** sửa khối `contact-direct` và footer
+  trong `index.html` (đang để số `0915 002 721`).
 
 ## Chạy thử local
 
