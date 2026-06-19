@@ -225,6 +225,29 @@ p {
   backdrop-filter: blur(2px);
 }
 
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -42%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-backdrop:not([hidden]),
+  body.form-open .lead-form {
+    animation: none !important;
+  }
+}
+
 .lead-form h2 {
   margin: 0;
   font-size: 24px;
@@ -357,6 +380,7 @@ textarea:focus {
 
   .form-backdrop:not([hidden]) {
     display: block;
+    animation: backdropIn 200ms ease both;
   }
 
   body.form-open .lead-form {
@@ -369,6 +393,7 @@ textarea:focus {
     width: min(440px, calc(100vw - 32px));
     max-height: 90vh;
     overflow-y: auto;
+    animation: modalIn 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   .form-close {
