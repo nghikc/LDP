@@ -3,7 +3,7 @@
 //  (xem hướng dẫn deploy trong README.md). Để trống "" thì
 //  form sẽ chỉ lưu tạm trong trình duyệt (chế độ thử nghiệm).
 // ============================================================
-const FORM_ENDPOINT = "";
+const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbwfID1Jsuit58QG27F3nn9_YD1olduLDtfYoEO2sg-0ylYRcuZ7aXRjfJYxk6s8hIk/exec";
 
 const form = document.querySelector("#leadForm");
 const statusEl = document.querySelector("#formStatus");
