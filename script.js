@@ -17,22 +17,58 @@ const openFormBtn = document.querySelector("#openForm");
 const closeFormBtn = document.querySelector("#closeForm");
 const formBackdrop = document.querySelector("#formBackdrop");
 
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function openFormModal() {
-  document.body.classList.add("form-open");
+  document.body.classList.remove("form-closing");
   if (formBackdrop) {
+    formBackdrop.classList.remove("is-closing");
     formBackdrop.hidden = false;
   }
+  document.body.classList.add("form-open");
   const nameField = form ? form.querySelector("[name='name']") : null;
   if (nameField) {
     window.setTimeout(() => nameField.focus({ preventScroll: true }), 50);
   }
 }
 
-function closeFormModal() {
-  document.body.classList.remove("form-open");
+function finalizeClose() {
+  document.body.classList.remove("form-open", "form-closing");
   if (formBackdrop) {
     formBackdrop.hidden = true;
+    formBackdrop.classList.remove("is-closing");
   }
+}
+
+function closeFormModal() {
+  if (!document.body.classList.contains("form-open")) {
+    return;
+  }
+
+  // Giảm chuyển động hoặc không có form: đóng ngay.
+  if (prefersReducedMotion() || !form) {
+    finalizeClose();
+    return;
+  }
+
+  document.body.classList.add("form-closing");
+  if (formBackdrop) {
+    formBackdrop.classList.add("is-closing");
+  }
+
+  const onEnd = (event) => {
+    if (event.target !== form) {
+      return;
+    }
+    form.removeEventListener("animationend", onEnd);
+    // Bỏ qua nếu người dùng đã mở lại trong lúc đang đóng.
+    if (document.body.classList.contains("form-closing")) {
+      finalizeClose();
+    }
+  };
+  form.addEventListener("animationend", onEnd);
 }
 
 if (openFormBtn) {

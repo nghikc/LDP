@@ -241,6 +241,22 @@ p {
   }
 }
 
+@keyframes backdropOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes modalOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -44%) scale(0.96);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .form-backdrop:not([hidden]),
   body.form-open .lead-form {
@@ -381,6 +397,14 @@ textarea:focus {
   .form-backdrop:not([hidden]) {
     display: block;
     animation: backdropIn 200ms ease both;
+  }
+
+  body.form-open.form-closing .lead-form {
+    animation: modalOut 200ms ease-in both;
+  }
+
+  .form-backdrop.is-closing {
+    animation: backdropOut 220ms ease both;
   }
 
   body.form-open .lead-form {
