@@ -98,6 +98,11 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
             </button>
           );
         })}
+        <div className="chu-thich-mau" onClick={(e) => e.stopPropagation()} aria-label="Chú thích màu vị trí">
+          <span><i className="ct-cham ct-binhthuong" /> Bình thường</span>
+          <span><i className="ct-cham ct-khoa" /> Đang khóa</span>
+          <span><i className="ct-cham ct-datlai" /> Cần đặt lại</span>
+        </div>
       </div>
     </section>
   );

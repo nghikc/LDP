@@ -100,6 +100,19 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .pin-DangKhoa .pin-cham { background: #8993a4; box-shadow: 0 0 0 3px rgba(137,147,164,.25); }
 .pin-CanDatLai .pin-cham { background: var(--mau-canh-bao); box-shadow: 0 0 0 3px rgba(122,79,1,.2); }
 .pin-lam-noi .pin-cham { animation: pulse-cham 600ms ease-in-out 2; }
+
+/* Chú thích màu vị trí — góc dưới-trái khung sơ đồ */
+.chu-thich-mau {
+  position: absolute; left: var(--kc-2); bottom: var(--kc-2); z-index: 3;
+  display: flex; gap: var(--kc-2); flex-wrap: wrap; align-items: center;
+  background: rgba(255,255,255,.92); border: 1px solid var(--mau-vien); border-radius: var(--r);
+  padding: 6px var(--kc-2); font-size: 12px; color: var(--mau-chu); box-shadow: 0 1px 4px rgba(9,30,66,.12);
+}
+.chu-thich-mau span { display: inline-flex; align-items: center; gap: 6px; }
+.ct-cham { width: 12px; height: 12px; border-radius: 999px; display: inline-block; flex-shrink: 0; }
+.ct-binhthuong { background: var(--mau-chinh); box-shadow: 0 0 0 2px rgba(20,86,184,.18); }
+.ct-khoa { background: #8993a4; box-shadow: 0 0 0 2px rgba(137,147,164,.25); }
+.ct-datlai { background: var(--mau-canh-bao); box-shadow: 0 0 0 2px rgba(122,79,1,.2); }
 @keyframes pulse-cham { 0%,100% { transform: scale(1); } 50% { transform: scale(1.45); } }
 .ds-vi-tri { list-style: none; margin: var(--kc-1) 0; padding: 0; max-height: 50vh; overflow: auto; }
 .ds-vi-tri li { display: flex; justify-content: space-between; align-items: center; gap: var(--kc-2); padding: var(--kc-1) 0; border-bottom: 1px solid var(--mau-vien); }
