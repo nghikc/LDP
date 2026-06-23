@@ -280,7 +280,7 @@ li > ul, li > ol { margin: 0.2em 0; }
     <span></span><span></span><span></span>
   </button>
   <h1>docs — Documentation Portal</h1>
-  <span class="timestamp">Generated: 2026-06-23T04:37:54.263Z</span>
+  <span class="timestamp">Generated: 2026-06-23T04:46:53.027Z</span>
 </header>
 <div id="layout">
   <div id="sidebar-overlay" hidden></div>
@@ -1153,9 +1153,19 @@ li > ul, li > ol { margin: 0.2em 0; }
 <tr><td>S07 Nhật ký kiểm toán</td><td>✅ dev xong</td><td>Đã merge <code>main</code> (PR #4); 27 test, 21/21 TC Auto Pass</td></tr>
 <tr><td>S03 Quản lý ảnh sơ đồ</td><td>✅ dev xong</td><td>Nhánh <code>feature/qlvt-s03-s05-s08</code>; 44 test, 22/22 TC Auto Pass</td></tr>
 <tr><td>S05 Pin cần đặt lại</td><td>✅ dev xong</td><td>Cùng nhánh; 23 test, 15/15 TC Auto Pass</td></tr>
-<tr><td>S08 Xuất báo cáo</td><td>✅ dev xong</td><td>Cùng nhánh; 33 test, 19/19 TC Auto Pass. <strong>Toàn bộ 8/8 màn dev xong — 248 test xanh.</strong></td></tr>
+<tr><td>S08 Xuất báo cáo</td><td>✅ dev xong</td><td>Cùng nhánh; 33 test, 19/19 TC Auto Pass. <strong>Toàn bộ 8/8 màn dev xong.</strong></td></tr>
 </tbody>
 </table>
+<h2 id="tch-hp-s01-v-tinh-2026-06-23">Tích hợp S01 ↔ vệ tinh (2026-06-23)</h2>
+<p><code>useWorkspace</code> là store trung tâm (nodes/pins/auditLog/lichSu + handlers). S01 Workspace mở 7 màn vệ tinh:</p>
+<ul>
+<li>Cây: menu ⋮ (Thêm con/Sửa → <strong>S02</strong>, Quản lý ảnh → <strong>S03</strong>, Xóa); "+ Thêm khu vực" → S02</li>
+<li>Popup pin: "Di dời" → <strong>S04</strong> (đơn), "Xem lịch sử" → <strong>S06</strong></li>
+<li>Thanh công cụ: "Di dời hàng loạt" → <strong>S04</strong> (lô), "Xuất báo cáo" → <strong>S08</strong></li>
+<li>Header: "Nhật ký kiểm toán" → <strong>S07</strong> (chỉ Quản trị)</li>
+<li>Dải cảnh báo "N pin cần đặt lại" → <strong>S05</strong></li>
+</ul>
+<p>Di dời sinh lịch sử (hiện ở S06) + nhật ký (hiện ở S07). <strong>257 test xanh</strong> (9 integration test mới).</p>
 </section>
 <section class="doc-section" id="doc-BanDoTaiSan-DiDoiTaiSan-ascii-screen-md">
 <div class="doc-section-title">BanDoTaiSan/DiDoiTaiSan/ascii-screen.md</div>

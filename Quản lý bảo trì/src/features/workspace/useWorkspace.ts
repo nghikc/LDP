@@ -1,18 +1,18 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import type { NutKhuVuc, TaiSan, ViTriPin, VaiTro } from "./types";
 import { nutKhuVucMau, taiSanMau, viTriPinMau } from "./sampleData";
 import { ganViTri } from "./logic/assign";
 import { goViTri, xoaNut, demAnhHuongXoa } from "./logic/remove";
 import { chuyenNut } from "./logic/move";
+import { chuoiDuongDan } from "./logic/treeModel";
 import { taoBanGhiKiemToan, type BanGhiKiemToan, type HanhDongKiemToan } from "./logic/audit";
+import { taoNut as taoNutSv, suaNut as suaNutSv } from "./form-khu-vuc/khuVucService";
+import type { DuLieuForm } from "./form-khu-vuc/validateKhuVuc";
+import type { KetQuaDiDoi } from "./di-doi/diDoiService";
+import { datLaiToaDo } from "./pin-can-dat-lai/pinCanDatLaiService";
+import type { BanGhiLichSu } from "./lich-su/lichSuService";
 
-export interface TrangThaiWorkspace {
-  nodes: NutKhuVuc[];
-  taiSan: TaiSan[];
-  pins: ViTriPin[];
-  auditLog: BanGhiKiemToan[];
-  vaiTro: VaiTro;
-}
+export type LichSuTheoTaiSan = Record<string, BanGhiLichSu[]>;
 
 const NGUOI_HIEN_TAI = "giangnb";
 
@@ -24,7 +24,9 @@ export function useWorkspace(
   const [taiSan] = useState<TaiSan[]>(taiSanMau);
   const [pins, setPins] = useState<ViTriPin[]>(viTriPinMau);
   const [auditLog, setAuditLog] = useState<BanGhiKiemToan[]>([]);
+  const [lichSu, setLichSu] = useState<LichSuTheoTaiSan>({});
   const [vaiTro] = useState<VaiTro>(vaiTroBanDau);
+  const demId = useRef(0);
 
   const taiSanDangKhoa = useMemo(
     () => new Set(pins.filter((p) => p.trangThai === "DangKhoa").map((p) => p.maTaiSan)),
@@ -32,13 +34,12 @@ export function useWorkspace(
   );
 
   const ghiAudit = useCallback(
-    (hanhDong: HanhDongKiemToan, doiTuong: string) => {
-      setAuditLog((log) => [...log, taoBanGhiKiemToan(NGUOI_HIEN_TAI, hanhDong, doiTuong, now())]);
+    (hanhDong: HanhDongKiemToan, doiTuong: string, extra?: Partial<BanGhiKiemToan>) => {
+      setAuditLog((log) => [...log, { ...taoBanGhiKiemToan(NGUOI_HIEN_TAI, hanhDong, doiTuong, now()), ...extra }]);
     },
     [now],
   );
 
-  /** Gán vị trí → trả thông báo (toast/lỗi) cho UI. */
   const gan = useCallback(
     (maTaiSan: string | null, maNut: string, x: number, y: number) => {
       const kq = ganViTri(maTaiSan, maNut, x, y, taiSanDangKhoa);
@@ -90,5 +91,77 @@ export function useWorkspace(
 
   const anhHuongXoa = useCallback((maNut: string) => demAnhHuongXoa(nodes, pins, maNut), [nodes, pins]);
 
-  return { nodes, taiSan, pins, auditLog, vaiTro, gan, go, xoa, chuyen, anhHuongXoa };
+  // ---- S02: tạo / sửa nút khu vực ----
+  const themNut = useCallback(
+    (data: DuLieuForm) => {
+      const maNut = `nut-${++demId.current}`;
+      setNodes((ns) => taoNutSv(ns, maNut, data));
+      ghiAudit("xoa-khu-vuc", maNut); // dùng chung nhật ký thao tác cấu trúc
+      return { ok: true, toast: "Đã thêm khu vực." };
+    },
+    [ghiAudit],
+  );
+
+  const suaNut = useCallback(
+    (maNut: string, data: DuLieuForm) => {
+      setNodes((ns) => suaNutSv(ns, maNut, data));
+      return { ok: true, toast: "Đã cập nhật khu vực." };
+    },
+    [],
+  );
+
+  // ---- S04: áp kết quả di dời (pins + lịch sử + audit) ----
+  const apDungDiDoi = useCallback(
+    (kq: KetQuaDiDoi) => {
+      if (!kq.ok || !kq.pins) return;
+      setPins(kq.pins);
+      if (kq.lichSu) {
+        setLichSu((ls) => {
+          const moi = { ...ls };
+          for (const l of kq.lichSu!) {
+            const bg: BanGhiLichSu = {
+              thoiDiem: l.thoiDiem,
+              nguoi: l.nguoi,
+              viTriCu: chuoiDuongDan(nodes, l.viTriCu) || l.viTriCu,
+              viTriMoi: chuoiDuongDan(nodes, l.viTriMoi) || l.viTriMoi,
+              lyDo: l.lyDo,
+            };
+            moi[l.maTaiSan] = [...(moi[l.maTaiSan] ?? []), bg];
+          }
+          return moi;
+        });
+      }
+      if (kq.audit) setAuditLog((log) => [...log, ...kq.audit!]);
+    },
+    [nodes],
+  );
+
+  // ---- S03: áp thay đổi sơ đồ (soDoUrl trên nút + pins khi thay/xóa) ----
+  const apDungSoDo = useCallback((maNut: string, soDoUrl: string | undefined, pinsMoi?: ViTriPin[]) => {
+    setNodes((ns) => ns.map((n) => (n.maNut === maNut ? { ...n, soDoUrl } : n)));
+    if (pinsMoi) setPins(pinsMoi);
+  }, []);
+
+  // ---- S05: đặt lại tọa độ pin ----
+  const datLaiPin = useCallback(
+    (maTaiSan: string, maNut: string, x: number, y: number) => {
+      const dangKhoa = taiSanDangKhoa.has(maTaiSan);
+      const kq = datLaiToaDo({ maTaiSan, maNut }, x, y, dangKhoa);
+      if (!kq.ok) return { ok: false, loi: kq.loi };
+      setPins((ps) =>
+        ps.map((p) =>
+          p.maTaiSan === maTaiSan ? { ...p, toaDoX: x, toaDoY: y, trangThai: "DaGanViTri" } : p,
+        ),
+      );
+      ghiAudit("gan-vi-tri", maTaiSan);
+      return { ok: true };
+    },
+    [taiSanDangKhoa, ghiAudit],
+  );
+
+  return {
+    nodes, taiSan, pins, auditLog, lichSu, vaiTro, nguoi: NGUOI_HIEN_TAI,
+    gan, go, xoa, chuyen, anhHuongXoa,
+    themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin,
+  };
 }

@@ -159,6 +159,7 @@ describe("Workspace S01 — xóa nút", () => {
     render(<Workspace />);
     await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
     await user.click(screen.getByRole("button", { name: "Menu Tầng 3" }));
+    await user.click(screen.getByRole("menuitem", { name: "Xóa" }));
     const dialog = screen.getByRole("dialog", { name: "Xác nhận xóa khu vực" });
     expect(dialog).toHaveTextContent(
       "Xóa khu vực này sẽ gỡ vị trí của 2 tài sản và xóa 2 khu vực con. Tiếp tục?",
@@ -168,6 +169,7 @@ describe("Workspace S01 — xóa nút", () => {
     expect(screen.getByRole("button", { name: "Tầng 3" })).toBeInTheDocument();
     // Mở lại + Tiếp tục
     await user.click(screen.getByRole("button", { name: "Menu Tầng 3" }));
+    await user.click(screen.getByRole("menuitem", { name: "Xóa" }));
     await user.click(screen.getByRole("button", { name: "Tiếp tục" }));
     expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("Đã xóa khu vực");
