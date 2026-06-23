@@ -21,7 +21,7 @@ import { XuatBaoCaoModal } from "./xuat-bao-cao/XuatBaoCaoModal";
 import { SO_DO_MAU } from "./soDoPlaceholder";
 import "./workspace.css";
 
-interface DraftGan { x: number; y: number; maTaiSan: string | null; }
+interface DraftGan { x: number; y: number; maTaiSans: string[]; }
 interface FormKVState { nutSua?: string; nutChaMacDinh?: string | null; }
 
 const NHAN_HANH_DONG_AUDIT: Record<string, LoaiHanhDong> = {
@@ -40,7 +40,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [pinLamNoi, setPinLamNoi] = useState<string | null>(null);
   const [thongBaoTraCuu, setThongBaoTraCuu] = useState<string | null>(null);
   const [draft, setDraft] = useState<DraftGan | null>(null);
-  const [pinPopup, setPinPopup] = useState<string | null>(null);
+  const [viTriPopup, setViTriPopup] = useState<string[] | null>(null);
   const [goConfirm, setGoConfirm] = useState<string | null>(null);
   const [xoaDialog, setXoaDialog] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -96,15 +96,22 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   }
 
   function xacNhanGan() {
-    if (!draft || !nodeChon) return;
-    const kq = ws.gan(draft.maTaiSan, nodeChon.maNut, draft.x, draft.y);
+    if (!draft || !nodeChon || draft.maTaiSans.length === 0) return;
+    const kq = ws.ganNhieu(draft.maTaiSans, nodeChon.maNut, draft.x, draft.y);
     if (kq.ok) { setToast(kq.toast!); setDraft(null); } else setSnackbar(kq.loi!);
+  }
+
+  function toggleTaiSanGan(ma: string) {
+    setDraft((d) => d ? { ...d, maTaiSans: d.maTaiSans.includes(ma) ? d.maTaiSans.filter((m) => m !== ma) : [...d.maTaiSans, ma] } : d);
   }
 
   function xacNhanGo(maTaiSan: string) {
     const kq = ws.go(maTaiSan);
-    if (kq.ok) { setToast(kq.toast!); setGoConfirm(null); setPinPopup(null); }
-    else { setSnackbar(kq.loi!); setGoConfirm(null); }
+    if (kq.ok) {
+      setToast(kq.toast!);
+      setGoConfirm(null);
+      setViTriPopup((vt) => { const con = vt?.filter((m) => m !== maTaiSan) ?? null; return con && con.length ? con : null; });
+    } else { setSnackbar(kq.loi!); setGoConfirm(null); }
   }
 
   function xacNhanXoa(maNut: string) {
@@ -200,8 +207,8 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
             </div>
           )}
           <FloorPlanCanvas nodes={nodes} nutChon={nodeChon} pins={pinTrongNut} pinLamNoi={pinLamNoi}
-            onClickTrong={(x, y) => nodeChon?.soDoUrl && setDraft({ x, y, maTaiSan: null })}
-            onClickPin={(m) => setPinPopup(m)} />
+            onClickTrong={(x, y) => nodeChon?.soDoUrl && setDraft({ x, y, maTaiSans: [] })}
+            onClickViTri={(ds) => setViTriPopup(ds)} />
           {soCanDatLai > 0 && (
             <button className="dai-canh-bao" aria-label={`${soCanDatLai} pin cần đặt lại vị trí`} onClick={() => setMoS05(true)}>
               ⚠ {soCanDatLai} pin cần đặt lại vị trí
@@ -214,30 +221,46 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
         <div className="lop-noi" role="dialog" aria-label="Gán vị trí tài sản">
           <div className="o-gan">
             <h2>Gán vị trí tại điểm đã chọn</h2>
+            <p className="o-gan-huong-dan">Chọn một hoặc nhiều tài sản để gán vào vị trí này.</p>
             <ul role="listbox" aria-label="Tài sản chưa có vị trí">
               {taiSanGanDuoc.map((t) => (
                 <li key={t.maTaiSan}>
-                  <label><input type="radio" name="tai-san-gan" checked={draft.maTaiSan === t.maTaiSan}
-                    onChange={() => setDraft({ ...draft, maTaiSan: t.maTaiSan })} />{t.maTaiSan} · {t.ten}</label>
+                  <label><input type="checkbox" checked={draft.maTaiSans.includes(t.maTaiSan)}
+                    onChange={() => toggleTaiSanGan(t.maTaiSan)} />{t.maTaiSan} · {t.ten}</label>
                 </li>
               ))}
             </ul>
             <div className="o-gan-nut">
               <button onClick={() => setDraft(null)}>Hủy</button>
-              <button className="cta" disabled={!draft.maTaiSan} onClick={xacNhanGan}>Gán vị trí</button>
+              <button className="cta" disabled={draft.maTaiSans.length === 0} onClick={xacNhanGan}>
+                Gán vị trí{draft.maTaiSans.length > 0 ? ` (${draft.maTaiSans.length})` : ""}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {pinPopup && (
-        <div className="lop-noi" role="dialog" aria-label="Chi tiết tài sản">
+      {/* Popup danh sách tài sản tại một vị trí */}
+      {viTriPopup && (
+        <div className="lop-noi" role="dialog" aria-label="Tài sản tại vị trí">
           <div className="pin-popup">
-            <h2>{pinPopup}</h2>
-            <button onClick={() => { setLichSuCua({ ma: pinPopup, ten: taiSan.find((t) => t.maTaiSan === pinPopup)?.ten ?? pinPopup }); setPinPopup(null); }}>Xem lịch sử</button>
-            <button onClick={() => { setDiDoi({ taiSanDon: pinPopup }); setPinPopup(null); }}>Di dời</button>
-            <button className="nguy-hiem" onClick={() => setGoConfirm(pinPopup)}>Gỡ vị trí</button>
-            <button onClick={() => setPinPopup(null)}>Đóng</button>
+            <h2>{viTriPopup.length === 1 ? "Chi tiết tài sản" : `${viTriPopup.length} tài sản tại vị trí này`}</h2>
+            <ul className="ds-vi-tri">
+              {viTriPopup.map((ma) => {
+                const ten = taiSan.find((t) => t.maTaiSan === ma)?.ten ?? ma;
+                return (
+                  <li key={ma}>
+                    <span className="vt-ten">{ma} · {ten}</span>
+                    <span className="vt-nut">
+                      <button onClick={() => { setLichSuCua({ ma, ten }); setViTriPopup(null); }}>Xem lịch sử</button>
+                      <button onClick={() => { setDiDoi({ taiSanDon: ma }); setViTriPopup(null); }}>Di dời</button>
+                      <button className="nguy-hiem" onClick={() => setGoConfirm(ma)}>Gỡ vị trí</button>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <button onClick={() => setViTriPopup(null)}>Đóng</button>
           </div>
         </div>
       )}

@@ -30,6 +30,25 @@ export function gomCumPin(pins: ViTriPin[], kichThuocO = 5): CumPin[] {
   }));
 }
 
+export interface ViTriGom {
+  toaDoX: number;
+  toaDoY: number;
+  pins: ViTriPin[];
+}
+
+/**
+ * Gom các pin TRÙNG vị trí (cùng tọa độ) thành một "vị trí" — một vị trí có thể chứa nhiều tài sản.
+ * Mỗi tài sản vẫn chỉ có 1 vị trí (BRule-01); nhiều tài sản có thể cùng một vị trí.
+ */
+export function gomTheoViTri(pins: ViTriPin[]): ViTriGom[] {
+  const o = new Map<string, ViTriPin[]>();
+  for (const p of pins) {
+    const key = `${p.toaDoX}:${p.toaDoY}`;
+    (o.get(key) ?? o.set(key, []).get(key)!).push(p);
+  }
+  return [...o.values()].map((ps) => ({ toaDoX: ps[0].toaDoX, toaDoY: ps[0].toaDoY, pins: ps }));
+}
+
 /** Lọc pin theo trạng thái (TC-S01-13). */
 export function locPinTheoTrangThai(
   pins: ViTriPin[],

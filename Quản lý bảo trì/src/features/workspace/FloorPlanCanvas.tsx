@@ -1,6 +1,6 @@
 import type { NutKhuVuc, ViTriPin } from "./types";
 import { chuoiDuongDan } from "./logic/treeModel";
-import { gomCumPin } from "./logic/clustering";
+import { gomCumPin, gomTheoViTri, NGUONG_GOM_CUM } from "./logic/clustering";
 import { SO_DO_FALLBACK } from "./soDoPlaceholder";
 
 interface Props {
@@ -9,11 +9,12 @@ interface Props {
   pins: ViTriPin[];
   pinLamNoi?: string | null; // mã tài sản đang được làm nổi (pulse)
   onClickTrong: (x: number, y: number) => void;
-  onClickPin: (maTaiSan: string) => void;
+  /** Click một vị trí → trả danh sách mã tài sản tại vị trí đó (≥1). */
+  onClickViTri: (maTaiSans: string[]) => void;
 }
 
 /** Khung sơ đồ mặt bằng: ảnh + pin theo tọa độ %, breadcrumb, states (F09, R-S01-02/04). */
-export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong, onClickPin }: Props) {
+export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong, onClickViTri }: Props) {
   if (!nutChon) {
     return (
       <section className="canvas" aria-label="Sơ đồ mặt bằng">
@@ -38,7 +39,11 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
     );
   }
 
-  const cum = gomCumPin(pins);
+  // Khi quá đông (>500) thì gom cụm theo lân cận; bình thường gom theo đúng vị trí (nhiều tài sản/1 vị trí).
+  const dongPin = pins.length > NGUONG_GOM_CUM;
+  const cum = dongPin
+    ? gomCumPin(pins).map((c) => ({ toaDoX: c.toaDoX, toaDoY: c.toaDoY, pins: c.pins }))
+    : gomTheoViTri(pins);
 
   return (
     <section className="canvas" aria-label="Sơ đồ mặt bằng">
@@ -66,34 +71,26 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
             if (img.src !== SO_DO_FALLBACK) img.src = SO_DO_FALLBACK;
           }}
         />
-        {cum.map((c, i) =>
-          c.soLuong === 1 ? (
+        {cum.map((c, i) => {
+          const dsMa = c.pins.map((p) => p.maTaiSan);
+          const lamNoi = !!pinLamNoi && dsMa.includes(pinLamNoi);
+          const nhieu = c.pins.length > 1;
+          return (
             <button
-              key={c.pins[0].maTaiSan}
-              className={`pin pin-${c.pins[0].trangThai} ${
-                pinLamNoi === c.pins[0].maTaiSan ? "pin-lam-noi" : ""
-              }`}
+              key={nhieu ? `vt-${i}` : c.pins[0].maTaiSan}
+              className={`pin pin-${c.pins[0].trangThai} ${lamNoi ? "pin-lam-noi" : ""} ${nhieu ? "pin-nhieu" : ""}`}
               style={{ left: `${c.toaDoX}%`, top: `${c.toaDoY}%` }}
-              aria-label={`Tài sản ${c.pins[0].maTaiSan}`}
+              aria-label={nhieu ? `Vị trí ${c.pins.length} tài sản` : `Tài sản ${c.pins[0].maTaiSan}`}
               data-trangthai={c.pins[0].trangThai}
               onClick={(e) => {
                 e.stopPropagation();
-                onClickPin(c.pins[0].maTaiSan);
+                onClickViTri(dsMa);
               }}
             >
-              📍
+              {nhieu ? <>📍<span className="pin-dem">{c.pins.length}</span></> : "📍"}
             </button>
-          ) : (
-            <span
-              key={`cum-${i}`}
-              className="cum-pin"
-              style={{ left: `${c.toaDoX}%`, top: `${c.toaDoY}%` }}
-              aria-label={`Cụm ${c.soLuong} tài sản`}
-            >
-              ⨁ {c.soLuong}
-            </span>
-          ),
-        )}
+          );
+        })}
       </div>
     </section>
   );

@@ -16,7 +16,7 @@
 - Header: tiêu đề "Bản đồ tài sản" · **ô tra cứu nhanh** (trung tâm) · avatar/menu tài khoản.
 - Body (3 vùng):
   - **Cột trái — Cây khu vực:** nút "+ Thêm khu vực" (chỉ Quản trị), cây mở/đóng nhánh, menu ngữ cảnh mỗi nút, kéo-thả (Quản trị).
-  - **Vùng giữa — Khung sơ đồ:** breadcrumb đường dẫn + thanh công cụ (Lọc pin, Di dời hàng loạt, Xuất báo cáo) ở trên; ảnh sơ đồ zoom/pan + pin/cụm; dải cảnh báo "N pin cần đặt lại" ở dưới.
+  - **Vùng giữa — Khung sơ đồ:** breadcrumb đường dẫn + thanh công cụ (**+ Gán vị trí**, Lọc pin, Di dời hàng loạt, Xuất báo cáo) ở trên; ảnh sơ đồ zoom/pan + pin/cụm; khi đã có ảnh nhưng chưa có pin → lớp gợi ý đặt tài sản đầu tiên; dải cảnh báo "N pin cần đặt lại" ở dưới.
   - **Lớp nổi:** popup chi tiết pin; ô chọn tài sản khi gán; dialog xác nhận xóa.
 - Footer: không có footer cố định (workspace toàn màn).
 
@@ -27,7 +27,9 @@
 | Cây khu vực | Tree | Mở/đóng nhánh, click mở sơ đồ, kéo-thả đổi nhánh | Chặn thả vào nhánh con của chính nó | R-S01-01, R-S01-08 |
 | Nút "+ Thêm khu vực" | Secondary CTA | Mở S02 (Form khu vực) | Chỉ hiện với Quản trị | R-S01-10 |
 | Menu ngữ cảnh nút | Menu | Thêm con / Sửa (→S02) / Xóa (dialog) / Quản lý ảnh (→S03) | Mục cấu trúc ẩn với Giám sát | R-S01-09, R-S01-10 |
-| Khung sơ đồ | Canvas ảnh | Hiển thị ảnh + pin theo tọa độ %; zoom/pan; click trống → gán | Pin trong vùng 0–100% | R-S01-02, R-S01-04 |
+| Nút "+ Gán vị trí" | Secondary CTA (toolbar) | **Điểm vào trực quan** để tạo vị trí: bấm → vào *chế độ đặt pin* (con trỏ đổi + dải hướng dẫn "Click lên sơ đồ để đặt tài sản", có nút Thoát) | Hiện cho cả Quản trị & Giám sát | R-S01-06 |
+| Khung sơ đồ | Canvas ảnh | Hiển thị ảnh + pin theo tọa độ %; zoom/pan; click trống (hoặc đang ở chế độ đặt pin) → gán | Pin trong vùng 0–100% | R-S01-02, R-S01-04, R-S01-06 |
+| Lớp gợi ý đặt pin đầu tiên | Empty overlay | Khi sơ đồ có ảnh nhưng 0 pin → "Chưa có tài sản nào trên sơ đồ — bấm '+ Gán vị trí' rồi click lên sơ đồ"; ẩn khi có ≥1 pin | Chỉ hiện khi N pin = 0 | R-S01-11 |
 | Pin / Cụm pin | Marker | Pin đơn click → popup; cụm (>500) click → tách/zoom | Gom cụm khi > 500 điểm | R-S01-04, R-S01-05 |
 | Bộ lọc pin | Filter | Thu hẹp pin hiển thị theo tiêu chí | — | R-S01-05 |
 | Ô chọn tài sản (gán) | Search modal | Chỉ liệt kê tài sản chưa có vị trí | Bắt buộc chọn 1 tài sản | R-S01-06 |
@@ -38,13 +40,14 @@
 | Dải "N pin cần đặt lại" | Banner | Đếm pin cần đặt lại → S05 | Ẩn khi N=0 | R-S01-10 |
 
 ## 4. Trạng thái giao diện (UI States)
-- ⚪ Empty: cây trống → minh họa + CTA "Tạo khu vực đầu tiên" (Quản trị); nút chưa có ảnh → khung giữa "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị) / thông báo nhờ Quản trị (Giám sát).
+- ⚪ Empty: cây trống → minh họa + CTA "Tạo khu vực đầu tiên" (Quản trị); nút chưa có ảnh → khung giữa "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị) / thông báo nhờ Quản trị (Giám sát); **nút đã có ảnh nhưng chưa có pin nào → lớp gợi ý "Chưa có tài sản nào trên sơ đồ — bấm '+ Gán vị trí' rồi click lên sơ đồ để đặt tài sản đầu tiên"**.
 - 🔄 Loading: skeleton cho cây; spinner/placeholder mờ cho khung sơ đồ khi đang tải ảnh + pin.
 - 🔴 Error: tải ảnh thất bại → thông báo "Không tải được sơ đồ" + nút "Thử lại"; tra cứu lỗi → "Không tìm thấy tài sản".
 - 🟢 Success: gán → toast "Đã gán vị trí cho tài sản"; gỡ → toast "Đã gỡ vị trí"; xóa → toast "Đã xóa khu vực".
 
 ## 5. CTA & Copywriting (microcopy)
-- CTA Primary: `Gán vị trí` · CTA Secondary: `Hủy`, `+ Thêm khu vực`, `Di dời hàng loạt`, `Xuất báo cáo`
+- CTA Primary: `Gán vị trí` · CTA Secondary: `+ Gán vị trí`, `Hủy`, `+ Thêm khu vực`, `Di dời hàng loạt`, `Xuất báo cáo`
+- Microcopy chế độ đặt pin: dải hướng dẫn `Click lên sơ đồ để đặt tài sản` + nút `Thoát`; empty-state sơ đồ chưa có pin: `Chưa có tài sản nào trên sơ đồ — bấm "+ Gán vị trí" rồi click lên sơ đồ để đặt tài sản đầu tiên.`
 - Title: `Bản đồ tài sản` · Helper text ô tra cứu: `Tra cứu mã/tên tài sản...`
 - Wording lỗi/thành công (chính xác):
   - `Đã gán vị trí cho tài sản.`

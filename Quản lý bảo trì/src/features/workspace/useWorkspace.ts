@@ -53,6 +53,25 @@ export function useWorkspace(
     [taiSanDangKhoa, ghiAudit],
   );
 
+  /** Gán NHIỀU tài sản vào cùng một vị trí (x,y) trên sơ đồ của nút. */
+  const ganNhieu = useCallback(
+    (maTaiSans: string[], maNut: string, x: number, y: number) => {
+      const moi: ViTriPin[] = [];
+      for (const ma of maTaiSans) {
+        const kq = ganViTri(ma, maNut, x, y, taiSanDangKhoa);
+        if (kq.ok && kq.pin) {
+          moi.push(kq.pin);
+          ghiAudit("gan-vi-tri", ma);
+        }
+      }
+      if (moi.length === 0) return { ok: false, loi: "Không gán được tài sản nào." };
+      setPins((ps) => [...ps, ...moi]);
+      const toast = moi.length === 1 ? "Đã gán vị trí cho tài sản." : `Đã gán vị trí cho ${moi.length} tài sản.`;
+      return { ok: true, soLuong: moi.length, toast };
+    },
+    [taiSanDangKhoa, ghiAudit],
+  );
+
   const go = useCallback(
     (maTaiSan: string) => {
       const kq = goViTri(pins, maTaiSan);
@@ -161,7 +180,7 @@ export function useWorkspace(
 
   return {
     nodes, taiSan, pins, auditLog, lichSu, vaiTro, nguoi: NGUOI_HIEN_TAI,
-    gan, go, xoa, chuyen, anhHuongXoa,
+    gan, ganNhieu, go, xoa, chuyen, anhHuongXoa,
     themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin,
   };
 }

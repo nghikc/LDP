@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { gomCumPin, locPinTheoTrangThai, NGUONG_GOM_CUM } from "./clustering";
+import { gomCumPin, gomTheoViTri, locPinTheoTrangThai, NGUONG_GOM_CUM } from "./clustering";
 import type { ViTriPin } from "../types";
 
 function taoPins(n: number): ViTriPin[] {
@@ -24,6 +24,18 @@ describe("clustering — gom cụm/lọc pin (F10)", () => {
     expect(kq.length).toBeLessThan(501);
     expect(kq.reduce((s, c) => s + c.soLuong, 0)).toBe(501);
     expect(kq.some((c) => c.soLuong > 1)).toBe(true);
+  });
+
+  it("gomTheoViTri: nhiều tài sản cùng tọa độ → một vị trí", () => {
+    const pins: ViTriPin[] = [
+      { maTaiSan: "A-007", maNut: "p305", toaDoX: 40, toaDoY: 55, trangThai: "DaGanViTri" },
+      { maTaiSan: "B-021", maNut: "p305", toaDoX: 40, toaDoY: 55, trangThai: "DaGanViTri" },
+      { maTaiSan: "A-009", maNut: "p305", toaDoX: 10, toaDoY: 20, trangThai: "DaGanViTri" },
+    ];
+    const vt = gomTheoViTri(pins);
+    expect(vt).toHaveLength(2); // 2 vị trí: (40,55) gồm 2 tài sản, (10,20) gồm 1
+    const chung = vt.find((v) => v.toaDoX === 40 && v.toaDoY === 55)!;
+    expect(chung.pins.map((p) => p.maTaiSan).sort()).toEqual(["A-007", "B-021"]);
   });
 
   it("TC-S01-13: lọc chỉ pin 'CanDatLai'", () => {
