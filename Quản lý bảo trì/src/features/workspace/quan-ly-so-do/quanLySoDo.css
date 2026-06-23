@@ -1,0 +1,229 @@
+/* S03 — Quản lý ảnh sơ đồ mặt bằng. CSS riêng, KHÔNG đụng workspace.css. */
+
+.sodo-lop-phu {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 60;
+  animation: sodo-mo-phu 160ms ease-out;
+}
+
+.sodo-modal {
+  width: min(720px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 12px 12px 0 0;
+  padding: 20px 24px 24px;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.25);
+  animation: sodo-truot-len 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hiệu ứng đóng (trượt xuống + mờ) khi modal đang đóng. */
+.sodo-lop-phu.dang-dong {
+  animation: sodo-tat-phu 180ms ease-in forwards;
+}
+.sodo-lop-phu.dang-dong .sodo-modal {
+  animation: sodo-truot-xuong 200ms ease-in forwards;
+}
+
+@keyframes sodo-mo-phu {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sodo-tat-phu {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes sodo-truot-len {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes sodo-truot-xuong {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(100%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sodo-lop-phu,
+  .sodo-modal,
+  .sodo-lop-phu.dang-dong,
+  .sodo-lop-phu.dang-dong .sodo-modal {
+    animation: none !important;
+  }
+}
+
+.sodo-tieu-de {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.sodo-breadcrumb {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px;
+}
+
+.sodo-dong {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: #475569;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.sodo-dong:hover { background: #f1f5f9; }
+
+/* Vùng kéo-thả (chưa có sơ đồ). */
+.sodo-dropzone {
+  border: 2px dashed #94a3b8;
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  color: #475569;
+  background: #f8fafc;
+  transition: border-color 120ms, background 120ms;
+}
+.sodo-dropzone.keo-vao {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+.sodo-dropzone.co-loi {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+.sodo-dropzone-huong-dan {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.sodo-loi {
+  color: #b91c1c;
+  font-size: 13px;
+  margin: 10px 0 0;
+}
+
+/* Xem trước (đã có sơ đồ). */
+.sodo-preview-anh {
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.sodo-metadata {
+  font-size: 13px;
+  color: #475569;
+  margin: 10px 0 2px;
+}
+.sodo-ten-file {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+.sodo-so-pin {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 12px;
+}
+
+/* Banner pin tràn ngoài. */
+.sodo-banner-tran {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #92400e;
+  font-size: 13px;
+}
+
+.sodo-nut-hang {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.sodo-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 14px;
+  cursor: pointer;
+}
+.sodo-btn:hover { background: #f8fafc; }
+.sodo-btn.cta {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.sodo-btn.cta:hover { background: #1d4ed8; }
+.sodo-btn.nguy-hiem {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+.sodo-btn.nguy-hiem:hover { background: #b91c1c; }
+
+/* Focus-visible rõ ràng cho WCAG AA. */
+.sodo-btn:focus-visible,
+.sodo-dong:focus-visible,
+.sodo-dropzone:focus-visible,
+.sodo-input-file:focus-visible + .sodo-nhan-chon {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.sodo-nhan-chon {
+  display: inline-block;
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+/* Ẩn input file thật, vẫn truy cập được. */
+.sodo-input-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.sodo-dialog-lop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 70;
+}
+.sodo-dialog {
+  width: min(440px, 92%);
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.sodo-dialog p { margin: 0 0 16px; color: #1e293b; font-size: 14px; line-height: 1.5; }

@@ -20,11 +20,11 @@
 - Create: `src/features/ban-do-tai-san/pin-can-dat-lai/usePinCanDatLai.ts` (load danh sách pin có cờ `can_dat_lai`)
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/PinCanDatLaiPanel.test.tsx`
 
-- [ ] Step 1: Viết test thất bại (lấy từ TC-S05-01, TC-S05-02, TC-S05-03 trong test.md)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu: gọi API danh sách pin "cần đặt lại", render mỗi pin một item (mã+tên, đường dẫn khu vực, tên sơ đồ), bộ đếm "Tổng: N", state Empty/Loading/Error
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (lấy từ TC-S05-01, TC-S05-02, TC-S05-03 trong test.md)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu: gọi API danh sách pin "cần đặt lại", render mỗi pin một item (mã+tên, đường dẫn khu vực, tên sơ đồ), bộ đếm "Tổng: N", state Empty/Loading/Error
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-01..04, 06 pass · panel render đúng 3 item + "Tổng: 3" · Empty hiện "Không có pin nào cần đặt lại vị trí" khi N=0 (R-S05-07) · Loading skeleton, Error có "Thử lại" · tải < 2s (R-S05-N01) · trace đúng các TC · không lỗi lint.
 
@@ -36,11 +36,11 @@
 - Modify: `src/features/ban-do-tai-san/workspace/WorkspaceS01.tsx` (nhận lệnh mở sơ đồ + chế độ đặt lại + banner)
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/useDatLaiMode.test.ts`
 
-- [ ] Step 1: Viết test thất bại (TC-S05-07, TC-S05-08, TC-S05-09, TC-S05-10)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: bấm [Đặt lại vị trí] → đóng panel, mở đúng sơ đồ chứa pin ở S01, làm nổi pin (pulse), banner hướng dẫn; nút vô hiệu khi pin bị khóa kèm thông báo; khóa tự mở sau 5 phút; ảnh sơ đồ bị xóa → thoát chế độ + pin rời danh sách
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S05-07, TC-S05-08, TC-S05-09, TC-S05-10)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: bấm [Đặt lại vị trí] → đóng panel, mở đúng sơ đồ chứa pin ở S01, làm nổi pin (pulse), banner hướng dẫn; nút vô hiệu khi pin bị khóa kèm thông báo; khóa tự mở sau 5 phút; ảnh sơ đồ bị xóa → thoát chế độ + pin rời danh sách
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-07..10 pass · pin khóa thì nút disable + báo "Tài sản đang được người khác chỉnh sửa…" (R-S05-N04) · vào chế độ đặt lại đúng sơ đồ (R-S05-03) · trace đúng TC · không lỗi lint.
 
@@ -52,11 +52,11 @@
 - Modify: `WorkspaceS01.tsx` (xử lý click/kéo pin, nút Hủy/Lưu)
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/datLaiToaDo.test.ts`
 
-- [ ] Step 1: Viết test thất bại (TC-S05-11..17, 19)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: click/kéo điểm → tọa độ tương đối (x%, y%); validate biên 0–100 + trong khung (BRule-S05-02); ngoài vùng → "Vị trí nằm ngoài sơ đồ", không lưu, pin giữ trạng thái; rớt mạng khi Lưu → snackbar lỗi, không lưu nửa vời
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S05-11..17, 19)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: click/kéo điểm → tọa độ tương đối (x%, y%); validate biên 0–100 + trong khung (BRule-S05-02); ngoài vùng → "Vị trí nằm ngoài sơ đồ", không lưu, pin giữ trạng thái; rớt mạng khi Lưu → snackbar lỗi, không lưu nửa vời
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-11..17, 19 pass · tọa độ hợp lệ `(0,0)`/`(100,100)` lưu được, `(105,40)`/`(-3,50)`/`(100.5,50)` bị chặn (R-S05-04, R-S05-06) · lưu dạng % (R-S05-N02) · sau chặn pin vẫn "cần đặt lại" · trace đúng TC · không lỗi lint.
 
@@ -68,11 +68,11 @@
 - Modify: `PinCanDatLaiPanel.tsx` (animation fade+collapse khi item rời; chuyển sang Empty khi N=0)
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/roiDanhSach.test.ts`
 
-- [ ] Step 1: Viết test thất bại (TC-S05-20, TC-S05-21)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: lưu thành công → bỏ cờ "cần đặt lại", pin về "đã có vị trí", gỡ item (fade+collapse), bộ đếm −1; pin cuối xử lý xong → panel chuyển Empty
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S05-20, TC-S05-21)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: lưu thành công → bỏ cờ "cần đặt lại", pin về "đã có vị trí", gỡ item (fade+collapse), bộ đếm −1; pin cuối xử lý xong → panel chuyển Empty
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-20, 21 pass · pin đặt lại xong rời danh sách + bộ đếm đồng bộ (R-S05-05, BRule-S05-04) · N về 0 → Empty (R-S05-07) · toast "Đã đặt lại vị trí pin." · trace đúng TC · không lỗi lint.
 
@@ -83,11 +83,11 @@
 - Create: `src/features/ban-do-tai-san/pin-can-dat-lai/auditDatLai.ts`
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/auditDatLai.test.ts`
 
-- [ ] Step 1: Viết test thất bại (TC-S05-18)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: mỗi lần đặt lại thành công ghi nhật ký kiểm toán (người · hành động · tài sản · vị trí cũ→mới · thời điểm); KHÔNG tạo bản ghi lịch sử di chuyển (BRule-S05-03)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S05-18)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: mỗi lần đặt lại thành công ghi nhật ký kiểm toán (người · hành động · tài sản · vị trí cũ→mới · thời điểm); KHÔNG tạo bản ghi lịch sử di chuyển (BRule-S05-03)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-18 pass · bản ghi nhật ký đầy đủ trường (R-S05-N03) · không sinh lịch sử di chuyển · trace đúng TC · không lỗi lint.
 
@@ -98,10 +98,10 @@
 - Modify: `useDatLaiMode.ts` / guard quyền (cho phép thao tác đặt/gán vị trí với cả 2 vai trò)
 - Test: `src/features/ban-do-tai-san/pin-can-dat-lai/phanQuyen.test.ts`
 
-- [ ] Step 1: Viết test thất bại (TC-S05-22)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: Quản trị và Giám sát đều mở panel + đặt lại được; không yêu cầu quyền quản lý cấu trúc (BRule-S05-05)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S05-22)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: Quản trị và Giám sát đều mở panel + đặt lại được; không yêu cầu quyền quản lý cấu trúc (BRule-S05-05)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** test TC-S05-22 pass · cả 2 vai trò đặt lại thành công (R-S05-08) · không lộ quyền quản cấu trúc · trace đúng TC · không lỗi lint.
