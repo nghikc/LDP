@@ -88,7 +88,14 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, san
   background: #fff; border-radius: var(--r); padding: var(--kc-3);
   min-width: 320px; max-width: 90vw; animation: hien-len var(--t-vao) ease-out;
 }
-.o-gan-nut, .xoa-nut { display: flex; gap: var(--kc-1); justify-content: flex-end; margin-top: var(--kc-2); }
+.o-gan-nut, .xoa-nut, .form-nut { display: flex; gap: var(--kc-1); justify-content: flex-end; margin-top: var(--kc-2); }
+
+.form-khu-vuc { background: #fff; border-radius: var(--r); padding: var(--kc-3); min-width: 360px; max-width: 90vw; animation: hien-len var(--t-vao) ease-out; }
+.form-khu-vuc h2 { margin-top: 0; }
+.form-khu-vuc label { display: block; margin-top: var(--kc-2); font-size: 13px; color: #44505f; }
+.form-khu-vuc input, .form-khu-vuc select { display: block; width: 100%; margin-top: 4px; padding: var(--kc-1); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; }
+.form-khu-vuc [aria-invalid="true"] { border-color: var(--mau-nguy-hiem); }
+.loi-field { color: var(--mau-nguy-hiem); font-size: 12px; margin: 4px 0 0; animation: hien-xuong var(--t-ra) ease-out; }
 
 .toast, .snackbar {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: var(--kc-3);

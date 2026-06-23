@@ -280,7 +280,7 @@ li > ul, li > ol { margin: 0.2em 0; }
     <span></span><span></span><span></span>
   </button>
   <h1>docs — Documentation Portal</h1>
-  <span class="timestamp">Generated: 2026-06-23T02:41:49.730Z</span>
+  <span class="timestamp">Generated: 2026-06-23T03:05:28.573Z</span>
 </header>
 <div id="layout">
   <div id="sidebar-overlay" hidden></div>
@@ -738,7 +738,7 @@ li > ul, li > ol { margin: 0.2em 0; }
 </thead>
 <tbody>
 <tr><td>F04, F05, F09, F10, F11, F14, F16, F03</td><td>Bản đồ tài sản (Workspace)</td><td>BanDoTaiSan</td><td>Workspace</td><td><code>docs/BanDoTaiSan/Workspace/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (24 TC Auto Pass)</td><td>2026-06-23</td></tr>
-<tr><td>F01, F02</td><td>Form khu vực (Tạo/Sửa nút)</td><td>BanDoTaiSan</td><td>FormKhuVuc</td><td><code>docs/BanDoTaiSan/FormKhuVuc/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
+<tr><td>F01, F02</td><td>Form khu vực (Tạo/Sửa nút)</td><td>BanDoTaiSan</td><td>FormKhuVuc</td><td><code>docs/BanDoTaiSan/FormKhuVuc/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (26 TC Auto Pass)</td><td>2026-06-23</td></tr>
 <tr><td>F06, F07, F08</td><td>Quản lý ảnh sơ đồ mặt bằng</td><td>BanDoTaiSan</td><td>QuanLySoDo</td><td><code>docs/BanDoTaiSan/QuanLySoDo/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
 <tr><td>F12, F13</td><td>Di dời tài sản</td><td>BanDoTaiSan</td><td>DiDoiTaiSan</td><td><code>docs/BanDoTaiSan/DiDoiTaiSan/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
 <tr><td>F15</td><td>Danh sách pin cần đặt lại</td><td>BanDoTaiSan</td><td>PinCanDatLai</td><td><code>docs/BanDoTaiSan/PinCanDatLai/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
@@ -1146,7 +1146,8 @@ li > ul, li > ol { margin: 0.2em 0; }
 <tr><th>Màn</th><th>Trạng thái</th><th>Ghi chú</th></tr>
 </thead>
 <tbody>
-<tr><td>S01 Workspace</td><td>✅ dev xong</td><td>Nhánh <code>feature/qlvt-s01-workspace</code>; 46 test Vitest xanh, 24/24 TC Auto Pass; build+lint sạch</td></tr>
+<tr><td>S01 Workspace</td><td>✅ dev xong</td><td>Đã merge <code>main</code> (PR #1); 46 test, 24/24 TC Auto Pass</td></tr>
+<tr><td>S02 Form khu vực</td><td>✅ dev xong</td><td>Nhánh <code>feature/qlvt-s02-formkhuvuc</code>; 34 test, 26/26 TC Auto Pass; build+lint sạch</td></tr>
 </tbody>
 </table>
 </section>
@@ -2245,11 +2246,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/form-khung.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (lấy từ TC-S02-01 mở chế độ Tạo, TC-S02-31 Hủy đóng ngay khi chưa sửa, TC-S02-32 hỏi "Bỏ thay đổi chưa lưu?" khi đã nhập)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code tối thiểu: modal slide-up từ S01, tiêu đề động, 4 trường (Tên/Mã/Loại/Nút cha), nút Hủy/Lưu/×; Nút cha đặt sẵn theo ngữ cảnh mở ("Thêm con" → nút đó; gốc → "(Gốc)"); đóng qua Hủy/×/nền tối, hỏi xác nhận nếu đã sửa dữ liệu</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (lấy từ TC-S02-01 mở chế độ Tạo, TC-S02-31 Hủy đóng ngay khi chưa sửa, TC-S02-32 hỏi "Bỏ thay đổi chưa lưu?" khi đã nhập)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code tối thiểu: modal slide-up từ S01, tiêu đề động, 4 trường (Tên/Mã/Loại/Nút cha), nút Hủy/Lưu/×; Nút cha đặt sẵn theo ngữ cảnh mở ("Thêm con" → nút đó; gốc → "(Gốc)"); đóng qua Hủy/×/nền tối, hỏi xác nhận nếu đã sửa dữ liệu</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 3 test pass · modal mở/đóng đúng (chưa sửa → đóng ngay; đã sửa → dialog "Bỏ thay đổi chưa lưu?") · tiêu đề "Thêm khu vực"/"Sửa khu vực" đổi theo chế độ · Nút cha đặt sẵn đúng ngữ cảnh · không lỗi lint.</p>
 <h2 id="task-2-to-nt-khu-vc-lu-hp-l-ch-to">Task 2: Tạo nút khu vực (lưu hợp lệ chế độ Tạo)</h2>
@@ -2259,11 +2260,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/tao-nut.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S02-03 tạo "Phòng 307" dưới "Tầng 3"; TC-S02-04 để trống Nút cha → tạo ở gốc; TC-S02-02 Nút cha mặc định "(Gốc)"; TC-S02-05/06 lưu với Mã trống / có Loại)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code tạo nút: gọi service tạo dưới đúng Nút cha hoặc gốc, ghi nhật ký kiểm toán, đóng modal (fade), cây S01 cập nhật + bật nhánh chứa nút mới, toast "Đã thêm khu vực."</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S02-03 tạo "Phòng 307" dưới "Tầng 3"; TC-S02-04 để trống Nút cha → tạo ở gốc; TC-S02-02 Nút cha mặc định "(Gốc)"; TC-S02-05/06 lưu với Mã trống / có Loại)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code tạo nút: gọi service tạo dưới đúng Nút cha hoặc gốc, ghi nhật ký kiểm toán, đóng modal (fade), cây S01 cập nhật + bật nhánh chứa nút mới, toast "Đã thêm khu vực."</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 5 test pass · nút mới xuất hiện đúng vị trí trong cây (cha / gốc) · toast "Đã thêm khu vực." hiển thị · có bản ghi nhật ký kiểm toán · không lỗi lint.</p>
 <h2 id="task-3-sa-nt-khu-vc-np-d-liu-lu-cp-nht">Task 3: Sửa nút khu vực (nạp dữ liệu + lưu cập nhật)</h2>
@@ -2273,11 +2274,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/sua-nut.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S02-09 nạp đúng dữ liệu &lt; 1s; TC-S02-10 đổi Tên cập nhật cây; TC-S02-11 đổi Nút cha chuyển nhánh; TC-S02-12 giữ Mã cũ không coi trùng; TC-S02-13 nút đã bị xóa → "Khu vực không còn tồn tại")</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code chế độ Sửa: nạp Tên/Mã/Loại/Nút cha hiện tại &lt; 1s, lưu cập nhật (đổi cha → chuyển nhánh), ghi nhật ký kiểm toán, toast "Đã cập nhật khu vực."; xử lý nút bị xóa đồng thời</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S02-09 nạp đúng dữ liệu &lt; 1s; TC-S02-10 đổi Tên cập nhật cây; TC-S02-11 đổi Nút cha chuyển nhánh; TC-S02-12 giữ Mã cũ không coi trùng; TC-S02-13 nút đã bị xóa → "Khu vực không còn tồn tại")</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code chế độ Sửa: nạp Tên/Mã/Loại/Nút cha hiện tại &lt; 1s, lưu cập nhật (đổi cha → chuyển nhánh), ghi nhật ký kiểm toán, toast "Đã cập nhật khu vực."; xử lý nút bị xóa đồng thời</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 5 test pass · form nạp đúng giá trị hiện tại trong &lt; 1s · đổi cha → nút chuyển nhánh đúng · Mã của chính nút không bị coi trùng · thông báo đúng khi nút đã bị xóa · không lỗi lint.</p>
 <h2 id="task-4-validation-tn-m-chn-lu-li-inline">Task 4: Validation Tên &amp; Mã (chặn lưu + lỗi inline)</h2>
@@ -2287,11 +2288,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/validate.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (Tên: TC-S02-14 rỗng, TC-S02-15 chỉ khoảng trắng, TC-S02-16 biên 1, TC-S02-17 biên 150, TC-S02-18 biên 151, TC-S02-19 nút Lưu vô hiệu khi trống, TC-S02-20 trim; Mã: TC-S02-21 trùng "P305", TC-S02-22 trống cho lưu, TC-S02-23 duy nhất, TC-S02-24 biên 50, TC-S02-25 biên 51)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code validation: trim Tên rồi kiểm tra 1–150 ký tự với wording "Vui lòng nhập tên khu vực." / "Tên khu vực tối đa 150 ký tự."; Mã ≤ 50 + duy nhất toàn cây (bỏ qua chính nút khi Sửa) với "Mã khu vực đã tồn tại." / "Mã khu vực tối đa 50 ký tự."; nút Lưu vô hiệu khi Tên trống; lỗi inline dưới đúng field</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (Tên: TC-S02-14 rỗng, TC-S02-15 chỉ khoảng trắng, TC-S02-16 biên 1, TC-S02-17 biên 150, TC-S02-18 biên 151, TC-S02-19 nút Lưu vô hiệu khi trống, TC-S02-20 trim; Mã: TC-S02-21 trùng "P305", TC-S02-22 trống cho lưu, TC-S02-23 duy nhất, TC-S02-24 biên 50, TC-S02-25 biên 51)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code validation: trim Tên rồi kiểm tra 1–150 ký tự với wording "Vui lòng nhập tên khu vực." / "Tên khu vực tối đa 150 ký tự."; Mã ≤ 50 + duy nhất toàn cây (bỏ qua chính nút khi Sửa) với "Mã khu vực đã tồn tại." / "Mã khu vực tối đa 50 ký tự."; nút Lưu vô hiệu khi Tên trống; lỗi inline dưới đúng field</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 12 test pass · lỗi inline đúng wording dưới đúng field · biên 150/151 và 50/51 xử lý đúng · nút Lưu vô hiệu khi Tên trống · Mã trống cho lưu, Mã của chính nút không coi trùng · không lỗi lint.</p>
 <h2 id="task-5-chn-cy-lp-khi-chn-nt-cha">Task 5: Chặn cây lặp khi chọn Nút cha</h2>
@@ -2301,11 +2302,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/cay-lap.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S02-26 loại trừ chính nút "Tầng 3" + con "Phòng 305/306" khỏi danh sách; TC-S02-27 gán chính nó → chặn lưu; TC-S02-28 gán nhánh con → chặn lưu; TC-S02-29 chọn "Tòa B" ngoài nhánh → cho lưu; TC-S02-30 lọc tìm kiếm; TC-S02-08 cây rỗng chỉ còn "(Gốc)")</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code: xây danh sách Nút cha hợp lệ loại trừ (ẩn hẳn) chính nút và toàn bộ con-cháu; validation server-side khi lưu báo "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó."; ô tìm kiếm lọc theo tên khớp một phần</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S02-26 loại trừ chính nút "Tầng 3" + con "Phòng 305/306" khỏi danh sách; TC-S02-27 gán chính nó → chặn lưu; TC-S02-28 gán nhánh con → chặn lưu; TC-S02-29 chọn "Tòa B" ngoài nhánh → cho lưu; TC-S02-30 lọc tìm kiếm; TC-S02-08 cây rỗng chỉ còn "(Gốc)")</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code: xây danh sách Nút cha hợp lệ loại trừ (ẩn hẳn) chính nút và toàn bộ con-cháu; validation server-side khi lưu báo "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó."; ô tìm kiếm lọc theo tên khớp một phần</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 6 test pass · chính nút và nhánh con bị ẩn khỏi dropdown Nút cha · cố gán cây lặp bị chặn với wording đúng · chọn nút ngoài nhánh / để gốc lưu được · lọc tìm kiếm hoạt động · không lỗi lint.</p>
 <h2 id="task-6-phn-quyn-qun-tr-chn-li-vo-lu">Task 6: Phân quyền Quản trị (chặn lối vào &amp; lưu)</h2>
@@ -2315,11 +2316,11 @@ Chú thích các thành phần:
 <li>Test: <code>src/features/ban-do-tai-san/form-khu-vuc/<strong>tests</strong>/phan-quyen.test.{ext}</code></li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S02-07 vai trò Giám sát truy cập trực tiếp → từ chối, không hiển thị form; TC-S02-34 rớt mạng khi Lưu → snackbar "Lỗi kết nối, chưa lưu được." giữ dữ liệu)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Viết code: guard chỉ Quản trị mở/lưu form (Giám sát bị từ chối ở cả lối vào và API); xử lý lỗi mạng khi lưu → snackbar, giữ nguyên dữ liệu đã nhập, không tạo/sửa nửa vời</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S02-07 vai trò Giám sát truy cập trực tiếp → từ chối, không hiển thị form; TC-S02-34 rớt mạng khi Lưu → snackbar "Lỗi kết nối, chưa lưu được." giữ dữ liệu)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Viết code: guard chỉ Quản trị mở/lưu form (Giám sát bị từ chối ở cả lối vào và API); xử lý lỗi mạng khi lưu → snackbar, giữ nguyên dữ liệu đã nhập, không tạo/sửa nửa vời</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 2 test pass · vai trò Giám sát không mở/lưu được form (cả UI và API) · rớt mạng → snackbar đúng wording + dữ liệu giữ nguyên · thao tác tạo/sửa được ghi nhật ký kiểm toán · không lỗi lint.</p>
 </section>
@@ -2484,21 +2485,22 @@ Chú thích các thành phần:
 <tr><th>Tổng TC</th><th>Pass</th><th>Fail</th><th>Blocked</th><th>Skip</th><th>Chưa chạy</th><th>% Pass</th><th>Lần chạy cuối</th></tr>
 </thead>
 <tbody>
-<tr><td>34</td><td>0</td><td>0</td><td>0</td><td>0</td><td>34</td><td>0%</td><td>—</td></tr>
+<tr><td>34</td><td>26</td><td>0</td><td>0</td><td>0</td><td>8</td><td>76%</td><td>2026-06-23</td></tr>
 </tbody>
 </table>
+<blockquote><p>26 TC <code>Auto</code> đã Pass (Vitest: 34 test / 3 file cho S02; tổng dự án 80 test). 8 TC <code>Manual</code> (07,08,13,20,24,25,30,34) còn <code>Chưa chạy</code> → checklist test tay. TC-20/24/25 đã phủ gián tiếp ở tầng logic (validate trim &amp; biên mã).</p></blockquote>
 <h2 id="chc-nng-to-nt-khu-vc-f01-risk-cao">Chức năng: Tạo nút khu vực (F01) — Risk: Cao</h2>
 <table>
 <thead>
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-01</td><td>Positive</td><td>EP</td><td>R-S02-01 / UC-S02-01 (b1) / US-S02-01 GWT-1</td><td>Cao</td><td>Critical</td><td>Đăng nhập Quản trị, ở S01, có nút "Tòa A › Tầng 3"</td><td>1. Bấm "Thêm con" trên nút "Tầng 3"&lt;br&gt;2. Quan sát form</td><td>mở từ "Thêm con" nút "Tầng 3"</td><td>Modal mở chế độ Tạo, tiêu đề "Thêm khu vực", Tên/Mã/Loại trống, Nút cha đặt sẵn "Tòa A › Tầng 3"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-02</td><td>Positive</td><td>EP</td><td>R-S02-01 / UC-S02-01 (b1)</td><td>Cao</td><td>High</td><td>Đăng nhập Quản trị, ở S01</td><td>1. Bấm "+ Thêm khu vực" ở gốc&lt;br&gt;2. Quan sát Nút cha</td><td>mở từ "+ Thêm khu vực" ở gốc</td><td>Tiêu đề "Thêm khu vực"; Nút cha = "(Gốc — không có nút cha)"; các trường trống</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-03</td><td>Positive</td><td>EP</td><td>R-S02-03 / UC-S02-01 (b2-5) / US-S02-01 GWT-2</td><td>Cao</td><td>Critical</td><td>Form Tạo mở, Nút cha = "Tầng 3"</td><td>1. Nhập Tên "Phòng 307"&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>Phòng 307</code></td><td>Tạo nút thành công; "Phòng 307" hiện dưới "Tầng 3" trong cây; modal đóng (fade); toast "Đã thêm khu vực."</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-04</td><td>Positive</td><td>EP</td><td>R-S02-03, R-S02-07 / US-S02-01 GWT-3 / BRule-S02-04</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Để trống Nút cha&lt;br&gt;2. Nhập Tên "Kho tổng"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Kho tổng</code>, Nút cha: (trống)</td><td>Nút "Kho tổng" được tạo ở cấp gốc của cây; toast "Đã thêm khu vực."</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-05</td><td>Positive</td><td>EP</td><td>R-S02-03, R-S02-06 / US-S02-05 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 401"&lt;br&gt;2. Để trống Mã&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 401</code>, Mã: (trống)</td><td>Cho lưu (Mã không bắt buộc); nút tạo thành công</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-06</td><td>Positive</td><td>EP</td><td>R-S02-09 / FR-01</td><td>Thấp</td><td>Low</td><td>Form Tạo mở</td><td>1. Nhập Tên "Tầng 5"&lt;br&gt;2. Chọn Loại "Tầng"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Tầng 5</code>, Loại: <code>Tầng</code></td><td>Lưu thành công với Loại "Tầng"</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-01</td><td>Positive</td><td>EP</td><td>R-S02-01 / UC-S02-01 (b1) / US-S02-01 GWT-1</td><td>Cao</td><td>Critical</td><td>Đăng nhập Quản trị, ở S01, có nút "Tòa A › Tầng 3"</td><td>1. Bấm "Thêm con" trên nút "Tầng 3"&lt;br&gt;2. Quan sát form</td><td>mở từ "Thêm con" nút "Tầng 3"</td><td>Modal mở chế độ Tạo, tiêu đề "Thêm khu vực", Tên/Mã/Loại trống, Nút cha đặt sẵn "Tòa A › Tầng 3"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-02</td><td>Positive</td><td>EP</td><td>R-S02-01 / UC-S02-01 (b1)</td><td>Cao</td><td>High</td><td>Đăng nhập Quản trị, ở S01</td><td>1. Bấm "+ Thêm khu vực" ở gốc&lt;br&gt;2. Quan sát Nút cha</td><td>mở từ "+ Thêm khu vực" ở gốc</td><td>Tiêu đề "Thêm khu vực"; Nút cha = "(Gốc — không có nút cha)"; các trường trống</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-03</td><td>Positive</td><td>EP</td><td>R-S02-03 / UC-S02-01 (b2-5) / US-S02-01 GWT-2</td><td>Cao</td><td>Critical</td><td>Form Tạo mở, Nút cha = "Tầng 3"</td><td>1. Nhập Tên "Phòng 307"&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>Phòng 307</code></td><td>Tạo nút thành công; "Phòng 307" hiện dưới "Tầng 3" trong cây; modal đóng (fade); toast "Đã thêm khu vực."</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-04</td><td>Positive</td><td>EP</td><td>R-S02-03, R-S02-07 / US-S02-01 GWT-3 / BRule-S02-04</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Để trống Nút cha&lt;br&gt;2. Nhập Tên "Kho tổng"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Kho tổng</code>, Nút cha: (trống)</td><td>Nút "Kho tổng" được tạo ở cấp gốc của cây; toast "Đã thêm khu vực."</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-05</td><td>Positive</td><td>EP</td><td>R-S02-03, R-S02-06 / US-S02-05 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 401"&lt;br&gt;2. Để trống Mã&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 401</code>, Mã: (trống)</td><td>Cho lưu (Mã không bắt buộc); nút tạo thành công</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-06</td><td>Positive</td><td>EP</td><td>R-S02-09 / FR-01</td><td>Thấp</td><td>Low</td><td>Form Tạo mở</td><td>1. Nhập Tên "Tầng 5"&lt;br&gt;2. Chọn Loại "Tầng"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Tầng 5</code>, Loại: <code>Tầng</code></td><td>Lưu thành công với Loại "Tầng"</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-07</td><td>Negative</td><td>EP</td><td>R-S02-N02 / BRule-S02-05</td><td>Cao</td><td>Critical</td><td>Đăng nhập vai trò Giám sát</td><td>1. Truy cập trực tiếp đường dẫn mở Form khu vực</td><td>vai trò: <code>Giám sát</code></td><td>Từ chối truy cập; form không hiển thị; không tạo được nút</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S02-08</td><td>Edge</td><td>EP</td><td>R-S02-07 / UC-S02-03 (ngoại lệ cây rỗng)</td><td>Thấp</td><td>Low</td><td>Form Tạo mở, cây chưa có nút nào</td><td>1. Mở dropdown Nút cha</td><td>cây: (rỗng)</td><td>Dropdown chỉ có "(Gốc — không có nút cha)"</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
@@ -2509,10 +2511,10 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-09</td><td>Positive</td><td>EP</td><td>R-S02-02 / UC-S02-02 (b1) / US-S02-02 GWT-1</td><td>Cao</td><td>Critical</td><td>Quản trị, nút "Phòng 305" tồn tại (Mã "P305", Loại "Phòng", cha "Tầng 3")</td><td>1. Chọn "Sửa" trên nút "Phòng 305"&lt;br&gt;2. Quan sát form</td><td>nút: <code>Phòng 305</code></td><td>Modal Sửa mở &lt; 1s; tiêu đề "Sửa khu vực"; Tên="Phòng 305", Mã="P305", Loại="Phòng", Nút cha="Tòa A › Tầng 3"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-10</td><td>Positive</td><td>EP</td><td>R-S02-04 / UC-S02-02 (b3-4) / US-S02-02 GWT-2</td><td>Cao</td><td>Critical</td><td>Form Sửa "Phòng 305" mở</td><td>1. Đổi Tên thành "Phòng 305A"&lt;br&gt;2. Bấm Lưu</td><td>Tên mới: <code>Phòng 305A</code></td><td>Lưu thành công; tên nút trong cây cập nhật ngay "Phòng 305A"; toast "Đã cập nhật khu vực."</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-11</td><td>Positive</td><td>EP</td><td>R-S02-04, R-S02-07 / US-S02-02 GWT-3</td><td>Cao</td><td>High</td><td>Form Sửa "Phòng 305" mở, tồn tại "Tầng 4"</td><td>1. Đổi Nút cha sang "Tầng 4"&lt;br&gt;2. Bấm Lưu</td><td>Nút cha mới: <code>Tòa A › Tầng 4</code></td><td>Lưu thành công; nút "Phòng 305" chuyển sang nhánh "Tầng 4" trong cây</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-12</td><td>Positive</td><td>DT</td><td>R-S02-06 / US-S02-05 GWT-3</td><td>Trung bình</td><td>Medium</td><td>Form Sửa "Phòng 305" (Mã hiện tại "P305") mở</td><td>1. Giữ nguyên Mã "P305"&lt;br&gt;2. Đổi Loại sang "Khu"&lt;br&gt;3. Bấm Lưu</td><td>Mã: <code>P305</code> (của chính nút), Loại mới: <code>Khu</code></td><td>Không coi "P305" là trùng (mã của chính nút); lưu thành công</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-09</td><td>Positive</td><td>EP</td><td>R-S02-02 / UC-S02-02 (b1) / US-S02-02 GWT-1</td><td>Cao</td><td>Critical</td><td>Quản trị, nút "Phòng 305" tồn tại (Mã "P305", Loại "Phòng", cha "Tầng 3")</td><td>1. Chọn "Sửa" trên nút "Phòng 305"&lt;br&gt;2. Quan sát form</td><td>nút: <code>Phòng 305</code></td><td>Modal Sửa mở &lt; 1s; tiêu đề "Sửa khu vực"; Tên="Phòng 305", Mã="P305", Loại="Phòng", Nút cha="Tòa A › Tầng 3"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-10</td><td>Positive</td><td>EP</td><td>R-S02-04 / UC-S02-02 (b3-4) / US-S02-02 GWT-2</td><td>Cao</td><td>Critical</td><td>Form Sửa "Phòng 305" mở</td><td>1. Đổi Tên thành "Phòng 305A"&lt;br&gt;2. Bấm Lưu</td><td>Tên mới: <code>Phòng 305A</code></td><td>Lưu thành công; tên nút trong cây cập nhật ngay "Phòng 305A"; toast "Đã cập nhật khu vực."</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-11</td><td>Positive</td><td>EP</td><td>R-S02-04, R-S02-07 / US-S02-02 GWT-3</td><td>Cao</td><td>High</td><td>Form Sửa "Phòng 305" mở, tồn tại "Tầng 4"</td><td>1. Đổi Nút cha sang "Tầng 4"&lt;br&gt;2. Bấm Lưu</td><td>Nút cha mới: <code>Tòa A › Tầng 4</code></td><td>Lưu thành công; nút "Phòng 305" chuyển sang nhánh "Tầng 4" trong cây</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-12</td><td>Positive</td><td>DT</td><td>R-S02-06 / US-S02-05 GWT-3</td><td>Trung bình</td><td>Medium</td><td>Form Sửa "Phòng 305" (Mã hiện tại "P305") mở</td><td>1. Giữ nguyên Mã "P305"&lt;br&gt;2. Đổi Loại sang "Khu"&lt;br&gt;3. Bấm Lưu</td><td>Mã: <code>P305</code> (của chính nút), Loại mới: <code>Khu</code></td><td>Không coi "P305" là trùng (mã của chính nút); lưu thành công</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-13</td><td>Negative</td><td>EP</td><td>UC-S02-02 (ngoại lệ đồng thời)</td><td>Trung bình</td><td>Medium</td><td>Form Sửa "Phòng 306" mở, nút vừa bị người khác xóa</td><td>1. Bấm Lưu</td><td>nút bị xóa nền</td><td>Thông báo "Khu vực không còn tồn tại"; form đóng; không cập nhật</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
@@ -2522,12 +2524,12 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-14</td><td>Negative</td><td>EP</td><td>R-S02-05 / UC-S02-01 (ngoại lệ Tên rỗng) / US-S02-03 GWT-1</td><td>Cao</td><td>Critical</td><td>Form Tạo mở, ô Tên trống</td><td>1. Để trống Tên&lt;br&gt;2. Bấm Lưu</td><td>Tên: (rỗng)</td><td>Chặn lưu; lỗi inline "Vui lòng nhập tên khu vực" dưới ô Tên; không tạo nút</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-15</td><td>Negative</td><td>EP</td><td>R-S02-05 / US-S02-03 GWT-2</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập chỉ khoảng trắng&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>␣␣␣␣␣</code> (5 dấu cách)</td><td>Sau trim coi là rỗng; chặn lưu; lỗi "Vui lòng nhập tên khu vực"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-16</td><td>Edge</td><td>BVA</td><td>R-S02-05 / Validation ten<em>khu</em>vuc (min)</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên 1 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>A</code> (1 ký tự — biên min hợp lệ)</td><td>Hợp lệ; lưu thành công</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-17</td><td>Edge</td><td>BVA</td><td>R-S02-05 / Validation ten<em>khu</em>vuc (max)</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập Tên đúng 150 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: chuỗi 150 ký tự "A…A" (biên max hợp lệ)</td><td>Hợp lệ; lưu thành công</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-18</td><td>Negative</td><td>BVA</td><td>R-S02-05 / US-S02-03 GWT-3 / UC-S02-01 (ngoại lệ quá dài)</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập Tên 151 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: chuỗi 151 ký tự (biên max+1)</td><td>Chặn lưu; lỗi "Tên khu vực tối đa 150 ký tự"; không tạo nút</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-19</td><td>Negative</td><td>ST</td><td>R-S02-05 / design-spec mục 3 (Lưu vô hiệu khi Tên trống)</td><td>Cao</td><td>High</td><td>Form Tạo mở, Tên trống</td><td>1. Quan sát nút Lưu khi Tên rỗng&lt;br&gt;2. Nhập Tên "Phòng 308"&lt;br&gt;3. Quan sát nút Lưu</td><td>Tên: (rỗng) → <code>Phòng 308</code></td><td>Khi Tên rỗng nút Lưu vô hiệu; sau khi nhập Tên hợp lệ nút Lưu kích hoạt</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-14</td><td>Negative</td><td>EP</td><td>R-S02-05 / UC-S02-01 (ngoại lệ Tên rỗng) / US-S02-03 GWT-1</td><td>Cao</td><td>Critical</td><td>Form Tạo mở, ô Tên trống</td><td>1. Để trống Tên&lt;br&gt;2. Bấm Lưu</td><td>Tên: (rỗng)</td><td>Chặn lưu; lỗi inline "Vui lòng nhập tên khu vực" dưới ô Tên; không tạo nút</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-15</td><td>Negative</td><td>EP</td><td>R-S02-05 / US-S02-03 GWT-2</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập chỉ khoảng trắng&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>␣␣␣␣␣</code> (5 dấu cách)</td><td>Sau trim coi là rỗng; chặn lưu; lỗi "Vui lòng nhập tên khu vực"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-16</td><td>Edge</td><td>BVA</td><td>R-S02-05 / Validation ten<em>khu</em>vuc (min)</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên 1 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>A</code> (1 ký tự — biên min hợp lệ)</td><td>Hợp lệ; lưu thành công</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-17</td><td>Edge</td><td>BVA</td><td>R-S02-05 / Validation ten<em>khu</em>vuc (max)</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập Tên đúng 150 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: chuỗi 150 ký tự "A…A" (biên max hợp lệ)</td><td>Hợp lệ; lưu thành công</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-18</td><td>Negative</td><td>BVA</td><td>R-S02-05 / US-S02-03 GWT-3 / UC-S02-01 (ngoại lệ quá dài)</td><td>Cao</td><td>High</td><td>Form Tạo mở</td><td>1. Nhập Tên 151 ký tự&lt;br&gt;2. Bấm Lưu</td><td>Tên: chuỗi 151 ký tự (biên max+1)</td><td>Chặn lưu; lỗi "Tên khu vực tối đa 150 ký tự"; không tạo nút</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-19</td><td>Negative</td><td>ST</td><td>R-S02-05 / design-spec mục 3 (Lưu vô hiệu khi Tên trống)</td><td>Cao</td><td>High</td><td>Form Tạo mở, Tên trống</td><td>1. Quan sát nút Lưu khi Tên rỗng&lt;br&gt;2. Nhập Tên "Phòng 308"&lt;br&gt;3. Quan sát nút Lưu</td><td>Tên: (rỗng) → <code>Phòng 308</code></td><td>Khi Tên rỗng nút Lưu vô hiệu; sau khi nhập Tên hợp lệ nút Lưu kích hoạt</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-20</td><td>Edge</td><td>BVA</td><td>R-S02-05 / Validation (Tên có khoảng trắng đầu/cuối)</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập "  Phòng 309  "&lt;br&gt;2. Bấm Lưu</td><td>Tên: <code>␣␣Phòng 309␣␣</code></td><td>Trim trước khi kiểm tra; lưu với Tên "Phòng 309" (không rỗng)</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
@@ -2537,9 +2539,9 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-21</td><td>Negative</td><td>DT</td><td>R-S02-06 / UC-S02-01 (ngoại lệ Mã trùng) / US-S02-05 GWT-1 / BRule-S02-03</td><td>Cao</td><td>High</td><td>Form Tạo mở, đã tồn tại nút khác có Mã "P305"</td><td>1. Nhập Tên "Phòng 310"&lt;br&gt;2. Nhập Mã "P305"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 310</code>, Mã: <code>P305</code> (trùng)</td><td>Chặn lưu; lỗi inline "Mã khu vực đã tồn tại"; không tạo nút</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-22</td><td>Positive</td><td>DT</td><td>R-S02-06 / US-S02-05 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 311"&lt;br&gt;2. Để trống Mã&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 311</code>, Mã: (trống)</td><td>Cho lưu; nút tạo thành công (Mã không bắt buộc)</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-23</td><td>Positive</td><td>EP</td><td>R-S02-06</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở, không có nút nào Mã "P999"</td><td>1. Nhập Tên "Phòng 999"&lt;br&gt;2. Nhập Mã "P999"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 999</code>, Mã: <code>P999</code> (duy nhất)</td><td>Lưu thành công với Mã "P999"</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-21</td><td>Negative</td><td>DT</td><td>R-S02-06 / UC-S02-01 (ngoại lệ Mã trùng) / US-S02-05 GWT-1 / BRule-S02-03</td><td>Cao</td><td>High</td><td>Form Tạo mở, đã tồn tại nút khác có Mã "P305"</td><td>1. Nhập Tên "Phòng 310"&lt;br&gt;2. Nhập Mã "P305"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 310</code>, Mã: <code>P305</code> (trùng)</td><td>Chặn lưu; lỗi inline "Mã khu vực đã tồn tại"; không tạo nút</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-22</td><td>Positive</td><td>DT</td><td>R-S02-06 / US-S02-05 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 311"&lt;br&gt;2. Để trống Mã&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 311</code>, Mã: (trống)</td><td>Cho lưu; nút tạo thành công (Mã không bắt buộc)</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-23</td><td>Positive</td><td>EP</td><td>R-S02-06</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở, không có nút nào Mã "P999"</td><td>1. Nhập Tên "Phòng 999"&lt;br&gt;2. Nhập Mã "P999"&lt;br&gt;3. Bấm Lưu</td><td>Tên: <code>Phòng 999</code>, Mã: <code>P999</code> (duy nhất)</td><td>Lưu thành công với Mã "P999"</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-24</td><td>Edge</td><td>BVA</td><td>R-S02-06 / Validation ma<em>khu</em>vuc (max)</td><td>Thấp</td><td>Low</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 50"&lt;br&gt;2. Nhập Mã 50 ký tự&lt;br&gt;3. Bấm Lưu</td><td>Mã: chuỗi 50 ký tự (biên max hợp lệ)</td><td>Lưu thành công</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S02-25</td><td>Negative</td><td>BVA</td><td>R-S02-06 / Validation ma<em>khu</em>vuc (max+1)</td><td>Thấp</td><td>Low</td><td>Form Tạo mở</td><td>1. Nhập Tên "Phòng 51"&lt;br&gt;2. Nhập Mã 51 ký tự&lt;br&gt;3. Bấm Lưu</td><td>Mã: chuỗi 51 ký tự (biên max+1)</td><td>Chặn lưu; lỗi "Mã khu vực tối đa 50 ký tự"</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
@@ -2550,10 +2552,10 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-26</td><td>Negative</td><td>EP</td><td>R-S02-08 / UC-S02-02 (ngoại lệ cây lặp) / US-S02-04 GWT-1 / BRule-S02-02</td><td>Cao</td><td>Critical</td><td>Form Sửa "Tầng 3" mở; "Tầng 3" có con "Phòng 305", "Phòng 306"</td><td>1. Mở dropdown Nút cha&lt;br&gt;2. Tìm "Tầng 3", "Phòng 305", "Phòng 306" trong danh sách</td><td>nút sửa: <code>Tầng 3</code></td><td>Chính "Tầng 3" và mọi con ("Phòng 305", "Phòng 306") không xuất hiện (ẩn hẳn) để chọn</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-27</td><td>Negative</td><td>EP</td><td>R-S02-08 / US-S02-04 GWT-2 / UC-S02-02 (ngoại lệ)</td><td>Cao</td><td>Critical</td><td>Form Sửa "Tầng 3" mở</td><td>1. Cố gán Nút cha = "Tầng 3" (chính nó qua thao tác khác/API)&lt;br&gt;2. Bấm Lưu</td><td>Nút cha: <code>Tầng 3</code> (= chính nút đang sửa)</td><td>Chặn lưu; lỗi "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-28</td><td>Negative</td><td>EP</td><td>R-S02-08 / BRule-S02-02</td><td>Cao</td><td>High</td><td>Form Sửa "Tầng 3" mở</td><td>1. Cố gán Nút cha = "Phòng 305" (nhánh con)&lt;br&gt;2. Bấm Lưu</td><td>Nút cha: <code>Phòng 305</code> (con của nút đang sửa)</td><td>Chặn lưu; lỗi "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-29</td><td>Positive</td><td>EP</td><td>R-S02-08 / UC-S02-03</td><td>Trung bình</td><td>Medium</td><td>Form Sửa "Tầng 3" mở</td><td>1. Mở dropdown Nút cha&lt;br&gt;2. Chọn "Tòa B" (ngoài nhánh con)</td><td>Nút cha: <code>Tòa B</code></td><td>Cho chọn "Tòa B"; lưu được (không gây cây lặp)</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-26</td><td>Negative</td><td>EP</td><td>R-S02-08 / UC-S02-02 (ngoại lệ cây lặp) / US-S02-04 GWT-1 / BRule-S02-02</td><td>Cao</td><td>Critical</td><td>Form Sửa "Tầng 3" mở; "Tầng 3" có con "Phòng 305", "Phòng 306"</td><td>1. Mở dropdown Nút cha&lt;br&gt;2. Tìm "Tầng 3", "Phòng 305", "Phòng 306" trong danh sách</td><td>nút sửa: <code>Tầng 3</code></td><td>Chính "Tầng 3" và mọi con ("Phòng 305", "Phòng 306") không xuất hiện (ẩn hẳn) để chọn</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-27</td><td>Negative</td><td>EP</td><td>R-S02-08 / US-S02-04 GWT-2 / UC-S02-02 (ngoại lệ)</td><td>Cao</td><td>Critical</td><td>Form Sửa "Tầng 3" mở</td><td>1. Cố gán Nút cha = "Tầng 3" (chính nó qua thao tác khác/API)&lt;br&gt;2. Bấm Lưu</td><td>Nút cha: <code>Tầng 3</code> (= chính nút đang sửa)</td><td>Chặn lưu; lỗi "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-28</td><td>Negative</td><td>EP</td><td>R-S02-08 / BRule-S02-02</td><td>Cao</td><td>High</td><td>Form Sửa "Tầng 3" mở</td><td>1. Cố gán Nút cha = "Phòng 305" (nhánh con)&lt;br&gt;2. Bấm Lưu</td><td>Nút cha: <code>Phòng 305</code> (con của nút đang sửa)</td><td>Chặn lưu; lỗi "Không thể đặt khu vực vào chính nó hoặc nhánh con của nó"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-29</td><td>Positive</td><td>EP</td><td>R-S02-08 / UC-S02-03</td><td>Trung bình</td><td>Medium</td><td>Form Sửa "Tầng 3" mở</td><td>1. Mở dropdown Nút cha&lt;br&gt;2. Chọn "Tòa B" (ngoài nhánh con)</td><td>Nút cha: <code>Tòa B</code></td><td>Cho chọn "Tòa B"; lưu được (không gây cây lặp)</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-30</td><td>Edge</td><td>EP</td><td>R-S02-07 / UC-S02-03 (lọc tìm kiếm)</td><td>Thấp</td><td>Low</td><td>Form mở, dropdown Nút cha có ô tìm kiếm</td><td>1. Gõ "Tầng" vào ô tìm</td><td>từ khóa: <code>Tầng</code></td><td>Lọc hiển thị các nút khớp một phần tên "Tầng" (vd "Tầng 3", "Tầng 4")</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
@@ -2563,9 +2565,9 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S02-31</td><td>Positive</td><td>ST</td><td>R-S02-10 / UC-S02-04 (b2) / US-S02-06 GWT-1</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở, chưa nhập gì</td><td>1. Bấm Hủy (hoặc nhấn nền tối)</td><td>chưa sửa dữ liệu</td><td>Form đóng ngay (fade về S01); không hỏi xác nhận; không tạo nút</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-32</td><td>Negative</td><td>ST</td><td>R-S02-10 / UC-S02-04 (b3) / US-S02-06 GWT-2</td><td>Trung bình</td><td>High</td><td>Form Tạo mở, đã nhập Tên "Phòng 312"</td><td>1. Bấm Hủy&lt;br&gt;2. Quan sát dialog</td><td>Tên đã nhập: <code>Phòng 312</code></td><td>Hệ thống hỏi "Bỏ thay đổi chưa lưu?"; chọn ở lại → giữ nguyên dữ liệu "Phòng 312"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S02-33</td><td>Positive</td><td>ST</td><td>R-S02-10 / UC-S02-04 (xác nhận bỏ)</td><td>Trung bình</td><td>Medium</td><td>Form Sửa đã đổi Tên, dialog "Bỏ thay đổi chưa lưu?" đang mở</td><td>1. Xác nhận bỏ thay đổi</td><td>xác nhận: <code>Có</code></td><td>Đóng modal không lưu; nút không bị cập nhật; quay về S01</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S02-31</td><td>Positive</td><td>ST</td><td>R-S02-10 / UC-S02-04 (b2) / US-S02-06 GWT-1</td><td>Trung bình</td><td>Medium</td><td>Form Tạo mở, chưa nhập gì</td><td>1. Bấm Hủy (hoặc nhấn nền tối)</td><td>chưa sửa dữ liệu</td><td>Form đóng ngay (fade về S01); không hỏi xác nhận; không tạo nút</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-32</td><td>Negative</td><td>ST</td><td>R-S02-10 / UC-S02-04 (b3) / US-S02-06 GWT-2</td><td>Trung bình</td><td>High</td><td>Form Tạo mở, đã nhập Tên "Phòng 312"</td><td>1. Bấm Hủy&lt;br&gt;2. Quan sát dialog</td><td>Tên đã nhập: <code>Phòng 312</code></td><td>Hệ thống hỏi "Bỏ thay đổi chưa lưu?"; chọn ở lại → giữ nguyên dữ liệu "Phòng 312"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S02-33</td><td>Positive</td><td>ST</td><td>R-S02-10 / UC-S02-04 (xác nhận bỏ)</td><td>Trung bình</td><td>Medium</td><td>Form Sửa đã đổi Tên, dialog "Bỏ thay đổi chưa lưu?" đang mở</td><td>1. Xác nhận bỏ thay đổi</td><td>xác nhận: <code>Có</code></td><td>Đóng modal không lưu; nút không bị cập nhật; quay về S01</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S02-34</td><td>Negative</td><td>EP</td><td>UC-S02-01 (ngoại lệ rớt mạng) / design-spec mục 6</td><td>Trung bình</td><td>High</td><td>Form Tạo mở, Tên "Phòng 313" đã nhập, mạng bị ngắt</td><td>1. Bấm Lưu khi mất kết nối</td><td>Tên: <code>Phòng 313</code>, mạng: ngắt</td><td>Snackbar "Lỗi kết nối, chưa lưu được."; giữ nguyên dữ liệu đã nhập; không tạo nút nửa vời</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
