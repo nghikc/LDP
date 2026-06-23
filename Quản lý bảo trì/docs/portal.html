@@ -280,7 +280,7 @@ li > ul, li > ol { margin: 0.2em 0; }
     <span></span><span></span><span></span>
   </button>
   <h1>docs — Documentation Portal</h1>
-  <span class="timestamp">Generated: 2026-06-23T02:20:04.769Z</span>
+  <span class="timestamp">Generated: 2026-06-23T02:41:49.730Z</span>
 </header>
 <div id="layout">
   <div id="sidebar-overlay" hidden></div>
@@ -293,6 +293,7 @@ li > ul, li > ol { margin: 0.2em 0; }
 <li class="nav-item" data-target="doc-01-requirements-md"><a href="#doc-01-requirements-md">01-requirements</a></li>
 <li class="nav-item" data-target="doc-02-functions-md"><a href="#doc-02-functions-md">02-functions</a></li>
 <li class="nav-item" data-target="doc-03-overview-md"><a href="#doc-03-overview-md">03-overview</a></li>
+<li class="nav-item" data-target="doc-08-dev-notes-md"><a href="#doc-08-dev-notes-md">08-dev-notes</a></li>
 </ul>
 <div class="nav-group">
 <div class="nav-group-title">BanDoTaiSan/DiDoiTaiSan</div>
@@ -736,7 +737,7 @@ li > ul, li > ol { margin: 0.2em 0; }
 <tr><th>Mã CN</th><th>Chức năng</th><th>Nhóm</th><th>Màn hình</th><th>Folder</th><th>ascii</th><th>brainstorm</th><th>srs</th><th>usecase</th><th>userstory</th><th>design-spec</th><th>html</th><th>test</th><th>plan</th><th>dev</th><th>Trạng thái</th><th>Cập nhật cuối</th></tr>
 </thead>
 <tbody>
-<tr><td>F04, F05, F09, F10, F11, F14, F16, F03</td><td>Bản đồ tài sản (Workspace)</td><td>BanDoTaiSan</td><td>Workspace</td><td><code>docs/BanDoTaiSan/Workspace/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
+<tr><td>F04, F05, F09, F10, F11, F14, F16, F03</td><td>Bản đồ tài sản (Workspace)</td><td>BanDoTaiSan</td><td>Workspace</td><td><code>docs/BanDoTaiSan/Workspace/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (24 TC Auto Pass)</td><td>2026-06-23</td></tr>
 <tr><td>F01, F02</td><td>Form khu vực (Tạo/Sửa nút)</td><td>BanDoTaiSan</td><td>FormKhuVuc</td><td><code>docs/BanDoTaiSan/FormKhuVuc/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
 <tr><td>F06, F07, F08</td><td>Quản lý ảnh sơ đồ mặt bằng</td><td>BanDoTaiSan</td><td>QuanLySoDo</td><td><code>docs/BanDoTaiSan/QuanLySoDo/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
 <tr><td>F12, F13</td><td>Di dời tài sản</td><td>BanDoTaiSan</td><td>DiDoiTaiSan</td><td><code>docs/BanDoTaiSan/DiDoiTaiSan/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⬜</td><td>Sẵn sàng dev</td><td>2026-06-23</td></tr>
@@ -1098,6 +1099,56 @@ li > ul, li > ol { margin: 0.2em 0; }
 </tbody>
 </table>
 <blockquote><p>Từ điển đầy đủ toàn dự án: <code>docs/00-glossary.md</code>.</p></blockquote>
+</section>
+<section class="doc-section" id="doc-08-dev-notes-md">
+<div class="doc-section-title">08-dev-notes.md</div>
+<h1 id="ghi-ch-dev-qun-l-v-tr-ti-sn-c-nh">Ghi chú dev — Quản lý vị trí tài sản cố định</h1>
+<blockquote><p>Do <code>dev-run</code> tạo/cập nhật. Các lần chạy sau đọc file này để biết stack &amp; lệnh, <strong>không hỏi lại</strong>.</p></blockquote>
+<h2 id="stack">Stack</h2>
+<ul>
+<li><strong>Frontend:</strong> React 18 + Vite 5 + TypeScript 5</li>
+<li><strong>Test:</strong> Vitest 2 + @testing-library/react (môi trường jsdom)</li>
+<li><strong>Lint:</strong> ESLint 8 + @typescript-eslint</li>
+</ul>
+<h2 id="cu-trc-th-mc">Cấu trúc thư mục</h2>
+<pre><code>Quản lý bảo trì/
+├── docs/                      # tài liệu BA (không build)
+├── index.html
+├── package.json · tsconfig.json · vite.config.ts · vitest.setup.ts · .eslintrc.cjs
+└── src/
+    ├── main.tsx · App.tsx
+    └── features/workspace/    # màn S01 — Bản đồ tài sản
+        ├── types.ts           # mô hình miền (NutKhuVuc, TaiSan, ViTriPin…)
+        ├── Workspace.tsx      # khung màn (dựng dần theo plan)
+        └── ...                # component + logic theo plan.md, test colocated *.test.ts(x)</code></pre>
+<h2 id="lnh">Lệnh</h2>
+<table>
+<thead>
+<tr><th>Việc</th><th>Lệnh</th></tr>
+</thead>
+<tbody>
+<tr><td>Chạy test (CI)</td><td><code>npm test</code></td></tr>
+<tr><td>Test watch</td><td><code>npm run test:watch</code></td></tr>
+<tr><td>Lint</td><td><code>npm run lint</code></td></tr>
+<tr><td>Dev server</td><td><code>npm run dev</code></td></tr>
+<tr><td>Build</td><td><code>npm run build</code></td></tr>
+</tbody>
+</table>
+<h2 id="quy-c-dev">Quy ước dev</h2>
+<ul>
+<li>TDD Red–Green: mỗi <code>TC-S..</code> (Auto) → viết test fail trước → code tối thiểu cho pass.</li>
+<li>UI bám <code>html-design.html</code>; logic/nghiệp vụ bám <code>srs.md</code> + <code>BRule-S..</code>.</li>
+<li>Tài liệu tiếng Việt; tên biến/hàm tiếng Việt không dấu hoặc tiếng Anh nhất quán theo <code>types.ts</code>.</li>
+</ul>
+<h2 id="tin-dev-theo-mn">Tiến độ dev theo màn</h2>
+<table>
+<thead>
+<tr><th>Màn</th><th>Trạng thái</th><th>Ghi chú</th></tr>
+</thead>
+<tbody>
+<tr><td>S01 Workspace</td><td>✅ dev xong</td><td>Nhánh <code>feature/qlvt-s01-workspace</code>; 46 test Vitest xanh, 24/24 TC Auto Pass; build+lint sạch</td></tr>
+</tbody>
+</table>
 </section>
 <section class="doc-section" id="doc-BanDoTaiSan-DiDoiTaiSan-ascii-screen-md">
 <div class="doc-section-title">BanDoTaiSan/DiDoiTaiSan/ascii-screen.md</div>
@@ -4393,11 +4444,11 @@ Chú thích các thành phần:
 <li>Test: test cây render đúng cha-con, toggle nhánh, lồng sâu, trạng thái rỗng</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-01/02/03/04)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code tối thiểu: render cây phân cấp, toggle ▾/▸, empty-state CTA "Tạo khu vực đầu tiên"</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-01/02/03/04)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code tối thiểu: render cây phân cấp, toggle ▾/▸, empty-state CTA "Tạo khu vực đầu tiên"</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> cây hiển thị đúng quan hệ cha-con; toggle mở/đóng hoạt động; lồng được ≥6 cấp không cắt; cây trống hiện CTA; test TC-S01-01..04 pass; không lỗi lint.</p>
 <h2 id="task-2-m-s-mt-bng-render-pin-theo-ta-f09">Task 2: Mở sơ đồ mặt bằng + render pin theo tọa độ % (F09)</h2>
@@ -4407,11 +4458,11 @@ Chú thích các thành phần:
 <li>Test: render &lt; 2s, empty "Chưa có sơ đồ", lỗi tải + thử lại, 50.000 tài sản, loading skeleton</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-05..09)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: click nút → tải ảnh + pin theo %, breadcrumb, skeleton/error/empty</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-05..09)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: click nút → tải ảnh + pin theo %, breadcrumb, skeleton/error/empty</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> click nút render ảnh + pin &lt; 2s (đo được); nút chưa ảnh hiện "Chưa có sơ đồ" + CTA tải; lỗi tải hiện "Không tải được sơ đồ" + Thử lại; chịu 50.000 tài sản không treo; test TC-S01-05..09 pass.</p>
 <h2 id="task-3-gom-cm-pin-500-b-lc-pin-f10">Task 3: Gom cụm pin &gt; 500 + bộ lọc pin (F10)</h2>
@@ -4421,11 +4472,11 @@ Chú thích các thành phần:
 <li>Test: ngưỡng 500/501, tách cụm, lọc "Cần đặt lại"</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-10..13)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: gom cụm (BVA 500), click cụm tách/zoom, filter</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-10..13)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: gom cụm (BVA 500), click cụm tách/zoom, filter</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> 500 pin → rời, 501 pin → gom cụm có số đếm; click cụm tách/zoom; bộ lọc thu hẹp đúng pin; test TC-S01-10..13 pass.</p>
 <h2 id="task-4-tra-cu-nhanh-ti-sn-lm-ni-pin-f16">Task 4: Tra cứu nhanh tài sản + làm nổi pin (F16)</h2>
@@ -4435,11 +4486,11 @@ Chú thích các thành phần:
 <li>Test: khớp không dấu, mở sơ đồ + pulse, "Chưa gán vị trí", "Không tìm thấy", biên 1/100/101 ký tự, tên dài tooltip</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-27..32)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: search service không dấu, dropdown, navigate + highlight, validation field tu<em>khoa</em>tra_cuu</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-27..32)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: search service không dấu, dropdown, navigate + highlight, validation field tu<em>khoa</em>tra_cuu</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> gõ "may nen" → gợi ý "Máy nén khí" &lt; 1s; chọn tài sản có vị trí → mở sơ đồ + pin pulse + breadcrumb; chưa vị trí → "Chưa gán vị trí"; không tồn tại → "Không tìm thấy tài sản."; &gt;100 ký tự bị chặn; test TC-S01-27..32 pass.</p>
 <h2 id="task-5-gn-v-tr-ti-sn-f11">Task 5: Gán vị trí tài sản (F11)</h2>
@@ -4449,11 +4500,11 @@ Chú thích các thành phần:
 <li>Test: liệt kê đúng (BRule-S01-01), gán thành công + toast, ẩn tài sản đã có vị trí, bắt buộc chọn, khóa, hủy, nút chưa sơ đồ, biên tọa độ, rớt mạng</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-14..22)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: ô gán, validation tai<em>san</em>chon / toa<em>do</em>pin_x/y, audit log, toast, edge cases</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-14..22)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: ô gán, validation tai<em>san</em>chon / toa<em>do</em>pin_x/y, audit log, toast, edge cases</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> ô gán chỉ liệt kê tài sản chưa có vị trí; gán → pin đúng tọa độ + toast "Đã gán vị trí cho tài sản." + nhật ký kiểm toán; chưa chọn → chặn; tài sản khóa → báo lỗi không tạo pin; hủy xóa pin tạm; tọa độ ngoài 0–100% bị chặn; test TC-S01-14..22 pass.</p>
 <h2 id="task-6-g-v-tr-ti-sn-f14">Task 6: Gỡ vị trí tài sản (F14)</h2>
@@ -4463,11 +4514,11 @@ Chú thích các thành phần:
 <li>Test: gỡ thành công, nhật ký kiểm toán, chặn khi khóa, hủy</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-23..26)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: popup pin, dialog gỡ, audit log, kiểm tra khóa</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-23..26)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: popup pin, dialog gỡ, audit log, kiểm tra khóa</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> gỡ + xác nhận → pin biến mất, tài sản "chưa có vị trí", nhật ký ghi ai/khi nào; tài sản khóa → "Tài sản đang được người khác chỉnh sửa..."; hủy giữ nguyên; test TC-S01-23..26 pass.</p>
 <h2 id="task-7-di-chuyn-nt-trong-cy-bng-ko-th-f05">Task 7: Di chuyển nút trong cây bằng kéo-thả (F05)</h2>
@@ -4477,11 +4528,11 @@ Chú thích các thành phần:
 <li>Test: kéo hợp lệ, chặn nhánh con, chặn chính nó, Giám sát không kéo</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-33..36)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: drag-drop, kiểm tra BRule-S01-02, gate vai trò</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-33..36)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: drag-drop, kiểm tra BRule-S01-02, gate vai trò</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> kéo nút hợp lệ → cập nhật cha + render lại; thả vào chính nó/nhánh con → chặn + "Không thể di chuyển khu vực vào chính nhánh con của nó."; Giám sát không có kéo-thả; test TC-S01-33..36 pass.</p>
 <h2 id="task-8-xa-nt-khu-vc-c-cnh-bo-f03">Task 8: Xóa nút khu vực có cảnh báo (F03)</h2>
@@ -4491,11 +4542,11 @@ Chú thích các thành phần:
 <li>Test: dialog wording đúng số, xóa + gỡ vị trí + nhật ký, hủy, nút rỗng</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-37..40)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: đếm ảnh hưởng, dialog, xóa nhánh + audit (BRule-S01-03)</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-37..40)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: đếm ảnh hưởng, dialog, xóa nhánh + audit (BRule-S01-03)</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> dialog ghi đúng "gỡ vị trí của {n} tài sản và xóa {m} khu vực con"; xác nhận → xóa nhánh, tài sản về "chưa có vị trí" giữ hồ sơ, nhật ký kiểm toán, toast "Đã xóa khu vực"; hủy không đổi; test TC-S01-37..40 pass.</p>
 <h2 id="task-9-phn-quyn-vai-tr-di-cnh-bo-iu-hng-v-tinh-brule-s01-04-r-s01-10">Task 9: Phân quyền vai trò + dải cảnh báo + điều hướng vệ tinh (BRule-S01-04, R-S01-10)</h2>
@@ -4505,11 +4556,11 @@ Chú thích các thành phần:
 <li>Test: Giám sát ẩn menu cấu trúc, dải cảnh báo + điều hướng</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (TC-S01-41, TC-S01-42)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: role-gate UI, banner pin cần đặt lại, các link điều hướng</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (TC-S01-41, TC-S01-42)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: role-gate UI, banner pin cần đặt lại, các link điều hướng</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> Giám sát không thấy Thêm/Sửa/Xóa/Quản lý ảnh (ẩn hẳn); dải cảnh báo hiện đúng số, click → S05, ẩn khi N=0; có lối vào S02/S03/S04/S06/S08; test TC-S01-41, TC-S01-42 pass.</p>
 <h2 id="task-10-animation-responsive-a11y-xuyn-mn">Task 10: Animation + responsive + a11y (xuyên màn)</h2>
@@ -4519,11 +4570,11 @@ Chú thích các thành phần:
 <li>Test: reduced-motion tắt animation; cây thành drawer khi &lt;768; focus thấy được</li>
 </ul>
 <ul>
-<li><span class="checkbox">&#9744;</span> Step 1: Viết test thất bại (animation/responsive/a11y có thể đo)</li>
-<li><span class="checkbox">&#9744;</span> Step 2: Chạy test, xác nhận FAIL</li>
-<li><span class="checkbox">&#9744;</span> Step 3: Code: motion tokens, media queries, ARIA labels, focus-visible</li>
-<li><span class="checkbox">&#9744;</span> Step 4: Chạy test, xác nhận PASS</li>
-<li><span class="checkbox">&#9744;</span> Step 5: Commit</li>
+<li><span class="checkbox">&#9745;</span> Step 1: Viết test thất bại (animation/responsive/a11y có thể đo)</li>
+<li><span class="checkbox">&#9745;</span> Step 2: Chạy test, xác nhận FAIL</li>
+<li><span class="checkbox">&#9745;</span> Step 3: Code: motion tokens, media queries, ARIA labels, focus-visible</li>
+<li><span class="checkbox">&#9745;</span> Step 4: Chạy test, xác nhận PASS</li>
+<li><span class="checkbox">&#9745;</span> Step 5: Commit</li>
 </ul>
 <p><strong>Definition of Done:</strong> mọi overlay/section có in/out mượt bằng transform/opacity; prefers-reduced-motion giảm/tắt; ≥1 breakpoint chuyển layout, cây → drawer khi &lt;768; tương phản ≥4.5:1, input có label, focus thấy được, pin phân biệt bằng hình dạng; các test trace pass.</p>
 <hr>
@@ -4705,17 +4756,18 @@ Chú thích các thành phần:
 <tr><th>Tổng TC</th><th>Pass</th><th>Fail</th><th>Blocked</th><th>Skip</th><th>Chưa chạy</th><th>% Pass</th><th>Lần chạy cuối</th></tr>
 </thead>
 <tbody>
-<tr><td>42</td><td>0</td><td>0</td><td>0</td><td>0</td><td>42</td><td>0%</td><td>—</td></tr>
+<tr><td>42</td><td>24</td><td>0</td><td>0</td><td>0</td><td>18</td><td>57%</td><td>2026-06-23</td></tr>
 </tbody>
 </table>
+<blockquote><p>24 TC <code>Auto</code> đã Pass (Vitest: 46 test / 7 file). 18 TC <code>Manual</code> còn <code>Chưa chạy</code> → checklist test tay ở báo cáo dev. Một số TC Manual (TC-18 gán khi khóa, TC-21 biên tọa độ, TC-25 gỡ khi khóa, TC-35 kéo nút vào chính nó) đã phủ gián tiếp ở tầng logic.</p></blockquote>
 <h2 id="chc-nng-xemduyt-cy-khu-vc-f04-risk-cao">Chức năng: Xem/duyệt cây khu vực (F04) — Risk: Cao</h2>
 <table>
 <thead>
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-01</td><td>Positive</td><td>EP</td><td>R-S01-01 / UC-S01-06</td><td>Cao</td><td>Critical</td><td>Đã đăng nhập, có cây khu vực</td><td>1. Mở workspace S01&lt;br&gt;2. Quan sát cột trái</td><td>Cây: "Tòa A" › "Tầng 3" › "Phòng 305", "Phòng 306"; "Tầng 4"; "Tòa B"</td><td>Cây hiển thị đúng quan hệ cha-con, các nhánh đóng mặc định ở cấp ngoài</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-02</td><td>Positive</td><td>ST</td><td>R-S01-01 / UC-S01-06</td><td>Cao</td><td>High</td><td>Đang ở workspace</td><td>1. Click icon ▸ của "Tòa A"&lt;br&gt;2. Click ▾ của "Tòa A"</td><td>Nút "Tòa A"</td><td>Lần 1: nhánh mở, hiện "Tầng 3", "Tầng 4"; lần 2: nhánh đóng, ẩn con</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-01</td><td>Positive</td><td>EP</td><td>R-S01-01 / UC-S01-06</td><td>Cao</td><td>Critical</td><td>Đã đăng nhập, có cây khu vực</td><td>1. Mở workspace S01&lt;br&gt;2. Quan sát cột trái</td><td>Cây: "Tòa A" › "Tầng 3" › "Phòng 305", "Phòng 306"; "Tầng 4"; "Tòa B"</td><td>Cây hiển thị đúng quan hệ cha-con, các nhánh đóng mặc định ở cấp ngoài</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-02</td><td>Positive</td><td>ST</td><td>R-S01-01 / UC-S01-06</td><td>Cao</td><td>High</td><td>Đang ở workspace</td><td>1. Click icon ▸ của "Tòa A"&lt;br&gt;2. Click ▾ của "Tòa A"</td><td>Nút "Tòa A"</td><td>Lần 1: nhánh mở, hiện "Tầng 3", "Tầng 4"; lần 2: nhánh đóng, ẩn con</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-03</td><td>Edge</td><td>BVA</td><td>R-S01-01</td><td>Trung bình</td><td>Medium</td><td>Có cây lồng sâu</td><td>1. Mở nhánh tới cấp sâu nhất</td><td>Cấu trúc 6 cấp: "Tòa A › Tầng 3 › Phòng 305 › Kệ 01 › Ngăn 02 › Ô A1"</td><td>Cây lồng được không giới hạn cấp, hiển thị đúng tất cả cấp, không cắt</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-04</td><td>Edge</td><td>EP</td><td>R-S01-01 / UC-S01-06 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Tài khoản chưa có khu vực nào</td><td>1. Mở workspace với cây trống</td><td>(không có nút nào)</td><td>Hiện trạng thái rỗng + CTA "Tạo khu vực đầu tiên" (vai trò Quản trị)</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
@@ -4726,8 +4778,8 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-05</td><td>Positive</td><td>EP</td><td>R-S01-02 / US-S01-06 GWT-1 / UC-S01-06</td><td>Cao</td><td>Critical</td><td>Nút có ảnh sơ đồ</td><td>1. Click nút "Phòng 305"&lt;br&gt;2. Đo thời gian render</td><td>Nút "Phòng 305" có sơ đồ + 5 pin (A-001, A-007, A-009, A-014, cụm 23)</td><td>Khung giữa hiển thị ảnh + pin trong &lt; 2 giây, breadcrumb "Tòa A › Tầng 3 › Phòng 305"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-06</td><td>Negative</td><td>EP</td><td>R-S01-02 / US-S01-06 GWT-3 / UC-S01-06 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Nút chưa gắn ảnh sơ đồ</td><td>1. Click nút "Phòng 306" (chưa có ảnh)</td><td>Nút "Phòng 306" không có sơ đồ</td><td>Khung giữa hiện "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị)</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-05</td><td>Positive</td><td>EP</td><td>R-S01-02 / US-S01-06 GWT-1 / UC-S01-06</td><td>Cao</td><td>Critical</td><td>Nút có ảnh sơ đồ</td><td>1. Click nút "Phòng 305"&lt;br&gt;2. Đo thời gian render</td><td>Nút "Phòng 305" có sơ đồ + 5 pin (A-001, A-007, A-009, A-014, cụm 23)</td><td>Khung giữa hiển thị ảnh + pin trong &lt; 2 giây, breadcrumb "Tòa A › Tầng 3 › Phòng 305"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-06</td><td>Negative</td><td>EP</td><td>R-S01-02 / US-S01-06 GWT-3 / UC-S01-06 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Nút chưa gắn ảnh sơ đồ</td><td>1. Click nút "Phòng 306" (chưa có ảnh)</td><td>Nút "Phòng 306" không có sơ đồ</td><td>Khung giữa hiện "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị)</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-07</td><td>Negative</td><td>EP</td><td>R-S01-02 / Design-spec Error</td><td>Cao</td><td>High</td><td>Nút có ảnh nhưng tải lỗi</td><td>1. Click nút có ảnh&lt;br&gt;2. Mô phỏng tải ảnh thất bại (HTTP 500)</td><td>Nút "Phòng 305", server trả lỗi tải ảnh</td><td>Hiện "Không tải được sơ đồ" + nút "Thử lại"</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-08</td><td>Edge</td><td>BVA</td><td>R-S01-N01</td><td>Cao</td><td>High</td><td>Khu vực dữ liệu lớn</td><td>1. Mở sơ đồ khu vực có 50.000 tài sản</td><td>Khu vực "Kho trung tâm" với 50.000 tài sản</td><td>Hệ thống vẫn render được, không treo; thời gian mở sơ đồ &lt; 2 giây (gom cụm)</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-09</td><td>Edge</td><td>ST</td><td>R-S01-02 / Design-spec Loading</td><td>Trung bình</td><td>Medium</td><td>Mạng chậm</td><td>1. Click nút khi mạng giả lập chậm</td><td>Nút "Phòng 305", độ trễ mạng 1.5s</td><td>Hiện skeleton cây + spinner/placeholder mờ khung sơ đồ trong khi tải</td><td>Manual</td><td>Chưa chạy</td></tr>
@@ -4739,10 +4791,10 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-10</td><td>Positive</td><td>BVA</td><td>R-S01-05 / US-S01-06 GWT-2</td><td>Trung bình</td><td>High</td><td>Sơ đồ có 501 pin</td><td>1. Mở sơ đồ vượt ngưỡng gom cụm</td><td>Sơ đồ "Tầng 3" với 501 pin (501 = 500+1)</td><td>Pin gần nhau gộp thành cụm hiển thị số đếm (vd ⨁ 23)</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-11</td><td>Negative</td><td>BVA</td><td>R-S01-05</td><td>Trung bình</td><td>Medium</td><td>Sơ đồ có đúng 500 pin</td><td>1. Mở sơ đồ ngay ngưỡng</td><td>Sơ đồ "Tầng 4" với 500 pin (= max không gom)</td><td>Không gom cụm, hiển thị 500 pin rời</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-10</td><td>Positive</td><td>BVA</td><td>R-S01-05 / US-S01-06 GWT-2</td><td>Trung bình</td><td>High</td><td>Sơ đồ có 501 pin</td><td>1. Mở sơ đồ vượt ngưỡng gom cụm</td><td>Sơ đồ "Tầng 3" với 501 pin (501 = 500+1)</td><td>Pin gần nhau gộp thành cụm hiển thị số đếm (vd ⨁ 23)</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-11</td><td>Negative</td><td>BVA</td><td>R-S01-05</td><td>Trung bình</td><td>Medium</td><td>Sơ đồ có đúng 500 pin</td><td>1. Mở sơ đồ ngay ngưỡng</td><td>Sơ đồ "Tầng 4" với 500 pin (= max không gom)</td><td>Không gom cụm, hiển thị 500 pin rời</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-12</td><td>Positive</td><td>ST</td><td>R-S01-05 / US-S01-06 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Đang xem cụm pin</td><td>1. Click cụm "⨁ 23"&lt;br&gt;2. Quan sát</td><td>Cụm "⨁ 23" tại tọa độ (62%, 48%)</td><td>Cụm tách/zoom, các pin tỏa ra từ tâm cụm hiển thị riêng</td><td>Manual</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-13</td><td>Positive</td><td>DT</td><td>R-S01-05</td><td>Trung bình</td><td>Medium</td><td>Sơ đồ nhiều pin trạng thái khác nhau</td><td>1. Mở "Lọc pin"&lt;br&gt;2. Chọn "Cần đặt lại"&lt;br&gt;3. Áp dụng</td><td>Lọc theo trạng thái = "Cần đặt lại" (3 pin: A-031, A-052, A-077)</td><td>Chỉ hiển thị 3 pin "cần đặt lại", ẩn pin khác</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-13</td><td>Positive</td><td>DT</td><td>R-S01-05</td><td>Trung bình</td><td>Medium</td><td>Sơ đồ nhiều pin trạng thái khác nhau</td><td>1. Mở "Lọc pin"&lt;br&gt;2. Chọn "Cần đặt lại"&lt;br&gt;3. Áp dụng</td><td>Lọc theo trạng thái = "Cần đặt lại" (3 pin: A-031, A-052, A-077)</td><td>Chỉ hiển thị 3 pin "cần đặt lại", ẩn pin khác</td><td>Auto</td><td>Pass</td></tr>
 </tbody>
 </table>
 <h2 id="chc-nng-gn-v-tr-ti-sn-f11-risk-cao">Chức năng: Gán vị trí tài sản (F11) — Risk: Cao</h2>
@@ -4751,12 +4803,12 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-14</td><td>Positive</td><td>EP</td><td>R-S01-06 / US-S01-02 GWT-1 / UC-S01-02</td><td>Cao</td><td>Critical</td><td>Nút "Phòng 305" có sơ đồ; tồn tại tài sản chưa có vị trí</td><td>1. Click điểm trống trên sơ đồ tại (40%, 55%)</td><td>Tài sản chưa vị trí: "B-021 · Máy bơm", "B-045 · Tủ điện"</td><td>Ô tìm mở ra, chỉ liệt kê "B-021 · Máy bơm" và "B-045 · Tủ điện"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-15</td><td>Positive</td><td>EP</td><td>R-S01-06 / US-S01-02 GWT-2 / UC-S01-02</td><td>Cao</td><td>Critical</td><td>Ô gán đang mở tại (40%, 55%)</td><td>1. Chọn "B-021 · Máy bơm"&lt;br&gt;2. Nhấn "Gán vị trí"</td><td>Tài sản "B-021 · Máy bơm", tọa độ x=40, y=55</td><td>Pin xuất hiện đúng điểm (40%,55%), toast "Đã gán vị trí cho tài sản.", ghi nhật ký kiểm toán</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-16</td><td>Negative</td><td>DT</td><td>R-S01-06 / BRule-S01-01</td><td>Cao</td><td>High</td><td>Ô gán đang mở</td><td>1. Quan sát danh sách trong ô tìm</td><td>Tài sản "A-007 · Máy nén khí" (ĐÃ có vị trí)</td><td>"A-007 · Máy nén khí" KHÔNG xuất hiện trong danh sách (chỉ tài sản chưa có vị trí)</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-17</td><td>Negative</td><td>DT</td><td>R-S01-06 / yêu cầu dữ liệu <code>tai<em>san</em>chon</code></td><td>Cao</td><td>High</td><td>Ô gán đang mở, chưa chọn tài sản</td><td>1. Nhấn "Gán vị trí" khi chưa chọn</td><td>tai<em>san</em>chon: (trống)</td><td>Chặn gán / nút disable, báo "Vui lòng chọn một tài sản chưa có vị trí"</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-14</td><td>Positive</td><td>EP</td><td>R-S01-06 / US-S01-02 GWT-1 / UC-S01-02</td><td>Cao</td><td>Critical</td><td>Nút "Phòng 305" có sơ đồ; tồn tại tài sản chưa có vị trí</td><td>1. Click điểm trống trên sơ đồ tại (40%, 55%)</td><td>Tài sản chưa vị trí: "B-021 · Máy bơm", "B-045 · Tủ điện"</td><td>Ô tìm mở ra, chỉ liệt kê "B-021 · Máy bơm" và "B-045 · Tủ điện"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-15</td><td>Positive</td><td>EP</td><td>R-S01-06 / US-S01-02 GWT-2 / UC-S01-02</td><td>Cao</td><td>Critical</td><td>Ô gán đang mở tại (40%, 55%)</td><td>1. Chọn "B-021 · Máy bơm"&lt;br&gt;2. Nhấn "Gán vị trí"</td><td>Tài sản "B-021 · Máy bơm", tọa độ x=40, y=55</td><td>Pin xuất hiện đúng điểm (40%,55%), toast "Đã gán vị trí cho tài sản.", ghi nhật ký kiểm toán</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-16</td><td>Negative</td><td>DT</td><td>R-S01-06 / BRule-S01-01</td><td>Cao</td><td>High</td><td>Ô gán đang mở</td><td>1. Quan sát danh sách trong ô tìm</td><td>Tài sản "A-007 · Máy nén khí" (ĐÃ có vị trí)</td><td>"A-007 · Máy nén khí" KHÔNG xuất hiện trong danh sách (chỉ tài sản chưa có vị trí)</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-17</td><td>Negative</td><td>DT</td><td>R-S01-06 / yêu cầu dữ liệu <code>tai<em>san</em>chon</code></td><td>Cao</td><td>High</td><td>Ô gán đang mở, chưa chọn tài sản</td><td>1. Nhấn "Gán vị trí" khi chưa chọn</td><td>tai<em>san</em>chon: (trống)</td><td>Chặn gán / nút disable, báo "Vui lòng chọn một tài sản chưa có vị trí"</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-18</td><td>Negative</td><td>ST</td><td>R-S01-06 / US-S01-02 GWT-3 / UC-S01-02 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Tài sản vừa bị người khác khóa</td><td>1. Chọn "B-045 · Tủ điện" (đang bị khóa)&lt;br&gt;2. Nhấn "Gán vị trí"</td><td>"B-045 · Tủ điện" đang bị người khác khóa</td><td>Báo "Tài sản đang được người khác chỉnh sửa. Vui lòng thử lại sau.", không tạo pin</td><td>Manual</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-19</td><td>Negative</td><td>EP</td><td>R-S01-06 / UC-S01-02 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Ô gán mở với pin tạm</td><td>1. Click điểm trống&lt;br&gt;2. Nhấn "Hủy"</td><td>Điểm trống (40%,55%)</td><td>Pin tạm bị xóa, ô đóng, không tạo pin</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-19</td><td>Negative</td><td>EP</td><td>R-S01-06 / UC-S01-02 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Ô gán mở với pin tạm</td><td>1. Click điểm trống&lt;br&gt;2. Nhấn "Hủy"</td><td>Điểm trống (40%,55%)</td><td>Pin tạm bị xóa, ô đóng, không tạo pin</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-20</td><td>Negative</td><td>EP</td><td>R-S01-06 / UC-S01-02 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Nút chưa có sơ đồ</td><td>1. Mở nút "Phòng 306" (chưa có ảnh)&lt;br&gt;2. Thử click vùng giữa</td><td>Nút "Phòng 306" không có ảnh</td><td>Thao tác gán bị ẩn, gợi ý tải ảnh (→ S03), không mở ô gán</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-21</td><td>Edge</td><td>BVA</td><td>R-S01-06 / <code>toa<em>do</em>pin<em>x</code>/<code>toa</em>do<em>pin</em>y</code></td><td>Trung bình</td><td>Medium</td><td>Ô gán đang mở</td><td>1. Click sát mép ngoài ảnh tại (0%, 100%) rồi tại (101% giả lập)</td><td>toạ độ biên: x=0,y=100 (hợp lệ) và x=101 (ngoài)</td><td>x=0,y=100 → gán được; x=101 → báo "Vị trí nằm ngoài sơ đồ"</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-22</td><td>Negative</td><td>EP</td><td>R-S01-06 / Design-spec Edge (rớt mạng)</td><td>Trung bình</td><td>Medium</td><td>Đang gán, mất kết nối</td><td>1. Chọn "B-021 · Máy bơm"&lt;br&gt;2. Nhấn "Gán vị trí" khi mất mạng</td><td>"B-021 · Máy bơm", mạng ngắt giữa chừng</td><td>Giữ thao tác đang nhập, snackbar "Lỗi kết nối, chưa lưu được", không tạo pin nửa vời</td><td>Manual</td><td>Chưa chạy</td></tr>
@@ -4768,10 +4820,10 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-23</td><td>Positive</td><td>ST</td><td>R-S01-07 / US-S01-03 GWT-1 / UC-S01-03</td><td>Cao</td><td>Critical</td><td>Pin "A-007" đang có vị trí</td><td>1. Click pin "A-007"&lt;br&gt;2. Chọn "Gỡ vị trí"&lt;br&gt;3. Xác nhận</td><td>Pin "A-007 · Máy nén khí" tại "Tòa A › Tầng 3 › Phòng 305"</td><td>Pin biến mất, tài sản A-007 về "chưa có vị trí"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-24</td><td>Positive</td><td>EP</td><td>R-S01-07 / US-S01-03 GWT-2 / R-S01-N03</td><td>Cao</td><td>High</td><td>Vừa gỡ A-007 thành công</td><td>1. Mở nhật ký kiểm toán</td><td>Tài sản "A-007", người dùng giangnb, thời điểm gỡ</td><td>Có bản ghi nhật ký kiểm toán: ai (giangnb), hành động (gỡ vị trí), khi nào</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-23</td><td>Positive</td><td>ST</td><td>R-S01-07 / US-S01-03 GWT-1 / UC-S01-03</td><td>Cao</td><td>Critical</td><td>Pin "A-007" đang có vị trí</td><td>1. Click pin "A-007"&lt;br&gt;2. Chọn "Gỡ vị trí"&lt;br&gt;3. Xác nhận</td><td>Pin "A-007 · Máy nén khí" tại "Tòa A › Tầng 3 › Phòng 305"</td><td>Pin biến mất, tài sản A-007 về "chưa có vị trí"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-24</td><td>Positive</td><td>EP</td><td>R-S01-07 / US-S01-03 GWT-2 / R-S01-N03</td><td>Cao</td><td>High</td><td>Vừa gỡ A-007 thành công</td><td>1. Mở nhật ký kiểm toán</td><td>Tài sản "A-007", người dùng giangnb, thời điểm gỡ</td><td>Có bản ghi nhật ký kiểm toán: ai (giangnb), hành động (gỡ vị trí), khi nào</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-25</td><td>Negative</td><td>DT</td><td>R-S01-07 / R-S01-N04 / UC-S01-03 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Pin "A-009" đang bị người khác khóa</td><td>1. Click pin "A-009" (đang khóa)&lt;br&gt;2. Chọn "Gỡ vị trí"</td><td>Pin "A-009 · Băng tải" đang khóa</td><td>Báo "Tài sản đang được người khác chỉnh sửa. Vui lòng thử lại sau.", không gỡ</td><td>Manual</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-26</td><td>Negative</td><td>EP</td><td>R-S01-07 / UC-S01-03 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Popup pin mở, dialog gỡ hiện</td><td>1. Click pin "A-007"&lt;br&gt;2. Chọn "Gỡ vị trí"&lt;br&gt;3. Nhấn "Hủy"</td><td>Pin "A-007 · Máy nén khí"</td><td>Dialog đóng, pin giữ nguyên, tài sản vẫn "đã có vị trí"</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-26</td><td>Negative</td><td>EP</td><td>R-S01-07 / UC-S01-03 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Popup pin mở, dialog gỡ hiện</td><td>1. Click pin "A-007"&lt;br&gt;2. Chọn "Gỡ vị trí"&lt;br&gt;3. Nhấn "Hủy"</td><td>Pin "A-007 · Máy nén khí"</td><td>Dialog đóng, pin giữ nguyên, tài sản vẫn "đã có vị trí"</td><td>Auto</td><td>Pass</td></tr>
 </tbody>
 </table>
 <h2 id="chc-nng-tra-cu-nhanh-ti-sn-f16-risk-cao">Chức năng: Tra cứu nhanh tài sản (F16) — Risk: Cao</h2>
@@ -4780,10 +4832,10 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-27</td><td>Positive</td><td>EP</td><td>R-S01-03 / US-S01-01 GWT-1 / UC-S01-01 / R-S01-N02</td><td>Cao</td><td>Critical</td><td>Đang ở workspace; tồn tại "Máy nén khí"</td><td>1. Gõ "may nen" vào ô tra cứu&lt;br&gt;2. Đo thời gian</td><td>Từ khóa: <code>may nen</code> (không dấu)</td><td>Gợi ý "A-007 · Máy nén khí" hiện trong &lt; 1 giây (khớp không dấu)</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-28</td><td>Positive</td><td>ST</td><td>R-S01-03 / US-S01-01 GWT-2 / UC-S01-01</td><td>Cao</td><td>Critical</td><td>Gợi ý đang hiện</td><td>1. Chọn "A-007 · Máy nén khí" (đã có vị trí)</td><td>Tài sản "A-007 · Máy nén khí" có vị trí ở "Phòng 305"</td><td>Sơ đồ khu vực tự mở, pin A-007 làm nổi (pulse), breadcrumb "Tòa A › Tầng 3 › Phòng 305"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-29</td><td>Negative</td><td>EP</td><td>R-S01-03 / US-S01-01 GWT-3 / UC-S01-01 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Tồn tại tài sản chưa có vị trí</td><td>1. Gõ "B-021"&lt;br&gt;2. Chọn "B-021 · Máy bơm" (chưa có vị trí)</td><td>Tài sản "B-021 · Máy bơm" chưa có vị trí</td><td>Hiện đường dẫn "Chưa gán vị trí", KHÔNG mở sơ đồ</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-30</td><td>Negative</td><td>EP</td><td>R-S01-03 / UC-S01-01 (ngoại lệ) / Design-spec Error</td><td>Cao</td><td>High</td><td>Đang ở workspace</td><td>1. Gõ "ZZZ-999" (không tồn tại)</td><td>Từ khóa: <code>ZZZ-999</code></td><td>Hiện "Không tìm thấy tài sản."</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-27</td><td>Positive</td><td>EP</td><td>R-S01-03 / US-S01-01 GWT-1 / UC-S01-01 / R-S01-N02</td><td>Cao</td><td>Critical</td><td>Đang ở workspace; tồn tại "Máy nén khí"</td><td>1. Gõ "may nen" vào ô tra cứu&lt;br&gt;2. Đo thời gian</td><td>Từ khóa: <code>may nen</code> (không dấu)</td><td>Gợi ý "A-007 · Máy nén khí" hiện trong &lt; 1 giây (khớp không dấu)</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-28</td><td>Positive</td><td>ST</td><td>R-S01-03 / US-S01-01 GWT-2 / UC-S01-01</td><td>Cao</td><td>Critical</td><td>Gợi ý đang hiện</td><td>1. Chọn "A-007 · Máy nén khí" (đã có vị trí)</td><td>Tài sản "A-007 · Máy nén khí" có vị trí ở "Phòng 305"</td><td>Sơ đồ khu vực tự mở, pin A-007 làm nổi (pulse), breadcrumb "Tòa A › Tầng 3 › Phòng 305"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-29</td><td>Negative</td><td>EP</td><td>R-S01-03 / US-S01-01 GWT-3 / UC-S01-01 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Tồn tại tài sản chưa có vị trí</td><td>1. Gõ "B-021"&lt;br&gt;2. Chọn "B-021 · Máy bơm" (chưa có vị trí)</td><td>Tài sản "B-021 · Máy bơm" chưa có vị trí</td><td>Hiện đường dẫn "Chưa gán vị trí", KHÔNG mở sơ đồ</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-30</td><td>Negative</td><td>EP</td><td>R-S01-03 / UC-S01-01 (ngoại lệ) / Design-spec Error</td><td>Cao</td><td>High</td><td>Đang ở workspace</td><td>1. Gõ "ZZZ-999" (không tồn tại)</td><td>Từ khóa: <code>ZZZ-999</code></td><td>Hiện "Không tìm thấy tài sản."</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-31</td><td>Edge</td><td>BVA</td><td>R-S01-03 / <code>tu<em>khoa</em>tra_cuu</code></td><td>Trung bình</td><td>Medium</td><td>Đang ở workspace</td><td>1. Gõ 1 ký tự, rồi 100 ký tự, rồi 101 ký tự</td><td>Lần lượt: <code>A</code> (1 ký tự, min), chuỗi 100 ký tự "A"×100 (max), chuỗi 101 ký tự (vượt)</td><td>1 ký tự → trả gợi ý; 100 ký tự → chấp nhận; 101 ký tự → chặn/cắt, báo "Nhập tối đa 100 ký tự"</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-32</td><td>Edge</td><td>EP</td><td>R-S01-03 / Design-spec Edge</td><td>Thấp</td><td>Low</td><td>Tài sản tên rất dài</td><td>1. Chọn tài sản tên dài</td><td>"A-118 · Máy điều hòa trung tâm khu vực sản xuất tầng hầm B2 phân xưởng phía Đông"</td><td>Tên cắt "..." trên breadcrumb + tooltip đầy đủ khi hover</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
@@ -4794,8 +4846,8 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-33</td><td>Positive</td><td>EP</td><td>R-S01-08 / US-S01-04 GWT-1 / UC-S01-04</td><td>Trung bình</td><td>High</td><td>Vai trò Quản trị</td><td>1. Kéo nút "Phòng 305" thả vào "Tầng 4"</td><td>Nút "Phòng 305" (đang dưới "Tầng 3") → thả vào "Tầng 4"</td><td>Quan hệ cha-con cập nhật ("Phòng 305" thuộc "Tầng 4"), cây render lại</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-34</td><td>Negative</td><td>ST</td><td>R-S01-08 / US-S01-04 GWT-2 / BRule-S01-02 / UC-S01-04 (ngoại lệ)</td><td>Trung bình</td><td>High</td><td>Vai trò Quản trị</td><td>1. Kéo nút "Tòa A" thả vào "Phòng 305" (là con của nó)</td><td>Nút "Tòa A" thả vào "Phòng 305" (nhánh con)</td><td>Chặn, báo "Không thể di chuyển khu vực vào chính nhánh con của nó.", cây không hỏng</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-33</td><td>Positive</td><td>EP</td><td>R-S01-08 / US-S01-04 GWT-1 / UC-S01-04</td><td>Trung bình</td><td>High</td><td>Vai trò Quản trị</td><td>1. Kéo nút "Phòng 305" thả vào "Tầng 4"</td><td>Nút "Phòng 305" (đang dưới "Tầng 3") → thả vào "Tầng 4"</td><td>Quan hệ cha-con cập nhật ("Phòng 305" thuộc "Tầng 4"), cây render lại</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-34</td><td>Negative</td><td>ST</td><td>R-S01-08 / US-S01-04 GWT-2 / BRule-S01-02 / UC-S01-04 (ngoại lệ)</td><td>Trung bình</td><td>High</td><td>Vai trò Quản trị</td><td>1. Kéo nút "Tòa A" thả vào "Phòng 305" (là con của nó)</td><td>Nút "Tòa A" thả vào "Phòng 305" (nhánh con)</td><td>Chặn, báo "Không thể di chuyển khu vực vào chính nhánh con của nó.", cây không hỏng</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-35</td><td>Edge</td><td>EP</td><td>R-S01-08 / BRule-S01-02</td><td>Trung bình</td><td>Medium</td><td>Vai trò Quản trị</td><td>1. Kéo nút "Tầng 3" thả vào chính "Tầng 3"</td><td>Nút "Tầng 3" thả vào chính nó</td><td>Chặn, báo "Không thể di chuyển khu vực vào chính nhánh con của nó.", giữ nguyên</td><td>Manual</td><td>Chưa chạy</td></tr>
 <tr><td>TC-S01-36</td><td>Negative</td><td>DT</td><td>R-S01-08 / BRule-S01-04 / UC-S01-04 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Vai trò Giám sát</td><td>1. Đăng nhập vai trò Giám sát&lt;br&gt;2. Thử kéo nút "Phòng 305"</td><td>Vai trò = Giám sát</td><td>Không có thao tác kéo-thả (bị vô hiệu), cấu trúc không đổi</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
@@ -4806,9 +4858,9 @@ Chú thích các thành phần:
 <tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
 </thead>
 <tbody>
-<tr><td>TC-S01-37</td><td>Positive</td><td>EP</td><td>R-S01-09 / US-S01-05 GWT-1 / UC-S01-05</td><td>Cao</td><td>Critical</td><td>Vai trò Quản trị; nút "Tầng 3" có 12 tài sản, 3 khu con</td><td>1. Mở menu ⋮ nút "Tầng 3"&lt;br&gt;2. Chọn "Xóa"</td><td>Nút "Tầng 3": 12 tài sản, 3 khu con</td><td>Dialog ghi rõ "Xóa khu vực này sẽ gỡ vị trí của 12 tài sản và xóa 3 khu vực con. Tiếp tục?"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-38</td><td>Positive</td><td>EP</td><td>R-S01-09 / US-S01-05 GWT-2 / BRule-S01-03 / R-S01-N03 / UC-S01-05</td><td>Cao</td><td>Critical</td><td>Dialog xóa "Tầng 3" đang mở</td><td>1. Nhấn "Tiếp tục" xác nhận</td><td>Nút "Tầng 3" (12 tài sản, 3 khu con)</td><td>Nhánh xóa, 12 tài sản về "chưa có vị trí" (hồ sơ giữ nguyên), 3 khu con xóa, ghi nhật ký kiểm toán, sơ đồ đóng, toast "Đã xóa khu vực"</td><td>Auto</td><td>Chưa chạy</td></tr>
-<tr><td>TC-S01-39</td><td>Negative</td><td>EP</td><td>R-S01-09 / UC-S01-05 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Dialog xóa đang mở</td><td>1. Nhấn "Hủy"</td><td>Nút "Tầng 3"</td><td>Dialog đóng, không xóa gì, cây giữ nguyên</td><td>Auto</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-37</td><td>Positive</td><td>EP</td><td>R-S01-09 / US-S01-05 GWT-1 / UC-S01-05</td><td>Cao</td><td>Critical</td><td>Vai trò Quản trị; nút "Tầng 3" có 12 tài sản, 3 khu con</td><td>1. Mở menu ⋮ nút "Tầng 3"&lt;br&gt;2. Chọn "Xóa"</td><td>Nút "Tầng 3": 12 tài sản, 3 khu con</td><td>Dialog ghi rõ "Xóa khu vực này sẽ gỡ vị trí của 12 tài sản và xóa 3 khu vực con. Tiếp tục?"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-38</td><td>Positive</td><td>EP</td><td>R-S01-09 / US-S01-05 GWT-2 / BRule-S01-03 / R-S01-N03 / UC-S01-05</td><td>Cao</td><td>Critical</td><td>Dialog xóa "Tầng 3" đang mở</td><td>1. Nhấn "Tiếp tục" xác nhận</td><td>Nút "Tầng 3" (12 tài sản, 3 khu con)</td><td>Nhánh xóa, 12 tài sản về "chưa có vị trí" (hồ sơ giữ nguyên), 3 khu con xóa, ghi nhật ký kiểm toán, sơ đồ đóng, toast "Đã xóa khu vực"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-39</td><td>Negative</td><td>EP</td><td>R-S01-09 / UC-S01-05 (ngoại lệ)</td><td>Cao</td><td>High</td><td>Dialog xóa đang mở</td><td>1. Nhấn "Hủy"</td><td>Nút "Tầng 3"</td><td>Dialog đóng, không xóa gì, cây giữ nguyên</td><td>Auto</td><td>Pass</td></tr>
 <tr><td>TC-S01-40</td><td>Edge</td><td>BVA</td><td>R-S01-09 / US-S01-05 GWT-1</td><td>Trung bình</td><td>Medium</td><td>Nút rỗng</td><td>1. Chọn "Xóa" nút "Phòng 306" (0 tài sản, 0 khu con)</td><td>Nút "Phòng 306": 0 tài sản, 0 khu con</td><td>Dialog ghi "gỡ vị trí 0 tài sản và xóa 0 khu vực con" (hoặc wording rỗng phù hợp), xác nhận → xóa</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
