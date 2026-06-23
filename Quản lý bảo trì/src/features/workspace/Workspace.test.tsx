@@ -94,6 +94,18 @@ describe("Workspace S01 — gán vị trí", () => {
 });
 
 describe("Workspace S01 — một vị trí nhiều tài sản (change request)", () => {
+  it("ô gán có tìm kiếm: gõ 'tủ' chỉ còn B-045 (UX nhiều tài sản)", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    const ds = screen.getByRole("listbox", { name: "Tài sản chưa có vị trí" });
+    expect(within(ds).getByText(/B-021 · Máy bơm/)).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Tìm tài sản chưa có vị trí"), "tu dien");
+    expect(within(ds).getByText(/B-045 · Tủ điện/)).toBeInTheDocument();
+    expect(within(ds).queryByText(/B-021/)).not.toBeInTheDocument();
+  });
+
   it("gán 2 tài sản vào cùng một vị trí → toast số nhiều + marker vị trí", async () => {
     const user = userEvent.setup();
     render(<Workspace />);

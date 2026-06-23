@@ -46,6 +46,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [toast, setToast] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
   const [locPin, setLocPin] = useState<TrangThaiPin | "tat-ca">("tat-ca");
+  const [timGan, setTimGan] = useState("");
 
   // Vệ tinh
   const [formKV, setFormKV] = useState<FormKVState | null>(null);
@@ -60,6 +61,11 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const nodeChon = useMemo(() => nodes.find((n) => n.maNut === nutChon) ?? null, [nodes, nutChon]);
   const goiY = useMemo(() => (tuKhoa ? timTaiSan(taiSan, tuKhoa) : []), [taiSan, tuKhoa]);
   const taiSanGanDuoc = useMemo(() => taiSanChuaCoViTri(taiSan, pins), [taiSan, pins]);
+  const GAN_HIEN_TOI_DA = 50;
+  const ketQuaGan = useMemo(
+    () => (timGan.trim() ? timTaiSan(taiSanGanDuoc, timGan) : taiSanGanDuoc),
+    [taiSanGanDuoc, timGan],
+  );
   const pinTrongNut = useMemo(() => {
     const cua = pins.filter((p) => p.maNut === nutChon);
     return locPin === "tat-ca" ? cua : locPinTheoTrangThai(cua, locPin);
@@ -98,7 +104,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   function xacNhanGan() {
     if (!draft || !nodeChon || draft.maTaiSans.length === 0) return;
     const kq = ws.ganNhieu(draft.maTaiSans, nodeChon.maNut, draft.x, draft.y);
-    if (kq.ok) { setToast(kq.toast!); setDraft(null); } else setSnackbar(kq.loi!);
+    if (kq.ok) { setToast(kq.toast!); setDraft(null); setTimGan(""); } else setSnackbar(kq.loi!);
   }
 
   function toggleTaiSanGan(ma: string) {
@@ -211,7 +217,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
             </div>
           )}
           <FloorPlanCanvas nodes={nodes} nutChon={nodeChon} pins={pinTrongNut} pinLamNoi={pinLamNoi}
-            onClickTrong={(x, y) => nodeChon?.soDoUrl && setDraft({ x, y, maTaiSans: [] })}
+            onClickTrong={(x, y) => { if (nodeChon?.soDoUrl) { setDraft({ x, y, maTaiSans: [] }); setTimGan(""); } }}
             onClickViTri={(ds, x, y) => setViTriPopup({ maTaiSans: ds, x, y })} />
           {soCanDatLai > 0 && (
             <button className="dai-canh-bao" aria-label={`${soCanDatLai} pin cần đặt lại vị trí`} onClick={() => setMoS05(true)}>
@@ -225,17 +231,27 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
         <div className="lop-noi" role="dialog" aria-label="Gán vị trí tài sản">
           <div className="o-gan">
             <h2>Gán vị trí tại điểm đã chọn</h2>
-            <p className="o-gan-huong-dan">Chọn một hoặc nhiều tài sản để gán vào vị trí này.</p>
+            <p className="o-gan-huong-dan">Tìm và chọn một hoặc nhiều tài sản (chưa có vị trí) để gán vào vị trí này.</p>
+            <input className="o-gan-tim" type="search" placeholder="Tìm theo mã/tên tài sản..."
+              aria-label="Tìm tài sản chưa có vị trí" value={timGan} onChange={(e) => setTimGan(e.target.value)} />
+            <p className="o-gan-meta">
+              {taiSanGanDuoc.length === 0
+                ? "Không còn tài sản chưa có vị trí."
+                : `${ketQuaGan.length} kết quả${ketQuaGan.length > GAN_HIEN_TOI_DA ? ` (hiện ${GAN_HIEN_TOI_DA} đầu — gõ để thu hẹp)` : ""} · Đã chọn ${draft.maTaiSans.length}`}
+            </p>
             <ul role="listbox" aria-label="Tài sản chưa có vị trí">
-              {taiSanGanDuoc.map((t) => (
+              {ketQuaGan.slice(0, GAN_HIEN_TOI_DA).map((t) => (
                 <li key={t.maTaiSan}>
                   <label><input type="checkbox" checked={draft.maTaiSans.includes(t.maTaiSan)}
                     onChange={() => toggleTaiSanGan(t.maTaiSan)} />{t.maTaiSan} · {t.ten}</label>
                 </li>
               ))}
+              {ketQuaGan.length === 0 && taiSanGanDuoc.length > 0 && (
+                <li className="o-gan-trong">Không tìm thấy tài sản phù hợp.</li>
+              )}
             </ul>
             <div className="o-gan-nut">
-              <button onClick={() => setDraft(null)}>Hủy</button>
+              <button onClick={() => { setDraft(null); setTimGan(""); }}>Hủy</button>
               <button className="cta" disabled={draft.maTaiSans.length === 0} onClick={xacNhanGan}>
                 Gán vị trí{draft.maTaiSans.length > 0 ? ` (${draft.maTaiSans.length})` : ""}
               </button>
@@ -266,7 +282,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
             </ul>
             <div className="vt-popup-nut">
               {taiSanGanDuoc.length > 0 && (
-                <button className="cta" onClick={() => { setDraft({ x: viTriPopup.x, y: viTriPopup.y, maTaiSans: [] }); setViTriPopup(null); }}>
+                <button className="cta" onClick={() => { setDraft({ x: viTriPopup.x, y: viTriPopup.y, maTaiSans: [] }); setTimGan(""); setViTriPopup(null); }}>
                   + Gán thêm tài sản vào vị trí này
                 </button>
               )}

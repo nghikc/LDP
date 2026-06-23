@@ -105,6 +105,13 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .ds-vi-tri .vt-nut { display: flex; gap: 4px; flex-shrink: 0; }
 .ds-vi-tri .vt-nut button { font-size: 12px; padding: 2px var(--kc-1); }
 .o-gan-huong-dan { font-size: 12px; color: var(--mau-chu-phu); margin: 4px 0; }
+.o-gan-tim, .ds-tim { width: 100%; margin: var(--kc-1) 0; padding: 9px var(--kc-2); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; background: #fafbfc; }
+.o-gan-tim:focus, .ds-tim:focus { outline: none; background: #fff; border-color: var(--mau-chinh); box-shadow: 0 0 0 2px rgba(20,86,184,.2); }
+.o-gan-meta, .ds-meta { font-size: 12px; color: var(--mau-chu-phu); margin: 0 0 4px; }
+.o-gan ul[role="listbox"] { max-height: 280px; overflow: auto; border: 1px solid var(--mau-vien); border-radius: var(--r); margin: 0; }
+.o-gan ul[role="listbox"] li { border-bottom: 1px solid var(--mau-vien); }
+.o-gan ul[role="listbox"] li:last-child { border-bottom: none; }
+.o-gan-trong { padding: var(--kc-2); color: var(--mau-chu-phu); text-align: center; font-size: 13px; }
 .vt-popup-nut { display: flex; gap: var(--kc-1); justify-content: space-between; align-items: center; margin-top: var(--kc-2); }
 .vt-popup-nut > button:last-child { background: none; border: none; cursor: pointer; color: var(--mau-chu-phu); font-size: 14px; }
 
