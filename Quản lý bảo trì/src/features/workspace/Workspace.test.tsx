@@ -1,0 +1,212 @@
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { render, screen, within, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Workspace } from "./Workspace";
+
+// jsdom không tính layout → mock rect cho khung sơ đồ để click ra tọa độ % xác định.
+beforeEach(() => {
+  Element.prototype.getBoundingClientRect = vi.fn(() => ({
+    x: 0, y: 0, left: 0, top: 0, width: 100, height: 100, right: 100, bottom: 100, toJSON: () => ({}),
+  })) as unknown as typeof Element.prototype.getBoundingClientRect;
+});
+
+async function moNhanhToiPhong305(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+  await user.click(screen.getByRole("button", { name: "Mở Tầng 3" }));
+  await user.click(screen.getByRole("button", { name: "Phòng 305" }));
+}
+
+describe("Workspace S01 — cây khu vực", () => {
+  it("TC-S01-01: hiển thị nút gốc, ẩn con tới khi mở", () => {
+    render(<Workspace />);
+    expect(screen.getByRole("button", { name: "Tòa A" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tòa B" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
+  });
+
+  it("TC-S01-02: mở/đóng nhánh hiện/ẩn con", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    expect(screen.getByRole("button", { name: "Tầng 3" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Đóng Tòa A" }));
+    expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
+  });
+});
+
+describe("Workspace S01 — xem sơ đồ", () => {
+  it("TC-S01-05: chọn Phòng 305 → breadcrumb + khung sơ đồ", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    expect(screen.getByText("Tòa A › Tầng 3 › Phòng 305")).toBeInTheDocument();
+    expect(screen.getByTestId("khung-so-do")).toBeInTheDocument();
+  });
+
+  it("TC-S01-06: chọn Phòng 306 (chưa có sơ đồ) → 'Chưa có sơ đồ'", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    await user.click(screen.getByRole("button", { name: "Mở Tầng 3" }));
+    await user.click(screen.getByRole("button", { name: "Phòng 306" }));
+    expect(screen.getByTestId("chua-co-so-do")).toHaveTextContent("Chưa có sơ đồ");
+  });
+});
+
+describe("Workspace S01 — gán vị trí", () => {
+  it("TC-S01-14/16: ô gán chỉ liệt kê tài sản chưa có vị trí", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    const ds = screen.getByRole("listbox", { name: "Tài sản chưa có vị trí" });
+    expect(within(ds).getByText(/B-021 · Máy bơm/)).toBeInTheDocument();
+    expect(within(ds).getByText(/B-045 · Tủ điện/)).toBeInTheDocument();
+    expect(within(ds).queryByText(/A-007/)).not.toBeInTheDocument();
+  });
+
+  it("TC-S01-17: nút Gán vị trí disabled khi chưa chọn", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    expect(screen.getByRole("button", { name: "Gán vị trí" })).toBeDisabled();
+  });
+
+  it("TC-S01-15: gán B-021 → toast 'Đã gán vị trí cho tài sản.'", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.click(screen.getByRole("button", { name: "Gán vị trí" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Đã gán vị trí cho tài sản.");
+  });
+
+  it("TC-S01-19: Hủy → đóng ô gán, không tạo pin", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByRole("button", { name: "Hủy" }));
+    expect(screen.queryByRole("listbox", { name: "Tài sản chưa có vị trí" })).not.toBeInTheDocument();
+  });
+});
+
+describe("Workspace S01 — gỡ vị trí", () => {
+  it("TC-S01-23: gỡ pin A-007 → xác nhận → pin biến mất", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    await user.click(screen.getByRole("button", { name: "Tài sản A-007" }));
+    await user.click(screen.getByRole("button", { name: "Gỡ vị trí" }));
+    await user.click(screen.getByRole("button", { name: "Xác nhận" }));
+    expect(screen.queryByRole("button", { name: "Tài sản A-007" })).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Đã gỡ vị trí.");
+  });
+
+  it("TC-S01-26: gỡ A-007 → Hủy → pin giữ nguyên", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    await user.click(screen.getByRole("button", { name: "Tài sản A-007" }));
+    await user.click(screen.getByRole("button", { name: "Gỡ vị trí" }));
+    await user.click(screen.getByRole("button", { name: "Hủy" }));
+    expect(screen.getByRole("button", { name: "Tài sản A-007" })).toBeInTheDocument();
+  });
+
+  it("TC-S01-25: gỡ pin A-009 (đang khóa) → xác nhận → chặn", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    await user.click(screen.getByRole("button", { name: "Tài sản A-009" }));
+    await user.click(screen.getByRole("button", { name: "Gỡ vị trí" }));
+    await user.click(screen.getByRole("button", { name: "Xác nhận" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Tài sản đang được người khác chỉnh sửa");
+  });
+});
+
+describe("Workspace S01 — tra cứu", () => {
+  it("TC-S01-27/28: gõ 'may nen' → gợi ý A-007; chọn → mở sơ đồ + breadcrumb", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.type(screen.getByLabelText("Tra cứu tài sản"), "may nen");
+    const gy = screen.getByRole("listbox", { name: "Kết quả tra cứu" });
+    await user.click(within(gy).getByText(/A-007 · Máy nén khí/));
+    expect(screen.getByText("Tòa A › Tầng 3 › Phòng 305")).toBeInTheDocument();
+  });
+
+  it("TC-S01-29: chọn B-021 (chưa có vị trí) → 'Chưa gán vị trí'", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.type(screen.getByLabelText("Tra cứu tài sản"), "B-021");
+    const gy = screen.getByRole("listbox", { name: "Kết quả tra cứu" });
+    await user.click(within(gy).getByText(/B-021 · Máy bơm/));
+    expect(screen.getByText("Chưa gán vị trí")).toBeInTheDocument();
+  });
+
+  it("TC-S01-30: từ khóa không tồn tại → 'Không tìm thấy tài sản.'", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.type(screen.getByLabelText("Tra cứu tài sản"), "ZZZ-999");
+    expect(screen.getByText("Không tìm thấy tài sản.")).toBeInTheDocument();
+  });
+});
+
+describe("Workspace S01 — xóa nút", () => {
+  it("TC-S01-37/38/39: dialog xóa Tầng 3 đúng wording; Hủy giữ nguyên; Tiếp tục xóa", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    await user.click(screen.getByRole("button", { name: "Menu Tầng 3" }));
+    const dialog = screen.getByRole("dialog", { name: "Xác nhận xóa khu vực" });
+    expect(dialog).toHaveTextContent(
+      "Xóa khu vực này sẽ gỡ vị trí của 2 tài sản và xóa 2 khu vực con. Tiếp tục?",
+    );
+    // Hủy
+    await user.click(within(dialog).getByRole("button", { name: "Hủy" }));
+    expect(screen.getByRole("button", { name: "Tầng 3" })).toBeInTheDocument();
+    // Mở lại + Tiếp tục
+    await user.click(screen.getByRole("button", { name: "Menu Tầng 3" }));
+    await user.click(screen.getByRole("button", { name: "Tiếp tục" }));
+    expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Đã xóa khu vực");
+  });
+});
+
+describe("Workspace S01 — lọc pin", () => {
+  it("TC-S01-13: lọc 'Đang khóa' → chỉ pin A-009, ẩn A-007", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    expect(screen.getByRole("button", { name: "Tài sản A-007" })).toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Lọc pin theo trạng thái"), "DangKhoa");
+    expect(screen.queryByRole("button", { name: "Tài sản A-007" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Tài sản A-009" })).toBeInTheDocument();
+  });
+});
+
+describe("Workspace S01 — kéo-thả nút", () => {
+  it("TC-S01-34: thả Tòa A vào nhánh con (Tầng 3) → snackbar chặn", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    const hangTang3 = screen.getByRole("button", { name: "Tầng 3" }).closest(".nut-hang")!;
+    const dt = { getData: () => "toa-a", setData: () => {}, dropEffect: "", effectAllowed: "" };
+    fireEvent.dragOver(hangTang3, { dataTransfer: dt });
+    fireEvent.drop(hangTang3, { dataTransfer: dt });
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Không thể di chuyển khu vực vào chính nhánh con của nó.",
+    );
+  });
+});
+
+describe("Workspace S01 — phân quyền Giám sát", () => {
+  it("TC-S01-41: Giám sát không thấy menu cấu trúc + nút Thêm khu vực", async () => {
+    const user = userEvent.setup();
+    render(<Workspace vaiTro="GiamSat" />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    expect(screen.queryByRole("button", { name: "Menu Tầng 3" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "+ Thêm khu vực" })).not.toBeInTheDocument();
+  });
+});

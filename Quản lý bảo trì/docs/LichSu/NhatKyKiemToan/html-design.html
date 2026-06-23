@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nhật ký kiểm toán — S07</title>
+<style>
+  /* ===== Design tokens (8pt spacing, WCAG AA) ===== */
+  :root {
+    --c-bg: #f4f6f8;
+    --c-surface: #ffffff;
+    --c-border: #d4dae0;
+    --c-text: #1b2733;        /* ~14.5:1 trên surface */
+    --c-text-muted: #51606e;  /* ~5.8:1 trên surface */
+    --c-primary: #0f5fae;     /* nút chính */
+    --c-primary-hover: #0c4d8c;
+    --c-on-primary: #ffffff;
+    --c-danger: #b3261e;
+    --c-danger-bg: #fdecea;
+    --c-warn-bg: #fff4e5;
+    --c-focus: #1a73e8;
+    --c-badge-gan: #1b5e20;     --c-badge-gan-bg: #e7f4e8;
+    --c-badge-didoi: #0d47a1;   --c-badge-didoi-bg: #e6effb;
+    --c-badge-xoa: #8a1c14;     --c-badge-xoa-bg: #fdecea;
+    --sp-1: 8px; --sp-2: 16px; --sp-3: 24px; --sp-4: 32px;
+    --radius: 8px;
+    --shadow: 0 4px 16px rgba(16,33,51,.12);
+    --dur-page: 280ms;
+    --dur-section: 180ms;
+    --ease-out: cubic-bezier(.16,.84,.44,1);
+    --ease-in: cubic-bezier(.5,0,.84,.44);
+    --font: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--c-bg); overflow-x: hidden; }
+  body {
+    margin: 0; font-family: var(--font); color: var(--c-text);
+    line-height: 1.5; font-size: 15px;
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  :focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; border-radius: 4px; }
+
+  /* ===== Page / panel ===== */
+  .stage { padding: var(--sp-3); display: flex; justify-content: center; }
+  .panel {
+    width: 100%; max-width: 1180px; background: var(--c-surface);
+    border: 1px solid var(--c-border); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+    animation: panelIn var(--dur-page) var(--ease-out) both;
+  }
+  @keyframes panelIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+  .panel.leaving { animation: panelOut var(--dur-page) var(--ease-in) both; }
+  @keyframes panelOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+
+  /* ===== Header ===== */
+  header.bar {
+    display: flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--c-border);
+    background: var(--c-surface);
+  }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 6px; background: transparent;
+    border: 1px solid transparent; color: var(--c-primary); font: inherit;
+    font-weight: 600; cursor: pointer; padding: 6px 8px; border-radius: 6px;
+  }
+  .btn-back:hover { background: #eaf2fb; }
+  header.bar h1 { font-size: 18px; margin: 0; flex: 1; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--c-primary);
+    color: var(--c-on-primary); display: grid; place-items: center; font-weight: 700; font-size: 13px;
+  }
+
+  /* ===== Filter panel ===== */
+  .filters {
+    padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--c-border);
+    background: #fafbfc;
+    animation: filtersIn var(--dur-section) var(--ease-out) both;
+  }
+  @keyframes filtersIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  .filters legend { font-weight: 700; font-size: 13px; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--c-text-muted); padding: 0; }
+  .filter-grid {
+    display: grid; gap: var(--sp-2); margin-top: var(--sp-1);
+    grid-template-columns: 1fr;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 13px; font-weight: 600; color: var(--c-text); }
+  .field select, .field input {
+    font: inherit; padding: 8px 10px; border: 1px solid var(--c-border);
+    border-radius: 6px; background: var(--c-surface); color: var(--c-text); width: 100%;
+  }
+  .field input[aria-invalid="true"] { border-color: var(--c-danger); background: var(--c-danger-bg); }
+  .field .err {
+    color: var(--c-danger); font-size: 12.5px; font-weight: 600;
+    animation: errIn var(--dur-section) var(--ease-out) both;
+  }
+  @keyframes errIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .filter-actions {
+    display: flex; gap: var(--sp-1); justify-content: flex-end; margin-top: var(--sp-2);
+    flex-wrap: wrap;
+  }
+  .btn {
+    font: inherit; font-weight: 600; cursor: pointer; padding: 9px 18px;
+    border-radius: 6px; border: 1px solid var(--c-border); background: var(--c-surface); color: var(--c-text);
+  }
+  .btn.secondary:hover { background: #eef1f4; }
+  .btn.primary { background: var(--c-primary); color: var(--c-on-primary); border-color: var(--c-primary); }
+  .btn.primary:hover { background: var(--c-primary-hover); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ===== Table ===== */
+  .table-region { padding: 0; }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 760px; }
+  caption { text-align: left; padding: var(--sp-2) var(--sp-3) var(--sp-1); color: var(--c-text-muted); font-size: 13px; }
+  th, td { text-align: left; padding: 12px var(--sp-2); border-bottom: 1px solid var(--c-border); font-size: 14px; vertical-align: top; }
+  thead th { position: sticky; top: 0; background: #eef2f6; color: var(--c-text); font-size: 13px; white-space: nowrap; }
+  th.sortable button {
+    background: none; border: 0; font: inherit; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px; color: var(--c-text); padding: 0;
+  }
+  th.sortable .arrow { font-size: 11px; }
+  tbody tr { animation: rowIn var(--dur-section) var(--ease-out) both; }
+  tbody tr:nth-child(2) { animation-delay: 40ms; }
+  tbody tr:nth-child(3) { animation-delay: 80ms; }
+  tbody tr:nth-child(4) { animation-delay: 120ms; }
+  tbody tr:nth-child(5) { animation-delay: 160ms; }
+  @keyframes rowIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  td.obj, td.loc { max-width: 240px; }
+  td.obj .truncate, td.loc .truncate {
+    display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom;
+  }
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 700; }
+  .badge.gan { color: var(--c-badge-gan); background: var(--c-badge-gan-bg); }
+  .badge.didoi { color: var(--c-badge-didoi); background: var(--c-badge-didoi-bg); }
+  .badge.xoa { color: var(--c-badge-xoa); background: var(--c-badge-xoa-bg); }
+  .loc-arrow { color: var(--c-text-muted); }
+  .dash { color: var(--c-text-muted); }
+
+  /* ===== Pagination ===== */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); flex-wrap: wrap;
+  }
+  .pagination .count { color: var(--c-text-muted); font-size: 14px; }
+  .pager { display: flex; align-items: center; gap: var(--sp-1); }
+  .pager button { padding: 7px 12px; }
+
+  /* ===== State blocks (empty / loading / error / denied) ===== */
+  .state {
+    text-align: center; padding: var(--sp-4) var(--sp-3);
+    animation: stateIn var(--dur-section) var(--ease-out) both;
+  }
+  @keyframes stateIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+  .state .icon { font-size: 40px; line-height: 1; }
+  .state h2 { font-size: 17px; margin: var(--sp-2) 0 6px; }
+  .state p { color: var(--c-text-muted); margin: 0 0 var(--sp-2); }
+  .state.error { color: var(--c-danger); }
+  .state.error p, .state.denied p { color: var(--c-text-muted); }
+
+  /* Loading skeleton */
+  .skeleton-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--sp-2); padding: 12px var(--sp-3); }
+  .sk { height: 14px; border-radius: 6px; background: linear-gradient(90deg,#e6ebf0 25%,#f1f4f7 37%,#e6ebf0 63%); background-size: 400% 100%; animation: shimmer 1.2s ease-in-out infinite; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+  /* Snackbar (lỗi kết nối) */
+  .snackbar {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);
+    background: #2b2f33; color: #fff; padding: 12px 18px; border-radius: 8px; box-shadow: var(--shadow);
+    font-size: 14px; animation: snackIn var(--dur-section) var(--ease-out) both;
+  }
+  @keyframes snackIn { from { opacity: 0; transform: translate(-50%,12px); } to { opacity: 1; transform: translateX(-50%); } }
+
+  /* ===== State switcher (demo only) ===== */
+  .switcher {
+    max-width: 1180px; margin: 0 auto var(--sp-2); display: flex; gap: var(--sp-1);
+    flex-wrap: wrap; align-items: center;
+  }
+  .switcher span { font-size: 13px; color: var(--c-text-muted); font-weight: 700; margin-right: 4px; }
+  .switcher button { font: inherit; font-size: 13px; padding: 6px 12px; border: 1px solid var(--c-border); background: var(--c-surface); border-radius: 999px; cursor: pointer; }
+  .switcher button[aria-pressed="true"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+
+  /* ===== Breakpoint: ≥768px ===== */
+  @media (min-width: 768px) {
+    .filter-grid {
+      grid-template-columns: repeat(2, 1fr) repeat(2, 0.7fr) 1.3fr;
+      align-items: end;
+    }
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .panel, .panel.leaving, .filters, .field .err, tbody tr, .state, .snackbar {
+      animation: none !important;
+    }
+    .sk { animation: none; background: #e6ebf0; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Demo state switcher (không thuộc sản phẩm) -->
+  <div class="switcher" role="group" aria-label="Chọn trạng thái giao diện (demo)">
+    <span>Trạng thái:</span>
+    <button type="button" data-state="success" aria-pressed="true">Có kết quả</button>
+    <button type="button" data-state="empty" aria-pressed="false">Rỗng</button>
+    <button type="button" data-state="loading" aria-pressed="false">Đang tải</button>
+    <button type="button" data-state="error" aria-pressed="false">Lỗi tải</button>
+    <button type="button" data-state="denied" aria-pressed="false">Từ chối (Giám sát)</button>
+    <button type="button" data-state="daterr" aria-pressed="false">Lỗi ngày</button>
+  </div>
+
+  <div class="stage">
+    <main class="panel" id="panel" aria-labelledby="screen-title">
+      <header class="bar">
+        <button type="button" class="btn-back" id="btnBack">
+          <span aria-hidden="true">←</span> Bản đồ tài sản
+        </button>
+        <h1 id="screen-title">Nhật ký kiểm toán</h1>
+        <div class="avatar" title="Tài khoản Quản trị" aria-label="Tài khoản Quản trị">QT</div>
+      </header>
+
+      <!-- ===== FILTER PANEL ===== -->
+      <form class="filters" id="filters" aria-label="Bộ lọc nhật ký kiểm toán">
+        <fieldset style="border:0;padding:0;margin:0;">
+          <legend>Bộ lọc</legend>
+          <div class="filter-grid">
+            <div class="field">
+              <label for="f-nguoi">Người thực hiện</label>
+              <select id="f-nguoi">
+                <option>Tất cả</option>
+                <option>Nguyễn Văn A</option>
+                <option>Trần Thị B</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-hanhdong">Hành động</label>
+              <select id="f-hanhdong">
+                <option>Tất cả</option>
+                <option>Gán</option>
+                <option>Di dời</option>
+                <option>Xóa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-tu">Từ ngày</label>
+              <input type="date" id="f-tu" value="2026-06-01" max="2026-06-23" />
+            </div>
+            <div class="field">
+              <label for="f-den">Đến ngày</label>
+              <input type="date" id="f-den" value="2026-06-22" max="2026-06-23"
+                     aria-describedby="den-err" />
+              <span class="err" id="den-err" hidden>Từ ngày phải nhỏ hơn hoặc bằng Đến ngày.</span>
+            </div>
+            <div class="field">
+              <label for="f-doituong">Đối tượng</label>
+              <input type="text" id="f-doituong" maxlength="100"
+                     placeholder="Tìm theo mã/tên tài sản hoặc khu vực..."
+                     aria-describedby="obj-help obj-err" />
+              <span class="visually-hidden" id="obj-help">Khớp một phần, tối đa 100 ký tự.</span>
+              <span class="err" id="obj-err" hidden>Nhập tối đa 100 ký tự.</span>
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button type="reset" class="btn secondary" id="btnClear">Xóa lọc</button>
+            <button type="submit" class="btn primary" id="btnApply">Áp dụng lọc</button>
+          </div>
+        </fieldset>
+      </form>
+
+      <!-- ===== TABLE REGION (Success) ===== -->
+      <section class="table-region" id="region-success" aria-live="polite">
+        <div class="table-scroll">
+          <table>
+            <caption id="cap">Bảng nhật ký kiểm toán — chỉ đọc, không sửa được</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="sortable" aria-sort="descending">
+                  <button type="button" id="sortBtn">
+                    Thời điểm <span class="arrow" id="sortArrow" aria-hidden="true">▼</span>
+                    <span class="visually-hidden">Sắp xếp giảm dần, nhấn để đảo</span>
+                  </button>
+                </th>
+                <th scope="col">Người thực hiện</th>
+                <th scope="col">Hành động</th>
+                <th scope="col">Đối tượng</th>
+                <th scope="col">Vị trí cũ → mới</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>22/06 14:32:10</td>
+                <td>Nguyễn Văn A</td>
+                <td><span class="badge didoi"><span aria-hidden="true">⇄</span> Di dời</span></td>
+                <td class="obj"><span class="truncate" title="TS A-007 Máy nén">TS A-007 Máy nén</span></td>
+                <td class="loc"><span class="truncate" title="Tầng 3·P305 → Tầng 4·P410">Tầng 3·P305 <span class="loc-arrow">→</span> Tầng 4·P410</span></td>
+              </tr>
+              <tr>
+                <td>22/06 11:08:55</td>
+                <td>Trần Thị B</td>
+                <td><span class="badge gan"><span aria-hidden="true">＋</span> Gán</span></td>
+                <td class="obj"><span class="truncate" title="TS B-021 Máy bơm">TS B-021 Máy bơm</span></td>
+                <td class="loc"><span class="truncate" title="(chưa có) → Tầng 1·Kho">(chưa có) <span class="loc-arrow">→</span> Tầng 1·Kho</span></td>
+              </tr>
+              <tr>
+                <td>21/06 16:45:02</td>
+                <td>Nguyễn Văn A</td>
+                <td><span class="badge xoa"><span aria-hidden="true">✕</span> Xóa</span></td>
+                <td class="obj"><span class="truncate" title="Khu vực &quot;P309&quot;">Khu vực "P309"</span></td>
+                <td class="loc"><span class="dash" title="Không áp dụng">—</span></td>
+              </tr>
+              <tr>
+                <td>21/06 09:12:40</td>
+                <td>Trần Thị B</td>
+                <td><span class="badge didoi"><span aria-hidden="true">⇄</span> Di dời</span></td>
+                <td class="obj"><span class="truncate" title="TS A-014 Tủ điện">TS A-014 Tủ điện</span></td>
+                <td class="loc"><span class="truncate" title="Tầng 2·P201 → Tầng 2·P205">Tầng 2·P201 <span class="loc-arrow">→</span> Tầng 2·P205</span></td>
+              </tr>
+              <tr>
+                <td>20/06 08:01:33</td>
+                <td>Nguyễn Văn A</td>
+                <td><span class="badge gan"><span aria-hidden="true">＋</span> Gán</span></td>
+                <td class="obj"><span class="truncate" title="TS C-002 Băng tải">TS C-002 Băng tải</span></td>
+                <td class="loc"><span class="truncate" title="(chưa có) → Tầng 1·Xưởng A">(chưa có) <span class="loc-arrow">→</span> Tầng 1·Xưởng A</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <nav class="pagination" aria-label="Phân trang nhật ký">
+          <span class="count">Hiển thị 1–25 / 1.284 bản ghi.</span>
+          <div class="pager">
+            <button type="button" class="btn secondary" disabled>‹ Trước</button>
+            <span aria-current="page">Trang 1/52</span>
+            <button type="button" class="btn secondary">Sau ›</button>
+          </div>
+        </nav>
+      </section>
+
+      <!-- ===== EMPTY ===== -->
+      <section class="table-region" id="region-empty" hidden>
+        <div class="state empty" role="status">
+          <div class="icon" aria-hidden="true">🗎</div>
+          <h2>Không có bản ghi phù hợp.</h2>
+          <p>Thử nới rộng khoảng thời gian hoặc bỏ bớt điều kiện lọc.</p>
+        </div>
+      </section>
+
+      <!-- ===== LOADING ===== -->
+      <section class="table-region" id="region-loading" hidden aria-busy="true">
+        <p class="visually-hidden" role="status">Đang tải nhật ký…</p>
+        <div class="skeleton-row"><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span></div>
+        <div class="skeleton-row"><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span></div>
+        <div class="skeleton-row"><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span></div>
+        <div class="skeleton-row"><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span><span class="sk"></span></div>
+      </section>
+
+      <!-- ===== ERROR (tải lỗi) ===== -->
+      <section class="table-region" id="region-error" hidden>
+        <div class="state error" role="alert">
+          <div class="icon" aria-hidden="true">⚠️</div>
+          <h2>Không tải được nhật ký.</h2>
+          <p>Vui lòng thử lại.</p>
+          <button type="button" class="btn primary">Thử lại</button>
+        </div>
+      </section>
+
+      <!-- ===== DENIED (Giám sát bị từ chối truy cập) ===== -->
+      <section class="table-region" id="region-denied" hidden>
+        <div class="state denied" role="alert">
+          <div class="icon" aria-hidden="true">🔒</div>
+          <h2>Bạn không có quyền xem nhật ký kiểm toán.</h2>
+          <p>Khu vực này chỉ dành cho vai trò Quản trị.</p>
+          <button type="button" class="btn primary" id="btnBackDenied">← Bản đồ tài sản</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Snackbar (ẩn mặc định) -->
+  <div class="snackbar" id="snackbar" role="status" hidden>Lỗi kết nối, chưa tải được.</div>
+
+<script>
+  // ===== Demo: chuyển trạng thái UI =====
+  var regions = {
+    success: document.getElementById('region-success'),
+    empty: document.getElementById('region-empty'),
+    loading: document.getElementById('region-loading'),
+    error: document.getElementById('region-error'),
+    denied: document.getElementById('region-denied')
+  };
+  var filters = document.getElementById('filters');
+  var denErr = document.getElementById('den-err');
+  var denInput = document.getElementById('f-den');
+  var applyBtn = document.getElementById('btnApply');
+
+  function showState(name) {
+    // daterr = trạng thái lỗi ngày: vẫn ở success nhưng bật lỗi inline
+    var isDateErr = (name === 'daterr');
+    Object.keys(regions).forEach(function (k) {
+      regions[k].hidden = !(k === (isDateErr ? 'success' : name));
+    });
+    // bộ lọc ẩn khi từ chối truy cập
+    filters.style.display = (name === 'denied') ? 'none' : '';
+    // lỗi ngày inline
+    denErr.hidden = !isDateErr;
+    denInput.setAttribute('aria-invalid', isDateErr ? 'true' : 'false');
+    applyBtn.disabled = isDateErr;
+  }
+
+  document.querySelectorAll('.switcher button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.switcher button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      showState(b.dataset.state);
+    });
+  });
+
+  // ===== Sắp xếp cột Thời điểm (đảo mũi tên + aria-sort) =====
+  var sortBtn = document.getElementById('sortBtn');
+  var sortArrow = document.getElementById('sortArrow');
+  var sortTh = sortBtn.closest('th');
+  sortBtn.addEventListener('click', function () {
+    var desc = sortTh.getAttribute('aria-sort') === 'descending';
+    sortTh.setAttribute('aria-sort', desc ? 'ascending' : 'descending');
+    sortArrow.textContent = desc ? '▲' : '▼';
+  });
+
+  // ===== Quay lại S01 (mô phỏng exit animation) =====
+  function leave() {
+    var panel = document.getElementById('panel');
+    panel.classList.add('leaving');
+    panel.addEventListener('animationend', function () {
+      panel.classList.remove('leaving');
+      panel.style.opacity = '';
+    }, { once: true });
+  }
+  document.getElementById('btnBack').addEventListener('click', leave);
+  document.getElementById('btnBackDenied').addEventListener('click', leave);
+
+  // ===== Chặn submit thật (demo) =====
+  filters.addEventListener('submit', function (e) { e.preventDefault(); });
+
+  // Validate độ dài ô đối tượng (demo)
+  var obj = document.getElementById('f-doituong');
+  var objErr = document.getElementById('obj-err');
+  obj.addEventListener('input', function () {
+    var over = obj.value.length >= 100;
+    objErr.hidden = !over;
+    obj.setAttribute('aria-invalid', over ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>

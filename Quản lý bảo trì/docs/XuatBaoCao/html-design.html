@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xuất báo cáo / kiểm kê — S08</title>
+<style>
+  :root{
+    /* spacing 8pt */
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px;
+    --r:8px;
+    /* màu — tương phản đạt WCAG AA */
+    --bg:#0f172a;            /* nền workspace tối */
+    --surface:#ffffff;
+    --ink:#1f2937;           /* text chính trên nền trắng (>=11:1) */
+    --ink-sub:#4b5563;       /* text phụ (~7:1) */
+    --line:#d1d5db;
+    --primary:#1d4ed8;       /* xanh CTA, trắng trên nền này >=4.5:1 */
+    --primary-ink:#ffffff;
+    --primary-hover:#1e40af;
+    --danger:#b91c1c;
+    --danger-bg:#fef2f2;
+    --warn:#92400e;
+    --warn-bg:#fffbeb;
+    --warn-line:#f59e0b;
+    --ok:#166534;
+    --ok-bg:#f0fdf4;
+    --focus:#1d4ed8;
+    --primary-disabled:#9ca3af;
+    --t-enter:cubic-bezier(.16,.84,.44,1);
+    --t-exit:cubic-bezier(.4,0,1,1);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;overflow-x:hidden;}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    min-height:100vh;
+  }
+
+  /* ===== Mô phỏng workspace S01 phía sau ===== */
+  .workspace{
+    position:fixed; inset:0;
+    padding:var(--s3);
+    color:#cbd5e1;
+    background:
+      radial-gradient(900px 500px at 70% 10%, #1e293b, transparent),
+      linear-gradient(135deg,#0f172a,#111827);
+    transition:filter .25s var(--t-exit), transform .25s var(--t-exit);
+  }
+  .workspace h1{font-size:18px;margin:0 0 var(--s1);color:#e2e8f0;}
+  .workspace p{margin:0;font-size:14px;color:#94a3b8;max-width:640px;}
+  .workspace.dimmed{filter:blur(2px) brightness(.6);transform:scale(.99);}
+
+  .demo-bar{
+    position:fixed; top:var(--s2); right:var(--s2); z-index:60;
+    display:flex; gap:var(--s1); flex-wrap:wrap; max-width:60vw; justify-content:flex-end;
+  }
+  .demo-bar button{
+    font-size:12px; padding:6px 10px; border-radius:6px; cursor:pointer;
+    border:1px solid #475569; background:#1e293b; color:#e2e8f0;
+  }
+  .demo-bar button:focus-visible{outline:3px solid #60a5fa; outline-offset:2px;}
+
+  /* ===== Overlay + Modal ===== */
+  .overlay{
+    position:fixed; inset:0; z-index:40;
+    display:flex; align-items:center; justify-content:center;
+    padding:var(--s2);
+    background:rgba(15,23,42,.55);
+    opacity:0; visibility:hidden;
+    transition:opacity .25s var(--t-exit), visibility 0s linear .25s;
+  }
+  .overlay.open{opacity:1; visibility:visible; transition:opacity .25s var(--t-enter);}
+
+  .modal{
+    background:var(--surface); color:var(--ink);
+    width:100%; max-width:560px; max-height:92vh; overflow:auto;
+    border-radius:var(--r);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+    transform:translateY(24px); opacity:0;
+    transition:transform .25s var(--t-exit), opacity .25s var(--t-exit);
+  }
+  .overlay.open .modal{transform:translateY(0); opacity:1; transition:transform .25s var(--t-enter), opacity .25s var(--t-enter);}
+
+  .modal-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:var(--s2); padding:var(--s2) var(--s3);
+    border-bottom:1px solid var(--line);
+  }
+  .modal-head h2{font-size:18px; margin:0;}
+  .close-btn{
+    border:1px solid transparent; background:transparent; cursor:pointer;
+    font-size:20px; line-height:1; color:var(--ink-sub);
+    width:36px; height:36px; border-radius:6px;
+  }
+  .close-btn:hover{background:#f3f4f6;}
+  .close-btn:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  .modal-body{padding:var(--s3); display:flex; flex-direction:column; gap:var(--s3);}
+
+  fieldset{border:1px solid var(--line); border-radius:var(--r); padding:var(--s2); margin:0;}
+  legend{font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-sub); padding:0 6px;}
+
+  .opt{display:flex; align-items:flex-start; gap:var(--s1); padding:6px 0;}
+  .opt label{cursor:pointer; font-size:15px;}
+  .opt input[type=radio],.opt input[type=checkbox]{margin-top:3px; width:18px; height:18px; accent-color:var(--primary);}
+  .opt input:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  /* khối breadcrumb mở rộng theo "Theo khu vực" */
+  .scope-sub{
+    overflow:hidden; max-height:0; opacity:0;
+    margin-left:26px;
+    transition:max-height .16s var(--t-exit), opacity .16s var(--t-exit), margin .16s var(--t-exit);
+  }
+  .scope-sub.show{max-height:120px; opacity:1; margin-top:var(--s1);
+    transition:max-height .16s var(--t-enter), opacity .16s var(--t-enter);}
+  .breadcrumb{
+    font-size:13px; color:var(--ink-sub); background:#f3f4f6;
+    padding:4px 10px; border-radius:6px; display:inline-block; margin-bottom:var(--s1);
+    max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+
+  .cols-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 var(--s2);}
+
+  /* dải ước tính */
+  .estimate{
+    display:flex; align-items:center; gap:var(--s1);
+    font-size:14px; color:var(--ink-sub);
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:var(--s2) 0;
+  }
+  .estimate .num{font-weight:700; color:var(--ink); transition:opacity .15s var(--t-enter);}
+  .estimate.flash .num{opacity:.25;}
+
+  /* empty state */
+  .empty{
+    display:none; gap:var(--s1); align-items:flex-start;
+    background:var(--warn-bg); border:1px solid var(--warn-line); border-radius:var(--r);
+    padding:var(--s2); color:var(--warn);
+    opacity:0; transform:translateY(-6px);
+    transition:opacity .15s var(--t-exit), transform .15s var(--t-exit);
+  }
+  .empty.show{display:flex; opacity:1; transform:translateY(0); transition:opacity .15s var(--t-enter), transform .15s var(--t-enter);}
+  .empty strong{display:block; margin-bottom:2px;}
+  .empty button{margin-top:var(--s1);}
+
+  /* error state */
+  .error-box{
+    display:none; align-items:flex-start; gap:var(--s1);
+    background:var(--danger-bg); border:1px solid var(--danger); border-radius:var(--r);
+    padding:var(--s2); color:var(--danger);
+  }
+  .error-box.show{display:flex;}
+
+  .field-msg{font-size:13px; color:var(--danger); margin-top:6px; min-height:18px;}
+
+  /* footer */
+  .modal-foot{
+    display:flex; justify-content:flex-end; gap:var(--s2);
+    padding:var(--s2) var(--s3); border-top:1px solid var(--line);
+  }
+  .btn{
+    font-size:15px; font-weight:600; padding:10px 18px; border-radius:var(--r);
+    cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
+  }
+  .btn:hover{background:#f3f4f6;}
+  .btn:focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+  .btn-primary{background:var(--primary); border-color:var(--primary); color:var(--primary-ink);}
+  .btn-primary:hover{background:var(--primary-hover);}
+  .btn-primary:disabled{background:var(--primary-disabled); border-color:var(--primary-disabled); cursor:not-allowed;}
+
+  /* ===== Loading / tiến trình ===== */
+  .progress-pane{
+    display:none; flex-direction:column; gap:var(--s2);
+    padding:var(--s4) var(--s3);
+    opacity:0; transform:translateY(8px);
+    transition:opacity .18s var(--t-exit), transform .18s var(--t-exit);
+  }
+  .progress-pane.show{display:flex; opacity:1; transform:translateY(0); transition:opacity .18s var(--t-enter), transform .18s var(--t-enter);}
+  .progress-title{display:flex; align-items:center; gap:var(--s1); font-weight:600; font-size:16px;}
+  .spinner{
+    width:18px; height:18px; border-radius:50%;
+    border:3px solid #cbd5e1; border-top-color:var(--primary);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .bar{height:12px; background:#e5e7eb; border-radius:999px; overflow:hidden;}
+  .bar > i{display:block; height:100%; width:64%; background:var(--primary);
+    border-radius:999px; transition:width .3s var(--t-enter);}
+  .progress-meta{font-size:14px; color:var(--ink-sub);}
+
+  /* ===== Toast ===== */
+  .toast{
+    position:fixed; top:var(--s2); left:50%; z-index:70;
+    transform:translate(-50%,-24px); opacity:0;
+    background:var(--ok-bg); color:var(--ok); border:1px solid var(--ok);
+    padding:var(--s1) var(--s2); border-radius:var(--r);
+    font-size:14px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,.2);
+    pointer-events:none;
+    transition:opacity .15s var(--t-exit), transform .15s var(--t-exit);
+  }
+  .toast.show{opacity:1; transform:translate(-50%,0); transition:opacity .15s var(--t-enter), transform .15s var(--t-enter);}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+
+  /* ===== Responsive: mobile < 600px ===== */
+  @media (max-width:600px){
+    .overlay{align-items:flex-end; padding:0;}
+    .modal{max-width:100%; max-height:96vh; border-radius:var(--r) var(--r) 0 0; transform:translateY(100%);}
+    .overlay.open .modal{transform:translateY(0);}
+    .cols-grid{grid-template-columns:1fr;}
+    .modal-foot{flex-direction:column-reverse;}
+    .modal-foot .btn{width:100%;}
+    .demo-bar{max-width:92vw;}
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important;}
+    .modal{transform:none !important;}
+    .overlay .modal{transition:opacity .12s linear;}
+    .spinner{animation:none; border-top-color:var(--primary);}
+  }
+</style>
+</head>
+<body>
+
+<!-- Workspace S01 phía sau -->
+<div class="workspace" id="workspace">
+  <h1>Bản đồ tài sản (S01) — workspace</h1>
+  <p>Modal "Xuất báo cáo / kiểm kê" (S08) trượt lên từ đây. Dùng thanh nút góc phải để xem các UI State: Mặc định, Phạm vi rỗng (Empty), Đang tạo file (Loading), Lỗi (Error), Thành công (Success).</p>
+</div>
+
+<!-- Thanh demo chuyển state (chỉ phục vụ xem bản dựng) -->
+<div class="demo-bar" role="group" aria-label="Chuyển trạng thái xem trước">
+  <button onclick="openModal()">Mở modal</button>
+  <button onclick="showDefault()">Mặc định</button>
+  <button onclick="showEmpty()">Empty</button>
+  <button onclick="showLoading()">Loading</button>
+  <button onclick="showError()">Error</button>
+  <button onclick="doSuccess()">Success</button>
+</div>
+
+<!-- Overlay + Modal -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Xuất báo cáo / kiểm kê</h2>
+      <button class="close-btn" aria-label="Đóng" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- BODY cấu hình -->
+    <div class="modal-body" id="configBody">
+
+      <!-- Phạm vi -->
+      <fieldset>
+        <legend>Phạm vi xuất</legend>
+        <div class="opt">
+          <input type="radio" id="scope-all" name="scope" value="toan_bo" onchange="onScopeChange()">
+          <label for="scope-all">Toàn bộ tài sản</label>
+        </div>
+        <div class="opt">
+          <input type="radio" id="scope-area" name="scope" value="theo_khu_vuc" checked onchange="onScopeChange()">
+          <label for="scope-area">Theo khu vực đang chọn</label>
+        </div>
+        <div class="scope-sub show" id="scopeSub">
+          <span class="breadcrumb" title="Tòa A › Tầng 3">Tòa A › Tầng 3</span>
+          <div class="opt">
+            <input type="checkbox" id="incl-children" checked>
+            <label for="incl-children">Gồm cả các khu vực con</label>
+          </div>
+        </div>
+        <div class="opt">
+          <input type="radio" id="scope-filter" name="scope" value="theo_bo_loc" onchange="onScopeChange()">
+          <label for="scope-filter">Theo bộ lọc hiện tại trên sơ đồ</label>
+        </div>
+        <div class="field-msg" id="scopeMsg" role="alert" aria-live="polite"></div>
+      </fieldset>
+
+      <!-- Cột -->
+      <fieldset>
+        <legend>Cột xuất</legend>
+        <div class="cols-grid" id="colsGrid">
+          <div class="opt"><input type="checkbox" class="col" id="c1" checked onchange="onColsChange()"><label for="c1">Mã tài sản</label></div>
+          <div class="opt"><input type="checkbox" class="col" id="c2" checked onchange="onColsChange()"><label for="c2">Tên tài sản</label></div>
+          <div class="opt"><input type="checkbox" class="col" id="c3" checked onchange="onColsChange()"><label for="c3">Đường dẫn khu vực</label></div>
+          <div class="opt"><input type="checkbox" class="col" id="c4" checked onchange="onColsChange()"><label for="c4">Vị trí</label></div>
+          <div class="opt"><input type="checkbox" class="col" id="c5" checked onchange="onColsChange()"><label for="c5">Lần di dời gần nhất</label></div>
+        </div>
+        <div class="field-msg" id="colsMsg" role="alert" aria-live="polite"></div>
+      </fieldset>
+
+      <!-- Ước tính -->
+      <div class="estimate" id="estimate" aria-live="polite">
+        <span aria-hidden="true">ℹ</span>
+        <span>Ước tính: <span class="num" id="estNum">1.248</span> tài sản trong phạm vi đã chọn</span>
+      </div>
+
+      <!-- Empty -->
+      <div class="empty" id="emptyBox" role="alert">
+        <span aria-hidden="true">⚠</span>
+        <div>
+          <strong>Không có dữ liệu để xuất.</strong>
+          Phạm vi đã chọn không có tài sản nào, hãy đổi phạm vi.
+          <div><button class="btn" onclick="changeScope()">Đổi phạm vi</button></div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="error-box" id="errorBox" role="alert">
+        <span aria-hidden="true">⛔</span>
+        <div>
+          <strong>Không tạo được file báo cáo. Vui lòng thử lại.</strong>
+          <div><button class="btn" onclick="showLoading()">Thử lại</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADING / tiến trình -->
+    <div class="progress-pane" id="progressPane">
+      <div class="progress-title"><span class="spinner" aria-hidden="true"></span> Đang tạo file...</div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="64" aria-label="Tiến trình xuất file">
+        <i id="barFill"></i>
+      </div>
+      <div class="progress-meta" id="progressMeta" aria-live="polite">Đang xử lý 32.000/50.000 dòng... (64%)</div>
+      <div style="display:flex;justify-content:flex-end;">
+        <button class="btn" onclick="cancelExport()">Hủy</button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="modal-foot" id="configFoot">
+      <button class="btn" onclick="closeModal()">Hủy</button>
+      <button class="btn btn-primary" id="exportBtn" onclick="doExport()">⬇ Xuất Excel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  var overlay=document.getElementById('overlay');
+  var workspace=document.getElementById('workspace');
+  var scopeSub=document.getElementById('scopeSub');
+  var estimate=document.getElementById('estimate');
+  var estNum=document.getElementById('estNum');
+  var emptyBox=document.getElementById('emptyBox');
+  var errorBox=document.getElementById('errorBox');
+  var configBody=document.getElementById('configBody');
+  var configFoot=document.getElementById('configFoot');
+  var progressPane=document.getElementById('progressPane');
+  var exportBtn=document.getElementById('exportBtn');
+  var colsMsg=document.getElementById('colsMsg');
+  var scopeMsg=document.getElementById('scopeMsg');
+  var toast=document.getElementById('toast');
+
+  // số tài sản ước tính theo phạm vi (dữ liệu mẫu)
+  var SCOPE_COUNT={toan_bo:1250, theo_khu_vuc:1248, theo_bo_loc:0};
+
+  function openModal(){
+    overlay.classList.add('open');
+    workspace.classList.add('dimmed');
+    showDefault();
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    workspace.classList.remove('dimmed');
+  }
+  function changeScope(){
+    showDefault();
+    document.getElementById('scope-all').focus();
+  }
+
+  function currentScope(){
+    var r=document.querySelector('input[name=scope]:checked');
+    return r?r.value:null;
+  }
+  function checkedCols(){
+    return document.querySelectorAll('.col:checked').length;
+  }
+
+  function onScopeChange(){
+    var v=currentScope();
+    scopeMsg.textContent='';
+    // hiện/ẩn khối breadcrumb khi chọn "theo khu vực"
+    if(v==='theo_khu_vuc'){ scopeSub.classList.add('show'); }
+    else{ scopeSub.classList.remove('show'); }
+    refreshEstimate();
+  }
+
+  function onColsChange(){
+    if(checkedCols()===0){ colsMsg.textContent='Chọn ít nhất một cột để xuất.'; }
+    else{ colsMsg.textContent=''; }
+    refreshExportState();
+  }
+
+  function refreshEstimate(){
+    var v=currentScope();
+    var n=SCOPE_COUNT[v]!==undefined?SCOPE_COUNT[v]:0;
+    // hiệu ứng cross-fade số
+    estimate.classList.add('flash');
+    setTimeout(function(){
+      estNum.textContent=n.toLocaleString('vi-VN');
+      estimate.classList.remove('flash');
+    },150);
+    if(n===0){ emptyBox.classList.add('show'); }
+    else{ emptyBox.classList.remove('show'); }
+    refreshExportState();
+  }
+
+  function refreshExportState(){
+    var v=currentScope();
+    var n=SCOPE_COUNT[v]!==undefined?SCOPE_COUNT[v]:0;
+    var disabled=(n===0)||(checkedCols()===0);
+    exportBtn.disabled=disabled;
+    exportBtn.title=disabled?(n===0?'Phạm vi không có dữ liệu':'Chọn ít nhất một cột để xuất'):'';
+  }
+
+  // ===== UI States (demo) =====
+  function showDefault(){
+    configBody.style.display='flex';
+    configFoot.style.display='flex';
+    progressPane.classList.remove('show');
+    errorBox.classList.remove('show');
+    onScopeChange();
+  }
+  function showEmpty(){
+    document.getElementById('scope-filter').checked=true; // bộ lọc khớp 0
+    onScopeChange();
+  }
+  function showError(){
+    showDefault();
+    errorBox.classList.add('show');
+  }
+  function showLoading(){
+    errorBox.classList.remove('show');
+    configBody.style.display='none';
+    configFoot.style.display='none';
+    progressPane.classList.add('show');
+    var pct=0, fill=document.getElementById('barFill'), meta=document.getElementById('progressMeta');
+    var total=50000;
+    var iv=setInterval(function(){
+      pct+=8; if(pct>100)pct=100;
+      var rows=Math.round(total*pct/100);
+      fill.style.width=pct+'%';
+      meta.textContent='Đang xử lý '+rows.toLocaleString('vi-VN')+'/'+total.toLocaleString('vi-VN')+' dòng... ('+pct+'%)';
+      progressPane.querySelector('[role=progressbar]').setAttribute('aria-valuenow',pct);
+      if(pct>=100){ clearInterval(iv); finishExport(total); }
+    },260);
+    progressPane.dataset.iv=iv;
+  }
+  function cancelExport(){
+    if(progressPane.dataset.iv) clearInterval(progressPane.dataset.iv);
+    showDefault(); // về cấu hình, không tải file dở
+  }
+  function finishExport(n){
+    showDefault();
+    fireToast('Đã xuất '+n.toLocaleString('vi-VN')+' tài sản · baocao.xlsx');
+    setTimeout(closeModal,900);
+  }
+  function doSuccess(){
+    fireToast('Đã xuất 1.248 tài sản · baocao.xlsx');
+  }
+
+  function doExport(){
+    scopeMsg.textContent=''; colsMsg.textContent='';
+    var v=currentScope();
+    if(!v){ scopeMsg.textContent='Vui lòng chọn phạm vi xuất.'; return; }
+    if(checkedCols()===0){ colsMsg.textContent='Chọn ít nhất một cột để xuất.'; return; }
+    var n=SCOPE_COUNT[v]||0;
+    if(n===0){ emptyBox.classList.add('show'); return; }
+    if(n>5000){ showLoading(); }      // tập lớn → tiến trình
+    else{ finishExport(n); }          // tập nhỏ → xong ngay
+  }
+
+  function fireToast(msg){
+    toast.textContent='✓ '+msg;
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t=setTimeout(function(){ toast.classList.remove('show'); },3200);
+  }
+
+  // Esc đóng modal
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+  // Mở sẵn modal khi tải trang để xem ngay
+  openModal();
+</script>
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bản đồ tài sản (Workspace) — S01</title>
+<style>
+  /* ===== Design tokens (8pt scale, WCAG AA) ===== */
+  :root{
+    --c-bg:#f4f6f8;
+    --c-surface:#ffffff;
+    --c-surface-2:#eef1f5;
+    --c-border:#cbd3dd;
+    --c-text:#1b2430;        /* contrast >7:1 trên trắng */
+    --c-text-muted:#4a5666;  /* contrast ~6:1 */
+    --c-primary:#0b5cab;     /* xanh đậm, AA trên trắng */
+    --c-primary-d:#08457f;
+    --c-on-primary:#ffffff;
+    --c-danger:#b3261e;
+    --c-warn-bg:#fff4e0;
+    --c-warn-tx:#7a4a00;
+    --c-ok:#1c6b3c;
+    --c-lock:#6a3fb0;
+    --c-reset:#b3261e;
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px;
+    --radius:8px;
+    --shadow:0 4px 16px rgba(16,32,56,.18);
+    --enter:200ms cubic-bezier(.16,.84,.44,1); /* ease-out */
+    --exit:160ms cubic-bezier(.4,0,1,1);       /* ease-in */
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;overflow-x:hidden;}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--c-bg);color:var(--c-text);font-size:15px;line-height:1.5;
+  }
+  h1,h2,h3{margin:0;}
+  button{font-family:inherit;font-size:14px;cursor:pointer;}
+  a{color:var(--c-primary);}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+
+  /* Focus rõ ràng */
+  a:focus-visible,button:focus-visible,input:focus-visible,
+  [tabindex]:focus-visible,.tree-node:focus-visible,.pin:focus-visible{
+    outline:3px solid #ffb000;outline-offset:2px;border-radius:4px;
+  }
+
+  /* Buttons */
+  .btn{border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text);
+    padding:8px 14px;border-radius:var(--radius);display:inline-flex;align-items:center;gap:6px;
+    transition:background var(--enter),transform var(--enter);}
+  .btn:hover{background:var(--c-surface-2);}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--c-primary);color:var(--c-on-primary);border-color:var(--c-primary);}
+  .btn-primary:hover{background:var(--c-primary-d);}
+  .btn-danger{background:var(--c-danger);color:#fff;border-color:var(--c-danger);}
+  .btn-sm{padding:4px 10px;font-size:13px;}
+
+  /* ===== Header ===== */
+  header.app{
+    background:var(--c-surface);border-bottom:1px solid var(--c-border);
+    display:flex;align-items:center;gap:var(--s2);padding:10px var(--s2);
+    position:sticky;top:0;z-index:30;
+  }
+  header.app h1{font-size:18px;white-space:nowrap;}
+  .search{position:relative;flex:1;max-width:520px;}
+  .search input{
+    width:100%;padding:9px 12px 9px 36px;border:1px solid var(--c-border);
+    border-radius:var(--radius);font-size:14px;background:var(--c-surface);
+  }
+  .search .ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);}
+  .suggest{
+    position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--c-surface);
+    border:1px solid var(--c-border);border-radius:var(--radius);box-shadow:var(--shadow);
+    z-index:40;overflow:hidden;animation:popIn var(--enter);
+  }
+  .suggest button{display:block;width:100%;text-align:left;border:0;background:none;
+    padding:10px 12px;color:var(--c-text);}
+  .suggest button:hover{background:var(--c-surface-2);}
+  .suggest .muted{color:var(--c-text-muted);font-size:12px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--c-primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+  .menu-toggle{display:none;}
+
+  /* ===== Layout 3 vùng ===== */
+  .workspace{display:grid;grid-template-columns:1fr;min-height:calc(100vh - 56px);}
+  /* Cột trái */
+  .tree-col{
+    background:var(--c-surface);border-right:1px solid var(--c-border);
+    padding:var(--s2);display:flex;flex-direction:column;gap:var(--s1);
+  }
+  .tree-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s1);}
+  .tree-head h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--c-text-muted);}
+  .tree{list-style:none;margin:0;padding:0;}
+  .tree ul{list-style:none;margin:0;padding-left:18px;
+    overflow:hidden;animation:branchIn var(--enter);}
+  .tree-node{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;
+    transition:background var(--enter);}
+  .tree-node:hover{background:var(--c-surface-2);}
+  .tree-node.active{background:#dbeafe;font-weight:600;}
+  .tw{width:16px;text-align:center;color:var(--c-text-muted);border:0;background:none;}
+  .tree-node .more{margin-left:auto;border:0;background:none;color:var(--c-text-muted);
+    padding:2px 6px;border-radius:4px;}
+  .tree-node .more:hover{background:#dde3ea;}
+
+  /* Vùng giữa */
+  .canvas-col{display:flex;flex-direction:column;padding:var(--s2);gap:var(--s2);min-width:0;}
+  .toolbar{display:flex;align-items:center;gap:var(--s1);flex-wrap:wrap;}
+  .breadcrumb{font-size:14px;color:var(--c-text-muted);display:flex;align-items:center;
+    gap:4px;flex-wrap:wrap;}
+  .breadcrumb b{color:var(--c-text);}
+  .toolbar .spacer{flex:1;}
+  .canvas{
+    position:relative;flex:1;min-height:360px;border:1px solid var(--c-border);
+    border-radius:var(--radius);overflow:hidden;
+    background:
+      linear-gradient(0deg,rgba(11,92,171,.04),rgba(11,92,171,.04)),
+      repeating-linear-gradient(90deg,#e7ecf2 0 39px,#dfe5ec 39px 40px),
+      repeating-linear-gradient(0deg,#e7ecf2 0 39px,#dfe5ec 39px 40px);
+  }
+  .floor-label{position:absolute;left:12px;top:10px;background:rgba(255,255,255,.85);
+    padding:4px 10px;border-radius:6px;font-size:12px;color:var(--c-text-muted);}
+
+  /* ===== Pin ===== */
+  .pin{position:absolute;transform:translate(-50%,-100%);border:0;background:none;padding:0;
+    line-height:0;animation:popIn var(--enter);}
+  .pin svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));}
+  .pin .lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);
+    background:rgba(27,36,48,.92);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px;
+    white-space:nowrap;opacity:0;pointer-events:none;transition:opacity var(--enter);}
+  .pin:hover .lbl,.pin:focus-visible .lbl{opacity:1;}
+  .pin.pulse svg{animation:pulse 600ms ease-in-out 2;}
+  .cluster{position:absolute;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:50%;
+    background:var(--c-primary);color:#fff;border:2px solid #fff;display:flex;align-items:center;
+    justify-content:center;font-weight:700;font-size:13px;box-shadow:var(--shadow);}
+
+  .warn-band{display:flex;align-items:center;gap:8px;background:var(--c-warn-bg);color:var(--c-warn-tx);
+    border:1px solid #f0d6a0;border-radius:var(--radius);padding:8px 12px;font-size:14px;}
+  .warn-band a{color:var(--c-warn-tx);font-weight:600;margin-left:auto;}
+
+  /* ===== Legend trạng thái pin (hình dạng, không chỉ màu) ===== */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--c-text-muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:14px;height:14px;display:inline-block;}
+
+  /* ===== Overlays (popup / modal / toast) ===== */
+  .overlay-demo{display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:var(--s2);}
+  .card h3{font-size:15px;margin-bottom:8px;}
+  .card .row{display:flex;justify-content:space-between;gap:8px;font-size:14px;margin:4px 0;}
+  .card .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+  .popup-anim{animation:popIn var(--enter);}
+  .dialog-anim{animation:dialogIn var(--enter);}
+  .slideup-anim{animation:slideUp var(--enter);}
+
+  .opt{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--c-border);
+    border-radius:6px;margin:6px 0;}
+  .opt input{width:18px;height:18px;}
+
+  .toast{display:inline-flex;align-items:center;gap:8px;background:var(--c-ok);color:#fff;
+    padding:10px 14px;border-radius:var(--radius);box-shadow:var(--shadow);animation:toastIn var(--enter);}
+  .snack{display:inline-flex;align-items:center;gap:8px;background:#2b2b2b;color:#fff;
+    padding:10px 14px;border-radius:var(--radius);}
+
+  /* ===== States gallery ===== */
+  .states{display:grid;gap:var(--s2);grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .state-box{background:var(--c-surface);border:1px dashed var(--c-border);border-radius:var(--radius);
+    padding:var(--s2);min-height:140px;display:flex;flex-direction:column;gap:8px;}
+  .state-box .tag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .skel{background:linear-gradient(90deg,#e9edf2 25%,#f3f6f9 37%,#e9edf2 63%);
+    background-size:400% 100%;border-radius:6px;height:14px;animation:shimmer 1.4s infinite;}
+  .skel.lg{height:120px;}
+  .empty-ill{font-size:40px;text-align:center;}
+
+  .section-title{font-size:16px;margin:var(--s3) var(--s2) var(--s1);color:var(--c-text);}
+  .note{margin:0 var(--s2);color:var(--c-text-muted);font-size:13px;}
+
+  /* Drawer scrim */
+  .scrim{display:none;}
+
+  /* ===== Keyframes ===== */
+  @keyframes popIn{from{opacity:0;transform:scale(.94) translateY(4px);}to{opacity:1;transform:none;}}
+  @keyframes dialogIn{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:none;}}
+  @keyframes branchIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.35);}}
+  @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+
+  /* ===== Responsive: tablet ≥768 ===== */
+  @media (min-width:768px){
+    .workspace{grid-template-columns:240px 1fr;}
+    .menu-toggle{display:none;}
+  }
+  /* ===== Responsive: desktop ≥1200 ===== */
+  @media (min-width:1200px){
+    .workspace{grid-template-columns:300px 1fr;}
+    .canvas{min-height:480px;}
+  }
+  /* ===== Mobile <768: cây thành drawer ===== */
+  @media (max-width:767px){
+    .menu-toggle{display:inline-flex;}
+    header.app h1{font-size:16px;}
+    .tree-col{
+      position:fixed;top:0;left:0;bottom:0;width:82vw;max-width:320px;z-index:60;
+      transform:translateX(-100%);transition:transform var(--enter);
+      box-shadow:var(--shadow);
+    }
+    .tree-col.open{transform:translateX(0);}
+    .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;
+      animation:popIn var(--exit);}
+    .toolbar{font-size:13px;}
+  }
+
+  /* ===== Giảm chuyển động ===== */
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+    .tree-col{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="app">
+  <button class="btn btn-sm menu-toggle" id="menuBtn" aria-label="Mở cây khu vực" aria-expanded="false">☰</button>
+  <h1>Bản đồ tài sản</h1>
+  <div class="search" role="search">
+    <span class="ic" aria-hidden="true">🔍</span>
+    <label for="q" class="visually-hidden">Tra cứu mã hoặc tên tài sản</label>
+    <input id="q" type="text" placeholder="Tra cứu mã/tên tài sản..." value="may nen" autocomplete="off" aria-describedby="q-hint">
+    <span id="q-hint" class="visually-hidden">Gõ mã hoặc tên, không phân biệt dấu</span>
+    <!-- Trạng thái Success: dropdown gợi ý -->
+    <div class="suggest" role="listbox" aria-label="Kết quả gợi ý">
+      <button role="option"><strong>A-007 · Máy nén khí</strong><br><span class="muted">Tòa A › Tầng 3 › Phòng 305 · Đang dùng</span></button>
+      <button role="option"><strong>A-118 · Máy nén khí dự phòng</strong><br><span class="muted">Chưa gán vị trí</span></button>
+    </div>
+  </div>
+  <span class="spacer" style="flex:1"></span>
+  <div class="avatar" title="Tài khoản: Giang (Quản trị)" aria-label="Tài khoản Giang, vai trò Quản trị">GN</div>
+</header>
+
+<!-- ===================== WORKSPACE 3 VÙNG ===================== -->
+<div class="scrim" id="scrim"></div>
+<div class="workspace">
+
+  <!-- ===== Cột trái: Cây khu vực ===== -->
+  <nav class="tree-col" id="treeCol" aria-label="Cây khu vực">
+    <div class="tree-head">
+      <h2>Cây khu vực</h2>
+      <button class="btn btn-sm btn-primary" aria-label="Thêm khu vực (chỉ Quản trị)">+ Thêm khu vực</button>
+    </div>
+    <ul class="tree" role="tree">
+      <li role="treeitem" aria-expanded="true">
+        <div class="tree-node active" tabindex="0">
+          <button class="tw" aria-label="Đóng nhánh Tòa A">▾</button>
+          <span>🏢 Tòa A</span>
+          <button class="more" aria-label="Menu khu vực Tòa A">⋮</button>
+        </div>
+        <ul role="group">
+          <li role="treeitem" aria-expanded="true">
+            <div class="tree-node" tabindex="0">
+              <button class="tw" aria-label="Đóng nhánh Tầng 3">▾</button>
+              <span>Tầng 3</span>
+              <button class="more" aria-label="Menu khu vực Tầng 3">⋮</button>
+            </div>
+            <ul role="group">
+              <li role="treeitem"><div class="tree-node active" tabindex="0"><span class="tw" aria-hidden="true">•</span><span>Phòng 305</span></div></li>
+              <li role="treeitem"><div class="tree-node" tabindex="0"><span class="tw" aria-hidden="true">•</span><span>Phòng 306</span></div></li>
+            </ul>
+          </li>
+          <li role="treeitem" aria-expanded="false">
+            <div class="tree-node" tabindex="0"><button class="tw" aria-label="Mở nhánh Tầng 4">▸</button><span>Tầng 4</span><button class="more" aria-label="Menu Tầng 4">⋮</button></div>
+          </li>
+        </ul>
+      </li>
+      <li role="treeitem" aria-expanded="false">
+        <div class="tree-node" tabindex="0"><button class="tw" aria-label="Mở nhánh Tòa B">▸</button><span>🏢 Tòa B</span><button class="more" aria-label="Menu Tòa B">⋮</button></div>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ===== Vùng giữa: Khung sơ đồ ===== -->
+  <main class="canvas-col">
+    <div class="toolbar">
+      <nav class="breadcrumb" aria-label="Đường dẫn khu vực">
+        Tòa A <span aria-hidden="true">›</span> Tầng 3 <span aria-hidden="true">›</span> <b>Phòng 305</b>
+      </nav>
+      <span class="spacer"></span>
+      <button class="btn btn-sm">Lọc pin ▾</button>
+      <button class="btn btn-sm">Di dời hàng loạt</button>
+      <button class="btn btn-sm">Xuất báo cáo</button>
+    </div>
+
+    <!-- Trạng thái Success/Default: sơ đồ + pin -->
+    <div class="canvas" role="img" aria-label="Sơ đồ mặt bằng Phòng 305 với 4 pin tài sản và 1 cụm pin">
+      <span class="floor-label">Sơ đồ mặt bằng — Phòng 305 (zoom/pan)</span>
+
+      <!-- Pin A-001: đang dùng (giọt nước) -->
+      <button class="pin" style="left:22%;top:30%" aria-label="Pin A-001, Tủ hồ sơ, đang dùng">
+        <svg width="26" height="34" viewBox="0 0 26 34"><path d="M13 0C6 0 1 5 1 12c0 8 12 22 12 22s12-14 12-22C25 5 20 0 13 0z" fill="#0b5cab"/><circle cx="13" cy="12" r="5" fill="#fff"/></svg>
+        <span class="lbl">A-001 · Tủ hồ sơ</span>
+      </button>
+
+      <!-- Pin A-014: đang dùng -->
+      <button class="pin" style="left:55%;top:26%" aria-label="Pin A-014, Bàn thao tác, đang dùng">
+        <svg width="26" height="34" viewBox="0 0 26 34"><path d="M13 0C6 0 1 5 1 12c0 8 12 22 12 22s12-14 12-22C25 5 20 0 13 0z" fill="#0b5cab"/><circle cx="13" cy="12" r="5" fill="#fff"/></svg>
+        <span class="lbl">A-014 · Bàn thao tác</span>
+      </button>
+
+      <!-- Pin A-007: đang được làm nổi (pulse) sau tra cứu -->
+      <button class="pin pulse" style="left:40%;top:50%" aria-label="Pin A-007, Máy nén khí, đang dùng, được làm nổi">
+        <svg width="30" height="38" viewBox="0 0 26 34"><path d="M13 0C6 0 1 5 1 12c0 8 12 22 12 22s12-14 12-22C25 5 20 0 13 0z" fill="#0b5cab" stroke="#ffb000" stroke-width="2"/><circle cx="13" cy="12" r="5" fill="#fff"/></svg>
+        <span class="lbl">A-007 · Máy nén khí (kết quả tra cứu)</span>
+      </button>
+
+      <!-- Pin A-009: đang khóa (hình vuông + ổ khóa) -->
+      <button class="pin" style="left:48%;top:66%" aria-label="Pin A-009, Băng tải, đang bị người khác chỉnh sửa (khóa)">
+        <svg width="26" height="34" viewBox="0 0 26 34"><rect x="3" y="2" width="20" height="20" rx="3" fill="#6a3fb0"/><path d="M13 22 L8 30 H18 Z" fill="#6a3fb0"/><rect x="9" y="9" width="8" height="7" rx="1" fill="#fff"/><path d="M10 9 v-2 a3 3 0 0 1 6 0 v2" stroke="#fff" stroke-width="1.6" fill="none"/></svg>
+        <span class="lbl">A-009 · Băng tải (đang khóa)</span>
+      </button>
+
+      <!-- Pin cần đặt lại (tam giác cảnh báo) -->
+      <button class="pin" style="left:84%;top:78%" aria-label="Pin A-031, cần đặt lại vị trí">
+        <svg width="28" height="28" viewBox="0 0 28 28"><path d="M14 1 L27 25 H1 Z" fill="#b3261e"/><rect x="12.6" y="9" width="2.8" height="9" fill="#fff"/><rect x="12.6" y="20" width="2.8" height="2.8" fill="#fff"/></svg>
+        <span class="lbl">A-031 · cần đặt lại</span>
+      </button>
+
+      <!-- Cụm pin > 500 -->
+      <div class="cluster" style="left:68%;top:46%" role="button" tabindex="0" aria-label="Cụm 23 pin, nhấn để tách">⨁ 23</div>
+    </div>
+
+    <div class="legend" aria-hidden="false">
+      <span><svg class="dot" viewBox="0 0 26 34"><path d="M13 0C6 0 1 5 1 12c0 8 12 22 12 22s12-14 12-22C25 5 20 0 13 0z" fill="#0b5cab"/></svg> Đang dùng</span>
+      <span><svg class="dot" viewBox="0 0 26 34"><rect x="3" y="2" width="20" height="20" rx="3" fill="#6a3fb0"/></svg> Đang khóa</span>
+      <span><svg class="dot" viewBox="0 0 28 28"><path d="M14 1 L27 25 H1 Z" fill="#b3261e"/></svg> Cần đặt lại</span>
+      <span><span class="cluster" style="position:static;transform:none;width:22px;height:22px;font-size:11px;">N</span> Cụm pin (&gt;500)</span>
+    </div>
+
+    <!-- Dải cảnh báo "N pin cần đặt lại" -->
+    <div class="warn-band" role="status">
+      <span aria-hidden="true">⚠</span> 3 pin cần đặt lại vị trí
+      <a href="#s05">Xử lý ngay →</a>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== LỚP NỔI (overlay) — minh họa ===================== -->
+<h2 class="section-title">Lớp nổi — Popup · Ô chọn tài sản · Dialog xóa · Toast</h2>
+<p class="note">Các overlay có animation in (ease-out) / out (ease-in) bằng transform + opacity; tắt khi bật giảm chuyển động.</p>
+<div class="overlay-demo" style="padding:0 16px 8px;">
+
+  <!-- Popup chi tiết pin -->
+  <div class="card popup-anim">
+    <h3>A-007 · Máy nén khí</h3>
+    <div class="row"><span>Trạng thái:</span><b style="color:var(--c-ok)">Đang dùng</b></div>
+    <div class="row"><span>Vị trí:</span><span>Tòa A › Tầng 3 › Phòng 305</span></div>
+    <div class="actions">
+      <button class="btn btn-sm">Xem lịch sử</button>
+      <button class="btn btn-sm">Di dời</button>
+      <button class="btn btn-sm btn-danger">Gỡ vị trí</button>
+    </div>
+  </div>
+
+  <!-- Ô chọn tài sản khi gán -->
+  <div class="card slideup-anim">
+    <h3>Gán vị trí tại điểm đã chọn</h3>
+    <div class="search" style="max-width:none;margin-bottom:8px;">
+      <span class="ic" aria-hidden="true">🔍</span>
+      <label for="qassign" class="visually-hidden">Tìm tài sản chưa có vị trí</label>
+      <input id="qassign" type="text" placeholder="Tìm tài sản chưa có vị trí...">
+    </div>
+    <label class="opt"><input type="radio" name="assign"> B-021 · Máy bơm</label>
+    <label class="opt"><input type="radio" name="assign"> B-045 · Tủ điện</label>
+    <div class="actions" style="justify-content:flex-end;">
+      <button class="btn btn-sm">Hủy</button>
+      <button class="btn btn-sm btn-primary">Gán vị trí</button>
+    </div>
+  </div>
+
+  <!-- Dialog xác nhận xóa -->
+  <div class="card dialog-anim">
+    <h3>Xóa khu vực</h3>
+    <p style="font-size:14px;">Xóa khu vực này sẽ gỡ vị trí của <b>12 tài sản</b> và xóa <b>3 khu vực con</b>. Tiếp tục?</p>
+    <div class="actions" style="justify-content:flex-end;">
+      <button class="btn btn-sm">Hủy</button>
+      <button class="btn btn-sm btn-danger">Xóa</button>
+    </div>
+  </div>
+
+  <!-- Toast + Snackbar -->
+  <div class="card">
+    <h3>Phản hồi</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+      <span class="toast">✓ Đã gán vị trí cho tài sản.</span>
+      <span class="toast" style="background:#08457f;">✓ Đã gỡ vị trí.</span>
+      <span class="snack">⚠ Lỗi kết nối, chưa lưu được.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== UI STATES ===================== -->
+<h2 class="section-title">Trạng thái giao diện (Empty · Loading · Error · Success)</h2>
+<div class="states" style="padding:0 16px 32px;">
+
+  <!-- Empty: cây trống -->
+  <div class="state-box">
+    <span class="tag" style="color:#6a7686">⚪ Empty — cây trống</span>
+    <div class="empty-ill" aria-hidden="true">🗂️</div>
+    <p style="font-size:14px;margin:0;text-align:center;">Chưa có khu vực nào.</p>
+    <button class="btn btn-sm btn-primary" style="align-self:center;">Tạo khu vực đầu tiên</button>
+  </div>
+
+  <!-- Empty: chưa có sơ đồ -->
+  <div class="state-box">
+    <span class="tag" style="color:#6a7686">⚪ Empty — chưa có sơ đồ</span>
+    <div class="empty-ill" aria-hidden="true">🖼️</div>
+    <p style="font-size:14px;margin:0;text-align:center;">Chưa có sơ đồ cho khu vực này.</p>
+    <button class="btn btn-sm btn-primary" style="align-self:center;">Tải ảnh sơ đồ</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="state-box">
+    <span class="tag" style="color:var(--c-primary)">🔄 Loading</span>
+    <div class="skel" style="width:60%"></div>
+    <div class="skel" style="width:85%"></div>
+    <div class="skel lg"></div>
+  </div>
+
+  <!-- Error -->
+  <div class="state-box" style="border-color:var(--c-danger);">
+    <span class="tag" style="color:var(--c-danger)">🔴 Error</span>
+    <div class="empty-ill" aria-hidden="true">⚠️</div>
+    <p style="font-size:14px;margin:0;text-align:center;">Không tải được sơ đồ.</p>
+    <button class="btn btn-sm" style="align-self:center;">Thử lại</button>
+    <p style="font-size:13px;margin:4px 0 0;text-align:center;color:var(--c-text-muted)">Không tìm thấy tài sản.</p>
+  </div>
+
+  <!-- Success -->
+  <div class="state-box" style="border-style:solid;border-color:var(--c-ok);">
+    <span class="tag" style="color:var(--c-ok)">🟢 Success</span>
+    <span class="toast" style="align-self:flex-start;">✓ Đã gán vị trí cho tài sản.</span>
+    <p style="font-size:13px;margin:0;color:var(--c-text-muted)">Sơ đồ mở < 2s, pin render đúng tọa độ %.</p>
+  </div>
+</div>
+
+<script>
+  // Tương tác tối thiểu để demo drawer mobile (không phụ thuộc package)
+  var menuBtn=document.getElementById('menuBtn'),
+      treeCol=document.getElementById('treeCol'),
+      scrim=document.getElementById('scrim');
+  function closeDrawer(){treeCol.classList.remove('open');scrim.classList.remove('show');menuBtn.setAttribute('aria-expanded','false');}
+  menuBtn&&menuBtn.addEventListener('click',function(){
+    var open=treeCol.classList.toggle('open');
+    scrim.classList.toggle('show',open);
+    menuBtn.setAttribute('aria-expanded',String(open));
+  });
+  scrim&&scrim.addEventListener('click',closeDrawer);
+</script>
+</body>
+</html>
