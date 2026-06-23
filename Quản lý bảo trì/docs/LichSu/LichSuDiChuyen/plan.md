@@ -11,11 +11,11 @@
 - Create: panel S06 (component slide-in từ phải), API đọc lịch sử di chuyển theo mã tài sản (trang đầu), mapper bản ghi → mục timeline
 - Test: test tải + render timeline + thứ tự giảm dần + 2 lối vào từ S01
 
-- [ ] Step 1: Viết test thất bại (TC-S06-01..08 trong test.md)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu: mở panel slide-left từ S01, gọi API trang đầu (≤ 50 bản ghi), render timeline mới-nhất-trên-cùng với 4 trường; xử lý "(Chưa có vị trí)" / "(Không có lý do)"; nút ←/✕/scrim đóng về S01
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S06-01..08 trong test.md)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu: mở panel slide-left từ S01, gọi API trang đầu (≤ 50 bản ghi), render timeline mới-nhất-trên-cùng với 4 trường; xử lý "(Chưa có vị trí)" / "(Không có lý do)"; nút ←/✕/scrim đóng về S01
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S06-01..08 pass · timeline đúng thứ tự thời gian giảm dần · breadcrump vị trí cũ→mới + người + thời điểm (dd/MM/yyyy HH:mm) + lý do đúng · trang đầu hiển thị < 2s (R-S06-N01) · cả 2 lối vào hoạt động · không lỗi lint.
 
@@ -26,11 +26,11 @@
 - Create: view Empty / Filtered-empty / Error trong panel; nút "Thử lại"; nút "Xóa lọc" trong filtered-empty
 - Test: test 3 trạng thái tách bạch + retry
 
-- [ ] Step 1: Viết test thất bại (TC-S06-09, TC-S06-10, TC-S06-22, TC-S06-23)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: phân biệt rỗng-tài-sản ("Tài sản chưa có lần di chuyển nào.") vs rỗng-sau-lọc ("Không có lần di chuyển nào trong khoảng đã chọn." + Xóa lọc) vs lỗi ("Không tải được lịch sử." + Thử lại)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S06-09, TC-S06-10, TC-S06-22, TC-S06-23)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: phân biệt rỗng-tài-sản ("Tài sản chưa có lần di chuyển nào.") vs rỗng-sau-lọc ("Không có lần di chuyển nào trong khoảng đã chọn." + Xóa lọc) vs lỗi ("Không tải được lịch sử." + Thử lại)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S06-09, 10, 22, 23 pass · ba trạng thái tách bạch đúng wording (R-S06-06) · Thử lại tải lại được · không lỗi lint.
 
@@ -41,11 +41,11 @@
 - Create: thanh bộ lọc Từ ngày/Đến ngày + Áp dụng/Xóa lọc; validation liên trường tu_ngay ≤ den_ngay; lỗi inline; gắn tham số khoảng vào API đọc
 - Test: test các biên ngày (BVA), lọc một phía (EP), chặn Từ>Đến (DT)
 
-- [ ] Step 1: Viết test thất bại (TC-S06-14..21)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: Áp dụng → tải bản ghi trong khoảng (bao gồm hai mốc); lọc một phía hợp lệ; Từ>Đến → lỗi inline "Từ ngày không được sau Đến ngày." và **không** gọi tải; Xóa lọc → toàn bộ lịch sử
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S06-14..21)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: Áp dụng → tải bản ghi trong khoảng (bao gồm hai mốc); lọc một phía hợp lệ; Từ>Đến → lỗi inline "Từ ngày không được sau Đến ngày." và **không** gọi tải; Xóa lọc → toàn bộ lịch sử
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S06-14..21 pass · biên bao gồm hai mốc đúng · khoảng không hợp lệ bị chặn không gọi tải (R-S06-05) · Xóa lọc khôi phục đầy đủ (R-S06-04) · không lỗi lint.
 
@@ -56,11 +56,11 @@
 - Create: cuộn vô hạn/"Xem thêm" theo lô; cờ "còn dữ liệu"; spinner cuối danh sách; chỉ báo hết
 - Test: test nối lô đúng thứ tự/không trùng + chỉ báo hết + hiệu năng từng lô
 
-- [ ] Step 1: Viết test thất bại (TC-S06-24)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: tải trang đầu 50 mục, cuộn cuối → tải lô tiếp nối vào timeline (không đụng mục cũ); hết dữ liệu → "— Đã hiển thị hết lịch sử —"; mỗi lô < 2s
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S06-24)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: tải trang đầu 50 mục, cuộn cuối → tải lô tiếp nối vào timeline (không đụng mục cũ); hết dữ liệu → "— Đã hiển thị hết lịch sử —"; mỗi lô < 2s
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S06-24 pass · nối thêm đúng thứ tự, không trùng (R-S06-07) · mỗi lô < 2s kể cả hàng trăm bản ghi (R-S06-N01) · chỉ báo hết đúng wording · không lỗi lint.
 
@@ -71,10 +71,10 @@
 - Create: kiểm soát quyền đọc (Quản trị + Giám sát); đảm bảo panel không render bất kỳ điều khiển sửa/xóa
 - Test: test vắng mặt nút sửa/xóa cho cả 2 vai trò + append-only sau di dời
 
-- [ ] Step 1: Viết test thất bại (TC-S06-11, TC-S06-12, TC-S06-13)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code: cả 2 vai trò xem cùng giao diện chỉ đọc; không có endpoint/UI sửa-xóa bản ghi; xác nhận bản ghi mới chỉ append vào đầu chuỗi
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S06-11, TC-S06-12, TC-S06-13)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code: cả 2 vai trò xem cùng giao diện chỉ đọc; không có endpoint/UI sửa-xóa bản ghi; xác nhận bản ghi mới chỉ append vào đầu chuỗi
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S06-11, 12, 13 pass · không có thao tác sửa/xóa cho mọi vai trò (R-S06-08, BRule-S06-01) · append-only được kiểm chứng · không lỗi lint.

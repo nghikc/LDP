@@ -40,4 +40,6 @@ Quản lý bảo trì/
 |-----|-----------|---------|
 | S01 Workspace | ✅ dev xong | Đã merge `main` (PR #1); 46 test, 24/24 TC Auto Pass |
 | S02 Form khu vực | ✅ dev xong | Đã merge `main` (PR #2); 34 test, 26/26 TC Auto Pass |
-| S04 Di dời tài sản | ✅ dev xong | Nhánh `feature/qlvt-s04-didoi`; 25 test, 16/16 TC Auto Pass; build+lint sạch |
+| S04 Di dời tài sản | ✅ dev xong | Đã merge `main` (PR #3); 25 test, 16/16 TC Auto Pass |
+| S06 Lịch sử di chuyển | ✅ dev xong | Nhánh `feature/qlvt-s06-s07-lichsu-audit`; 16 test, 16/16 TC Auto Pass |
+| S07 Nhật ký kiểm toán | ✅ dev xong | Cùng nhánh S06; 27 test, 21/21 TC Auto Pass; tổng dự án 148 test xanh |
