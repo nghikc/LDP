@@ -93,7 +93,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
                 onClickViTri(dsMa, c.toaDoX, c.toaDoY);
               }}
             >
-              <span className="pin-cham" aria-hidden="true">{nhieu ? c.pins.length : ""}</span>
+              <span className="pin-cham" aria-hidden="true">{c.pins.length}</span>
               <span className="pin-nhan">{nhan}</span>
             </button>
           );
