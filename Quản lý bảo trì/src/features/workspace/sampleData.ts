@@ -1,4 +1,5 @@
 import type { NutKhuVuc, TaiSan, ViTriPin } from "./types";
+import { SO_DO_MAU } from "./soDoPlaceholder";
 
 // Dữ liệu mẫu khớp Test Data trong test.md S01.
 // Cây: Tòa A › (Tầng 3 › Phòng 305, Phòng 306) , Tầng 4 ; Tòa B.
@@ -6,9 +7,9 @@ import type { NutKhuVuc, TaiSan, ViTriPin } from "./types";
 export const nutKhuVucMau: NutKhuVuc[] = [
   { maNut: "toa-a", tenKhuVuc: "Tòa A", nutCha: null },
   { maNut: "tang-3", tenKhuVuc: "Tầng 3", nutCha: "toa-a" },
-  { maNut: "phong-305", tenKhuVuc: "Phòng 305", nutCha: "tang-3", soDoUrl: "/so-do/phong-305.png" },
+  { maNut: "phong-305", tenKhuVuc: "Phòng 305", nutCha: "tang-3", soDoUrl: SO_DO_MAU },
   { maNut: "phong-306", tenKhuVuc: "Phòng 306", nutCha: "tang-3" }, // chưa có sơ đồ
-  { maNut: "tang-4", tenKhuVuc: "Tầng 4", nutCha: "toa-a", soDoUrl: "/so-do/tang-4.png" },
+  { maNut: "tang-4", tenKhuVuc: "Tầng 4", nutCha: "toa-a", soDoUrl: SO_DO_MAU },
   { maNut: "toa-b", tenKhuVuc: "Tòa B", nutCha: null },
 ];
 

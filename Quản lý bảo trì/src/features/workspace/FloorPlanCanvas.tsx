@@ -1,6 +1,7 @@
 import type { NutKhuVuc, ViTriPin } from "./types";
 import { chuoiDuongDan } from "./logic/treeModel";
 import { gomCumPin } from "./logic/clustering";
+import { SO_DO_FALLBACK } from "./soDoPlaceholder";
 
 interface Props {
   nodes: NutKhuVuc[];
@@ -56,7 +57,15 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
           onClickTrong(x, y);
         }}
       >
-        <img src={nutChon.soDoUrl} alt={`Sơ đồ ${nutChon.tenKhuVuc}`} className="anh-so-do" />
+        <img
+          src={nutChon.soDoUrl}
+          alt={`Sơ đồ ${nutChon.tenKhuVuc}`}
+          className="anh-so-do"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src !== SO_DO_FALLBACK) img.src = SO_DO_FALLBACK;
+          }}
+        />
         {cum.map((c, i) =>
           c.soLuong === 1 ? (
             <button
