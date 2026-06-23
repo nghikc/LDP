@@ -106,7 +106,11 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .ds-vi-tri .vt-nut { display: flex; gap: 4px; flex-shrink: 0; }
 .ds-vi-tri .vt-nut button { font-size: 12px; padding: 2px var(--kc-1); }
 .o-gan-huong-dan { font-size: 12px; color: var(--mau-chu-phu); margin: 4px 0; }
-.o-gan-tim, .ds-tim { width: 100%; margin: var(--kc-1) 0; padding: 9px var(--kc-2); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; background: #fafbfc; }
+.o-gan-truong { display: block; margin-top: var(--kc-2); font-size: 13px; font-weight: 600; color: var(--mau-chu-phu); flex-shrink: 0; }
+.o-gan-truong:first-of-type { margin-top: var(--kc-1); }
+.o-gan-tuychon { font-weight: 400; }
+.o-gan-tim, .ds-tim { width: 100%; margin: 6px 0 0; padding: 9px var(--kc-2); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; background: #fafbfc; }
+.o-gan-meta { margin-top: 6px; }
 .o-gan-tim:focus, .ds-tim:focus { outline: none; background: #fff; border-color: var(--mau-chinh); box-shadow: 0 0 0 2px rgba(20,86,184,.2); }
 .o-gan-meta, .ds-meta { font-size: 12px; color: var(--mau-chu-phu); margin: 0 0 4px; }
 /* Modal gán: cột co giãn, danh sách cuộn riêng, footer luôn hiển thị. */

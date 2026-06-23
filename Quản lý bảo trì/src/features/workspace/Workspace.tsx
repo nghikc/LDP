@@ -237,9 +237,16 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
         <div className="lop-noi" role="dialog" aria-label="Gán vị trí tài sản">
           <div className="o-gan">
             <h2>Gán vị trí tại điểm đã chọn</h2>
-            <p className="o-gan-huong-dan">Tìm và chọn một hoặc nhiều tài sản (chưa có vị trí) để gán vào vị trí này.</p>
-            <input className="o-gan-tim" type="search" placeholder="Tìm theo mã/tên tài sản..."
-              aria-label="Tìm tài sản chưa có vị trí" value={timGan} onChange={(e) => setTimGan(e.target.value)} />
+            <label className="o-gan-truong">
+              Tên vị trí <span className="o-gan-tuychon">(tùy chọn)</span>
+              <input className="o-gan-tim" type="text" placeholder="vd Khu máy nén"
+                aria-label="Tên vị trí" value={tenGan} onChange={(e) => setTenGan(e.target.value)} />
+            </label>
+            <label className="o-gan-truong">
+              Chọn tài sản <span className="o-gan-tuychon">(chưa có vị trí)</span>
+              <input className="o-gan-tim" type="search" placeholder="Tìm theo mã/tên tài sản..."
+                aria-label="Tìm tài sản chưa có vị trí" value={timGan} onChange={(e) => setTimGan(e.target.value)} />
+            </label>
             <p className="o-gan-meta">
               {taiSanGanDuoc.length === 0
                 ? "Không còn tài sản chưa có vị trí."
@@ -256,8 +263,6 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
                 <li className="o-gan-trong">Không tìm thấy tài sản phù hợp.</li>
               )}
             </ul>
-            <input className="o-gan-tim" type="text" placeholder="Tên vị trí (tùy chọn) — vd Khu máy nén"
-              aria-label="Tên vị trí" value={tenGan} onChange={(e) => setTenGan(e.target.value)} />
             <div className="o-gan-nut">
               <button onClick={() => { setDraft(null); setTimGan(""); setTenGan(""); }}>Hủy</button>
               <button className="cta" disabled={draft.maTaiSans.length === 0} onClick={xacNhanGan}>
