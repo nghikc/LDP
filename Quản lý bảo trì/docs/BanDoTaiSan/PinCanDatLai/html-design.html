@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S05 — Danh sách pin cần đặt lại</title>
+<style>
+  /* ===== Design tokens (mặc định, thang spacing 8pt) ===== */
+  :root{
+    --c-bg:#0f172a;            /* nền workspace tối phía sau */
+    --c-overlay:rgba(15,23,42,.55);
+    --c-panel:#ffffff;
+    --c-text:#1f2937;          /* text chính - tương phản >=4.5:1 trên trắng */
+    --c-text-muted:#566175;
+    --c-border:#d7dde6;
+    --c-primary:#1d4ed8;       /* xanh đậm - contrast >=4.5:1 với trắng */
+    --c-primary-hover:#1741b6;
+    --c-primary-fg:#ffffff;
+    --c-warn-bg:#fff7ed;
+    --c-warn-border:#fdba74;
+    --c-warn-text:#9a3412;
+    --c-success:#15803d;
+    --c-success-bg:#ecfdf5;
+    --c-danger:#b91c1c;
+    --c-danger-bg:#fef2f2;
+    --c-focus:#2563eb;
+    --c-skeleton:#e7ebf1;
+    --c-skeleton-hi:#f3f5f8;
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px;
+    --radius:10px;
+    --shadow:0 12px 40px rgba(15,23,42,.28);
+    --enter:250ms cubic-bezier(.16,.84,.44,1);  /* ease-out */
+    --exit:220ms cubic-bezier(.4,0,1,1);         /* ease-in */
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--c-text);
+    background:var(--c-bg);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== Mô phỏng Workspace S01 phía sau ===== */
+  .workspace{
+    min-height:100vh; padding:var(--s3);
+    color:#cbd5e1;
+  }
+  .workspace h1{font-size:18px;margin:0 0 var(--s1);color:#e2e8f0;}
+  .workspace p{margin:0;color:#94a3b8;font-size:14px;}
+  .ws-strip{
+    margin-top:var(--s3); display:inline-flex; gap:var(--s1); align-items:center;
+    background:var(--c-warn-bg); color:var(--c-warn-text);
+    border:1px solid var(--c-warn-border); border-radius:var(--radius);
+    padding:var(--s1) var(--s2); font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .ws-strip:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;}
+
+  /* ===== Overlay ===== */
+  .overlay{
+    position:fixed; inset:0; background:var(--c-overlay);
+    opacity:0; pointer-events:none; transition:opacity var(--exit);
+    z-index:20;
+  }
+  .overlay.open{opacity:1; pointer-events:auto; transition:opacity var(--enter);}
+
+  /* ===== Panel trượt từ phải ===== */
+  .panel{
+    position:fixed; top:0; right:0; height:100vh; width:440px; max-width:100vw;
+    background:var(--c-panel); box-shadow:var(--shadow);
+    transform:translateX(100%); transition:transform var(--exit);
+    z-index:21; display:flex; flex-direction:column;
+  }
+  .panel.open{transform:translateX(0); transition:transform var(--enter);}
+
+  .panel__header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:var(--s2) var(--s3); border-bottom:1px solid var(--c-border);
+    flex:0 0 auto;
+  }
+  .panel__title{font-size:17px; font-weight:700; margin:0;}
+  .icon-btn{
+    width:40px; height:40px; border:none; background:transparent; border-radius:8px;
+    font-size:20px; line-height:1; cursor:pointer; color:var(--c-text-muted);
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .icon-btn:hover{background:#eef1f5; color:var(--c-text);}
+  .icon-btn:focus-visible{outline:3px solid var(--c-focus); outline-offset:2px;}
+
+  .panel__desc{
+    padding:var(--s2) var(--s3); border-bottom:1px solid var(--c-border);
+    font-size:14px; color:var(--c-text-muted); display:flex; gap:var(--s2);
+    align-items:flex-start; justify-content:space-between; flex:0 0 auto;
+  }
+  .panel__desc p{margin:0; line-height:1.5;}
+  .counter{
+    flex:0 0 auto; background:#eef2ff; color:var(--c-primary);
+    border-radius:999px; padding:4px var(--s2); font-weight:700; font-size:13px;
+    white-space:nowrap;
+  }
+  .counter.pulse{animation:countPulse 150ms ease-out;}
+
+  .panel__body{flex:1 1 auto; overflow-y:auto; padding:var(--s2) var(--s3);}
+
+  /* ===== Item pin ===== */
+  .pin-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--s2);}
+  .pin-item{
+    border:1px solid var(--c-border); border-radius:var(--radius);
+    padding:var(--s2); display:flex; gap:var(--s2);
+    align-items:center; justify-content:space-between;
+    animation:itemIn var(--enter) both;
+    will-change:transform,opacity;
+  }
+  .pin-item__info{min-width:0;}
+  .pin-item__name{
+    font-weight:700; font-size:15px; margin:0 0 4px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .pin-item__path,.pin-item__map{
+    font-size:13px; color:var(--c-text-muted); margin:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .pin-item__map{margin-top:2px;}
+  .pin-item__map b{color:var(--c-text); font-weight:600;}
+
+  .btn{
+    font:inherit; border-radius:8px; padding:10px var(--s2); cursor:pointer;
+    border:1px solid transparent; font-weight:600; font-size:14px;
+    transition:background var(--exit), border-color var(--exit);
+  }
+  .btn:focus-visible{outline:3px solid var(--c-focus); outline-offset:2px;}
+  .btn--primary{background:var(--c-primary); color:var(--c-primary-fg); white-space:nowrap; flex:0 0 auto;}
+  .btn--primary:hover{background:var(--c-primary-hover);}
+  .btn--primary:disabled{background:#cbd5e1; color:#64748b; cursor:not-allowed;}
+  .btn--ghost{background:transparent; color:var(--c-primary); border-color:var(--c-border);}
+  .btn--ghost:hover{background:#f1f5f9;}
+
+  .pin-item.locked{background:#fafafa;}
+  .lock-hint{
+    display:block; margin-top:6px; font-size:12px; color:var(--c-warn-text);
+  }
+
+  /* Item rời danh sách */
+  .pin-item.leaving{
+    animation:itemOut 180ms cubic-bezier(.4,0,1,1) forwards;
+  }
+
+  /* ===== Empty state (phổ biến) ===== */
+  .empty{
+    text-align:center; padding:var(--s4) var(--s3);
+    display:flex; flex-direction:column; align-items:center; gap:var(--s2);
+    animation:emptyIn 200ms ease-out both;
+  }
+  .empty__icon{
+    width:72px; height:72px; border-radius:50%; background:var(--c-success-bg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .empty__title{font-size:16px; font-weight:700; margin:0; color:var(--c-text);}
+  .empty__sub{font-size:14px; color:var(--c-text-muted); margin:0; max-width:30ch;}
+
+  /* ===== Loading skeleton ===== */
+  .skel-item{
+    border:1px solid var(--c-border); border-radius:var(--radius);
+    padding:var(--s2); display:flex; flex-direction:column; gap:var(--s1);
+  }
+  .skel-line{height:12px; border-radius:6px; background:linear-gradient(90deg,var(--c-skeleton),var(--c-skeleton-hi),var(--c-skeleton)); background-size:200% 100%; animation:shimmer 1.2s linear infinite;}
+  .skel-line.w70{width:70%;} .skel-line.w50{width:50%;} .skel-line.w40{width:40%;}
+
+  /* ===== Error state ===== */
+  .errbox{
+    text-align:center; padding:var(--s4) var(--s3);
+    display:flex; flex-direction:column; align-items:center; gap:var(--s2);
+  }
+  .errbox__icon{
+    width:64px; height:64px; border-radius:50%; background:var(--c-danger-bg);
+    display:flex; align-items:center; justify-content:center; color:var(--c-danger); font-size:30px;
+  }
+  .errbox__title{font-weight:700; margin:0; color:var(--c-text);}
+
+  /* ===== Toast success ===== */
+  .toast{
+    position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-20px);
+    background:var(--c-success); color:#fff; padding:var(--s1) var(--s2);
+    border-radius:8px; font-size:14px; font-weight:600; z-index:40;
+    opacity:0; pointer-events:none; transition:opacity var(--exit), transform var(--exit);
+    box-shadow:0 6px 20px rgba(21,128,61,.4);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0); transition:opacity var(--enter), transform var(--enter);}
+
+  /* ===== Demo switcher (chỉ để xem các state) ===== */
+  .demo-bar{
+    position:fixed; bottom:0; left:0; right:0; background:#111827; color:#e5e7eb;
+    display:flex; flex-wrap:wrap; gap:var(--s1); padding:var(--s1) var(--s2);
+    z-index:50; font-size:13px; align-items:center;
+  }
+  .demo-bar span{font-weight:700; margin-right:var(--s1);}
+  .demo-bar button{
+    font:inherit; background:#1f2937; color:#e5e7eb; border:1px solid #374151;
+    border-radius:6px; padding:6px 10px; cursor:pointer;
+  }
+  .demo-bar button:hover{background:#374151;}
+  .demo-bar button[aria-pressed="true"]{background:var(--c-primary); border-color:var(--c-primary);}
+
+  /* ===== Animations ===== */
+  @keyframes itemIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  @keyframes itemOut{
+    0%{opacity:1; transform:translateX(0); max-height:140px;}
+    100%{opacity:0; transform:translateX(24px); max-height:0; padding-top:0; padding-bottom:0; margin-bottom:-16px; border-width:0;}
+  }
+  @keyframes emptyIn{from{opacity:0;} to{opacity:1;}}
+  @keyframes countPulse{0%{transform:scale(1);}50%{transform:scale(1.18);}100%{transform:scale(1);}}
+  @keyframes shimmer{from{background-position:200% 0;} to{background-position:-200% 0;}}
+  @keyframes pinPulse{0%,100%{transform:scale(1); box-shadow:0 0 0 0 rgba(29,78,216,.5);}50%{transform:scale(1.25); box-shadow:0 0 0 10px rgba(29,78,216,0);}}
+
+  /* Highlight pin trên workspace (mô phỏng) */
+  .ws-pin{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:50%; background:var(--c-primary); color:#fff;
+    font-size:12px; font-weight:700; margin-top:var(--s2);
+  }
+  .ws-pin.highlight{animation:pinPulse 600ms ease-in-out 2;}
+
+  /* ===== Responsive: full-width panel trên mobile ===== */
+  @media (max-width:640px){
+    .panel{width:100vw;}
+    .panel__desc{flex-direction:column;}
+    .pin-item{flex-direction:column; align-items:stretch;}
+    .pin-item .btn--primary{width:100%;}
+  }
+
+  /* ===== prefers-reduced-motion ===== */
+  @media (prefers-reduced-motion:reduce){
+    .overlay,.panel{transition:opacity 1ms linear;}
+    .panel{transition:transform 1ms linear, opacity 120ms linear;}
+    .pin-item,.empty{animation:none;}
+    .pin-item.leaving{animation:none; opacity:0;}
+    .counter.pulse{animation:none;}
+    .skel-line{animation:none;}
+    .ws-pin.highlight{animation:none; outline:3px solid var(--c-primary); outline-offset:2px;}
+    .toast{transition:opacity 120ms linear;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== Workspace S01 (nền) ===== -->
+  <main class="workspace" aria-hidden="false">
+    <h1>Bản đồ tài sản — Workspace (S01)</h1>
+    <p>Sơ đồ mặt bằng đang hiển thị. Dải cảnh báo dưới đây mở panel S05.</p>
+    <button class="ws-strip" id="openBtn" aria-haspopup="dialog" aria-controls="panel">
+      ⚠️ 3 pin cần đặt lại vị trí
+    </button>
+    <div>
+      <span class="ws-pin" id="wsPin" aria-label="Pin A-014 trên sơ đồ">A14</span>
+      <p style="font-size:12px;margin-top:4px;color:#94a3b8;">(Mô phỏng: pin được làm nổi khi vào chế độ đặt lại)</p>
+    </div>
+  </main>
+
+  <!-- ===== Overlay + Panel ===== -->
+  <div class="overlay" id="overlay" tabindex="-1"></div>
+
+  <aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+    <header class="panel__header">
+      <h2 class="panel__title" id="panelTitle">Pin cần đặt lại vị trí</h2>
+      <button class="icon-btn" id="closeBtn" aria-label="Đóng panel">✕</button>
+    </header>
+
+    <!-- Mô tả + bộ đếm (ẩn ở empty/loading/error) -->
+    <div class="panel__desc" id="descBlock">
+      <p>Sau khi thay ảnh sơ đồ, <strong id="descCount">3</strong> pin nằm ngoài vùng ảnh mới. Chọn từng pin để đặt lại vị trí trên sơ đồ.</p>
+      <span class="counter" id="counter" aria-live="polite">Tổng: 3</span>
+    </div>
+
+    <div class="panel__body" id="panelBody">
+      <!-- Nội dung động được render theo state -->
+    </div>
+  </aside>
+
+  <!-- ===== Toast ===== -->
+  <div class="toast" id="toast" role="status" aria-live="polite">Đã đặt lại vị trí pin.</div>
+
+  <!-- ===== Demo switcher ===== -->
+  <nav class="demo-bar" aria-label="Chọn trạng thái xem thử">
+    <span>UI State:</span>
+    <button data-state="default" aria-pressed="true">Danh sách (3 pin)</button>
+    <button data-state="loading" aria-pressed="false">Loading</button>
+    <button data-state="error" aria-pressed="false">Error</button>
+    <button data-state="empty" aria-pressed="false">Empty (0 pin)</button>
+    <button data-state="success" aria-pressed="false">Success (đặt lại 1 pin)</button>
+  </nav>
+
+<script>
+  // ===== Dữ liệu mẫu tĩnh =====
+  var pins = [
+    {ma:'A-014', ten:'Máy nén khí', path:'Tòa A › Tầng 3 › Phòng 305', map:'Phòng 305', locked:false},
+    {ma:'A-031', ten:'Tủ điện',     path:'Tòa A › Tầng 3 › Phòng 306', map:'Phòng 306', locked:true},
+    {ma:'B-002', ten:'Máy bơm',     path:'Tòa B › Tầng 1 › Kho',       map:'Kho B1',    locked:false}
+  ];
+
+  var body = document.getElementById('panelBody');
+  var descBlock = document.getElementById('descBlock');
+  var counter = document.getElementById('counter');
+  var descCount = document.getElementById('descCount');
+  var toast = document.getElementById('toast');
+  var wsPin = document.getElementById('wsPin');
+
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function setCounter(n){
+    counter.textContent = 'Tổng: ' + n;
+    descCount.textContent = n;
+    counter.classList.remove('pulse'); void counter.offsetWidth; counter.classList.add('pulse');
+  }
+
+  function renderList(list){
+    descBlock.style.display = '';
+    setCounter(list.length);
+    var ul = document.createElement('ul');
+    ul.className = 'pin-list';
+    list.forEach(function(p){
+      var li = document.createElement('li');
+      li.className = 'pin-item' + (p.locked ? ' locked' : '');
+      li.innerHTML =
+        '<div class="pin-item__info">' +
+          '<p class="pin-item__name" title="'+esc(p.ma+' · '+p.ten)+'">'+esc(p.ma)+' · '+esc(p.ten)+'</p>' +
+          '<p class="pin-item__path" title="'+esc(p.path)+'">'+esc(p.path)+'</p>' +
+          '<p class="pin-item__map">Sơ đồ: <b>'+esc(p.map)+'</b></p>' +
+          (p.locked ? '<span class="lock-hint">Tài sản đang được người khác chỉnh sửa. Vui lòng thử lại sau.</span>' : '') +
+        '</div>' +
+        '<button class="btn btn--primary" '+(p.locked?'disabled aria-disabled="true"':'')+
+          ' aria-label="Đặt lại vị trí '+esc(p.ma)+'">Đặt lại vị trí</button>';
+      // nút đặt lại: mô phỏng đóng panel + highlight pin
+      var btn = li.querySelector('button');
+      if(!p.locked){
+        btn.addEventListener('click', function(){
+          closePanel();
+          wsPin.classList.remove('highlight'); void wsPin.offsetWidth; wsPin.classList.add('highlight');
+        });
+      }
+      ul.appendChild(li);
+    });
+    body.innerHTML = '';
+    body.appendChild(ul);
+  }
+
+  function renderLoading(){
+    descBlock.style.display = 'none';
+    var html = '';
+    for(var i=0;i<3;i++){
+      html += '<div class="skel-item"><div class="skel-line w70"></div><div class="skel-line w50"></div><div class="skel-line w40"></div></div>';
+    }
+    body.innerHTML = '<div style="display:flex;flex-direction:column;gap:16px">'+html+'</div>';
+  }
+
+  function renderError(){
+    descBlock.style.display = 'none';
+    body.innerHTML =
+      '<div class="errbox" role="alert">' +
+        '<div class="errbox__icon" aria-hidden="true">!</div>' +
+        '<p class="errbox__title">Không tải được danh sách pin cần đặt lại.</p>' +
+        '<button class="btn btn--primary" id="retryBtn">Thử lại</button>' +
+      '</div>';
+    document.getElementById('retryBtn').addEventListener('click', function(){ show('default'); });
+  }
+
+  function renderEmpty(){
+    descBlock.style.display = 'none';
+    body.innerHTML =
+      '<div class="empty">' +
+        '<div class="empty__icon" aria-hidden="true">' +
+          '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+        '</div>' +
+        '<p class="empty__title">Không có pin nào cần đặt lại vị trí.</p>' +
+        '<p class="empty__sub">Mọi pin đều nằm đúng trong vùng sơ đồ.</p>' +
+        '<button class="btn btn--ghost" id="emptyCloseBtn">Đóng</button>' +
+      '</div>';
+    document.getElementById('emptyCloseBtn').addEventListener('click', closePanel);
+  }
+
+  // Success: đặt lại 1 pin -> item rời danh sách (collapse/fade) + bộ đếm giảm + toast
+  function renderSuccess(){
+    renderList(pins.slice()); // bắt đầu với 3
+    setTimeout(function(){
+      var firstItem = body.querySelector('.pin-item');
+      if(!firstItem) return;
+      // toast
+      toast.classList.add('show');
+      setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+      // item rời danh sách
+      firstItem.classList.add('leaving');
+      firstItem.addEventListener('animationend', function(){
+        firstItem.remove();
+        setCounter(body.querySelectorAll('.pin-item').length);
+      }, {once:true});
+    }, 700);
+  }
+
+  function clearPressed(){
+    document.querySelectorAll('.demo-bar button').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+  }
+
+  function show(state){
+    clearPressed();
+    var active = document.querySelector('.demo-bar button[data-state="'+state+'"]');
+    if(active) active.setAttribute('aria-pressed','true');
+    if(state==='default') renderList(pins.slice());
+    else if(state==='loading') renderLoading();
+    else if(state==='error') renderError();
+    else if(state==='empty') renderEmpty();
+    else if(state==='success') renderSuccess();
+  }
+
+  // ===== Mở / đóng panel =====
+  var overlay = document.getElementById('overlay');
+  var panel = document.getElementById('panel');
+  var openBtn = document.getElementById('openBtn');
+  var lastFocus = null;
+
+  function openPanel(){
+    lastFocus = document.activeElement;
+    overlay.classList.add('open');
+    panel.classList.add('open');
+    document.getElementById('closeBtn').focus();
+  }
+  function closePanel(){
+    overlay.classList.remove('open');
+    panel.classList.remove('open');
+    if(lastFocus) lastFocus.focus();
+  }
+
+  openBtn.addEventListener('click', openPanel);
+  document.getElementById('closeBtn').addEventListener('click', closePanel);
+  overlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePanel(); });
+
+  document.querySelectorAll('.demo-bar button').forEach(function(b){
+    b.addEventListener('click', function(){ show(b.getAttribute('data-state')); if(!panel.classList.contains('open')) openPanel(); });
+  });
+
+  // Khởi tạo: hiển thị danh sách + mở panel để xem ngay
+  show('default');
+  openPanel();
+</script>
+</body>
+</html>

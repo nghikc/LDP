@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quản lý ảnh sơ đồ mặt bằng — S03</title>
+<style>
+  /* ===== Design tokens (8pt scale) ===== */
+  :root{
+    --c-bg:#0f172a; --c-surface:#ffffff; --c-surface-2:#f1f5f9; --c-border:#cbd5e1;
+    --c-text:#0f172a; --c-text-2:#475569; --c-muted:#64748b;
+    --c-primary:#1d4ed8; --c-primary-700:#1e40af; --c-primary-50:#eff6ff;
+    --c-danger:#b91c1c; --c-danger-50:#fef2f2; --c-danger-border:#fecaca;
+    --c-success:#15803d; --c-success-50:#ecfdf5;
+    --c-warn:#b45309; --c-warn-50:#fffbeb; --c-warn-border:#fde68a;
+    --c-focus:#2563eb;
+    --sp-1:8px; --sp-2:16px; --sp-3:24px; --sp-4:32px; --sp-05:4px;
+    --radius:12px; --radius-sm:8px;
+    --shadow:0 10px 30px rgba(2,6,23,.28);
+    --dur-section:180ms; --dur-modal:260ms; --dur-toast:150ms;
+    --ease-out:cubic-bezier(.16,1,.3,1); --ease-in:cubic-bezier(.4,0,1,1);
+    --font:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;overflow-x:hidden;background:var(--c-bg);}
+  body{font-family:var(--font);color:var(--c-text);line-height:1.5;
+    /* mô phỏng workspace S01 phía sau */
+    background-image:radial-gradient(circle at 20% 20%, #1e293b 0, #0f172a 60%);}
+
+  /* ===== Workspace S01 backdrop ===== */
+  .workspace{position:fixed;inset:0;display:grid;place-items:center;padding:var(--sp-2);
+    transition:filter var(--dur-modal) var(--ease-out), transform var(--dur-modal) var(--ease-out);}
+  .workspace.dimmed{filter:blur(2px) brightness(.7);transform:scale(.99);}
+  .ws-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--radius);padding:var(--sp-3);max-width:560px;color:#e2e8f0;text-align:center;}
+  .ws-card h1{font-size:20px;margin:0 0 var(--sp-1);}
+  .ws-card p{color:#cbd5e1;margin:0 0 var(--sp-2);font-size:14px;}
+  .ws-btns{display:flex;gap:var(--sp-1);flex-wrap:wrap;justify-content:center;}
+
+  /* ===== Controls panel (demo only) ===== */
+  .demo-bar{position:fixed;top:var(--sp-1);left:var(--sp-1);z-index:60;display:flex;gap:var(--sp-05);
+    flex-wrap:wrap;background:rgba(15,23,42,.85);padding:var(--sp-1);border-radius:var(--radius-sm);
+    border:1px solid rgba(255,255,255,.18);}
+  .demo-bar span{color:#94a3b8;font-size:11px;align-self:center;padding-right:4px;}
+
+  /* ===== Buttons ===== */
+  .btn{font:inherit;font-size:14px;font-weight:600;border-radius:var(--radius-sm);
+    padding:10px var(--sp-2);border:1px solid transparent;cursor:pointer;
+    display:inline-flex;align-items:center;gap:var(--sp-05);min-height:40px;
+    transition:background .15s var(--ease-out), box-shadow .15s var(--ease-out), transform .08s;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--c-primary);color:#fff;}
+  .btn-primary:hover{background:var(--c-primary-700);}
+  .btn-secondary{background:var(--c-surface-2);color:var(--c-text);border-color:var(--c-border);}
+  .btn-secondary:hover{background:#e2e8f0;}
+  .btn-danger{background:#fff;color:var(--c-danger);border-color:var(--c-danger-border);}
+  .btn-danger:hover{background:var(--c-danger-50);}
+  .btn-danger-solid{background:var(--c-danger);color:#fff;}
+  .btn-danger-solid:hover{background:#991b1b;}
+  .btn-ghost{background:transparent;color:#cbd5e1;border-color:rgba(255,255,255,.25);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn:focus-visible, a:focus-visible, .dropzone:focus-visible{
+    outline:3px solid var(--c-focus);outline-offset:2px;}
+
+  /* ===== Modal S03 ===== */
+  .overlay{position:fixed;inset:0;background:rgba(2,6,23,.55);z-index:40;
+    display:flex;align-items:flex-end;justify-content:center;
+    opacity:0;visibility:hidden;transition:opacity var(--dur-modal) var(--ease-out), visibility var(--dur-modal);}
+  .overlay.open{opacity:1;visibility:visible;}
+  .modal{background:var(--c-surface);width:100%;max-width:720px;max-height:92vh;overflow:auto;
+    border-radius:var(--radius) var(--radius) 0 0;box-shadow:var(--shadow);
+    transform:translateY(40px);opacity:0;
+    transition:transform var(--dur-modal) var(--ease-out), opacity var(--dur-modal) var(--ease-out);}
+  .overlay.open .modal{transform:translateY(0);opacity:1;}
+  .overlay.closing .modal{transform:translateY(40px);opacity:0;transition-timing-function:var(--ease-in);}
+
+  .modal-header{display:flex;align-items:flex-start;gap:var(--sp-2);
+    padding:var(--sp-3) var(--sp-3) var(--sp-2);border-bottom:1px solid var(--c-surface-2);}
+  .modal-header .title{flex:1;min-width:0;}
+  .modal-header h2{margin:0;font-size:18px;}
+  .breadcrumb{color:var(--c-text-2);font-size:13px;margin-top:var(--sp-05);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .icon-close{flex:none;width:40px;height:40px;border-radius:var(--radius-sm);border:1px solid var(--c-border);
+    background:var(--c-surface);color:var(--c-text-2);font-size:18px;cursor:pointer;line-height:1;}
+  .icon-close:hover{background:var(--c-surface-2);}
+
+  .modal-body{padding:var(--sp-3);}
+  .modal-footer{display:flex;gap:var(--sp-1);justify-content:flex-end;flex-wrap:wrap;
+    padding:var(--sp-2) var(--sp-3) var(--sp-3);border-top:1px solid var(--c-surface-2);}
+
+  /* ===== Dropzone (Empty / Loading / Error) ===== */
+  .dropzone{border:2px dashed var(--c-border);border-radius:var(--radius);
+    background:var(--c-surface-2);padding:var(--sp-4) var(--sp-3);text-align:center;cursor:pointer;
+    transition:border-color var(--dur-section) var(--ease-out), background var(--dur-section) var(--ease-out), transform 120ms var(--ease-out);
+    animation:sectionIn var(--dur-section) var(--ease-out);}
+  .dropzone:hover{border-color:var(--c-primary);}
+  .dropzone.dragover{border-color:var(--c-primary);background:var(--c-primary-50);transform:scale(1.01);}
+  .dropzone.error-state{border-color:var(--c-danger);background:var(--c-danger-50);}
+  .dz-icon{font-size:40px;line-height:1;}
+  .dz-title{font-size:16px;font-weight:600;margin:var(--sp-1) 0 var(--sp-05);}
+  .dz-hint{color:var(--c-muted);font-size:13px;margin:0 0 var(--sp-2);}
+  .dz-meta{color:var(--c-text-2);font-size:12px;margin-top:var(--sp-1);}
+
+  .inline-error{display:none;margin-top:var(--sp-1);background:var(--c-danger-50);
+    border:1px solid var(--c-danger-border);color:var(--c-danger);border-radius:var(--radius-sm);
+    padding:var(--sp-1) var(--sp-2);font-size:13px;
+    animation:slideDown var(--dur-section) var(--ease-out);}
+  .inline-error.show{display:block;}
+
+  /* progress (loading) */
+  .progress-wrap{display:none;margin-top:var(--sp-2);text-align:left;
+    animation:fadeIn var(--dur-section) var(--ease-out);}
+  .progress-wrap.show{display:block;}
+  .progress-label{font-size:13px;color:var(--c-text-2);margin-bottom:var(--sp-05);}
+  .progress{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden;}
+  .progress > span{display:block;height:100%;width:0;background:var(--c-primary);
+    transition:width 1.2s linear;}
+
+  /* ===== Preview (Success/Default) ===== */
+  .preview{border:1px solid var(--c-border);border-radius:var(--radius);overflow:hidden;
+    animation:previewIn 200ms var(--ease-out);}
+  .preview-img{width:100%;height:auto;display:block;background:#e2e8f0;aspect-ratio:16/9;object-fit:contain;}
+  .preview-meta{padding:var(--sp-2);display:flex;flex-wrap:wrap;gap:var(--sp-05) var(--sp-2);
+    align-items:center;border-top:1px solid var(--c-surface-2);font-size:13px;color:var(--c-text-2);}
+  .preview-meta .file{font-weight:600;color:var(--c-text);max-width:260px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .badge-pins{background:var(--c-primary-50);color:var(--c-primary-700);font-weight:600;
+    border-radius:99px;padding:2px 10px;font-size:12px;}
+
+  /* ===== Pin-overflow banner ===== */
+  .banner-overflow{display:none;margin-top:var(--sp-2);background:var(--c-warn-50);
+    border:1px solid var(--c-warn-border);border-radius:var(--radius-sm);
+    padding:var(--sp-2);gap:var(--sp-2);align-items:center;justify-content:space-between;flex-wrap:wrap;
+    animation:slideDown var(--dur-section) var(--ease-out);}
+  .banner-overflow.show{display:flex;}
+  .banner-overflow .msg{color:var(--c-warn);font-size:13px;flex:1;min-width:200px;}
+
+  /* ===== Confirm dialogs ===== */
+  .dialog-overlay{position:fixed;inset:0;background:rgba(2,6,23,.5);z-index:50;
+    display:grid;place-items:center;padding:var(--sp-2);
+    opacity:0;visibility:hidden;transition:opacity 200ms var(--ease-out), visibility 200ms;}
+  .dialog-overlay.open{opacity:1;visibility:visible;}
+  .dialog{background:#fff;border-radius:var(--radius);max-width:440px;width:100%;
+    box-shadow:var(--shadow);padding:var(--sp-3);
+    transform:scale(.94);opacity:0;transition:transform 200ms var(--ease-out), opacity 200ms var(--ease-out);}
+  .dialog-overlay.open .dialog{transform:scale(1);opacity:1;}
+  .dialog-overlay.closing .dialog{transform:scale(.94);opacity:0;transition-timing-function:var(--ease-in);}
+  .dialog h3{margin:0 0 var(--sp-1);font-size:16px;display:flex;align-items:center;gap:var(--sp-05);}
+  .dialog p{margin:0 0 var(--sp-3);color:var(--c-text-2);font-size:14px;}
+  .dialog-actions{display:flex;gap:var(--sp-1);justify-content:flex-end;flex-wrap:wrap;}
+
+  /* ===== Toast / snackbar ===== */
+  .toast-wrap{position:fixed;top:var(--sp-2);left:50%;transform:translateX(-50%);z-index:70;
+    display:flex;flex-direction:column;gap:var(--sp-1);width:min(92vw,420px);}
+  .toast{display:flex;align-items:center;gap:var(--sp-1);border-radius:var(--radius-sm);
+    padding:var(--sp-1) var(--sp-2);font-size:14px;box-shadow:var(--shadow);color:#fff;
+    animation:toastIn var(--dur-toast) var(--ease-out);}
+  .toast.success{background:var(--c-success);}
+  .toast.error{background:var(--c-danger);}
+  .toast.leaving{animation:toastOut var(--dur-toast) var(--ease-in) forwards;}
+
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+
+  /* ===== keyframes ===== */
+  @keyframes sectionIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes previewIn{from{opacity:0;transform:scale(.98);}to{opacity:1;transform:scale(1);}}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toastOut{to{opacity:0;transform:translateY(-12px);}}
+
+  /* ===== Responsive: tablet/desktop ≥768 → modal centered card ===== */
+  @media (min-width:768px){
+    .overlay{align-items:center;}
+    .modal{border-radius:var(--radius);max-height:88vh;}
+    .modal-footer{padding:var(--sp-2) var(--sp-4) var(--sp-3);}
+  }
+  @media (max-width:480px){
+    .modal-footer .btn{flex:1;justify-content:center;}
+    .preview-meta .file{max-width:160px;}
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion: reduce){
+    *,.modal,.overlay,.dialog,.dialog-overlay,.toast,.dropzone,.preview,.workspace{
+      transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important;}
+    .overlay.open .modal,.dialog-overlay.open .dialog{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Demo controls (chỉ để duyệt các state, không thuộc UI sản phẩm) -->
+  <div class="demo-bar" role="group" aria-label="Bảng điều khiển xem trạng thái (demo)">
+    <span>Demo state:</span>
+    <button class="btn btn-ghost" onclick="openModal('empty')">Empty (chưa có ảnh)</button>
+    <button class="btn btn-ghost" onclick="openModal('loading')">Loading</button>
+    <button class="btn btn-ghost" onclick="openModal('error')">Error (file sai)</button>
+    <button class="btn btn-ghost" onclick="openModal('success')">Success (đã có ảnh)</button>
+  </div>
+
+  <!-- ===== Workspace S01 (nền) ===== -->
+  <div class="workspace" id="workspace">
+    <div class="ws-card">
+      <h1>Bản đồ tài sản — S01</h1>
+      <p>Nút khu vực đang chọn: <strong>Tòa A › Tầng 3 › Phòng 305</strong></p>
+      <div class="ws-btns">
+        <button class="btn btn-primary" onclick="openModal('empty')">Quản lý ảnh sơ đồ (khu vực chưa có ảnh)</button>
+        <button class="btn btn-secondary" onclick="openModal('success')">Quản lý ảnh sơ đồ (khu vực đã có ảnh)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Modal S03 ===== -->
+  <div class="overlay" id="overlay" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+      <div class="modal-header">
+        <div class="title">
+          <h2 id="modalTitle">Quản lý ảnh sơ đồ</h2>
+          <div class="breadcrumb" id="modalDesc">Tòa A › Tầng 3 › Phòng 305</div>
+        </div>
+        <button class="icon-close" aria-label="Đóng cửa sổ Quản lý ảnh sơ đồ" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Trạng thái A: chưa có sơ đồ -> dropzone (Empty / Loading / Error) -->
+        <div id="sectionEmpty">
+          <div class="dropzone" id="dropzone" tabindex="0" role="button"
+               aria-label="Vùng tải ảnh: kéo và thả ảnh vào đây, hoặc nhấn Enter để chọn ảnh từ máy"
+               aria-describedby="dzHint dzError"
+               onclick="pickFile()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickFile();}">
+            <div class="dz-icon" aria-hidden="true">⬆️</div>
+            <div class="dz-title">Kéo &amp; thả ảnh vào đây</div>
+            <p class="dz-hint" id="dzHint">hoặc <span style="color:var(--c-primary);text-decoration:underline;">Chọn ảnh từ máy</span></p>
+            <p class="dz-meta">PNG hoặc JPG · tối đa 10 MB · 1 ảnh mỗi khu vực</p>
+            <input type="file" id="fileInput" accept="image/png,image/jpeg" class="visually-hidden"
+                   aria-label="Chọn ảnh sơ đồ từ máy" />
+          </div>
+
+          <div class="inline-error" id="dzError" role="alert">Chỉ chấp nhận ảnh PNG hoặc JPG, tối đa 10 MB.</div>
+
+          <div class="progress-wrap" id="progressWrap" aria-live="polite">
+            <div class="progress-label">Đang tải ảnh lên… <span id="progressPct">0%</span></div>
+            <div class="progress" role="progressbar" aria-label="Tiến trình tải ảnh"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+              <span id="progressFill"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trạng thái B: đã có sơ đồ -> preview (Success/Default) -->
+        <div id="sectionSuccess" style="display:none;">
+          <div class="preview">
+            <!-- inline SVG placeholder làm ảnh sơ đồ + pin minh họa -->
+            <svg class="preview-img" viewBox="0 0 320 180" role="img"
+                 aria-label="Xem trước ảnh sơ đồ mặt bằng so-do-tang-3.png, có 12 pin tài sản đang đặt">
+              <rect width="320" height="180" fill="#e2e8f0"/>
+              <g stroke="#94a3b8" stroke-width="2" fill="none">
+                <rect x="16" y="16" width="130" height="80"/>
+                <rect x="150" y="16" width="154" height="80"/>
+                <rect x="16" y="100" width="288" height="64"/>
+              </g>
+              <g fill="#1d4ed8">
+                <circle cx="40" cy="40" r="5"/><circle cx="70" cy="55" r="5"/>
+                <circle cx="110" cy="70" r="5"/><circle cx="180" cy="40" r="5"/>
+                <circle cx="220" cy="60" r="5"/><circle cx="270" cy="50" r="5"/>
+                <circle cx="60" cy="130" r="5"/><circle cx="120" cy="140" r="5"/>
+                <circle cx="180" cy="125" r="5"/><circle cx="240" cy="145" r="5"/>
+                <circle cx="290" cy="120" r="5"/><circle cx="150" cy="150" r="5"/>
+              </g>
+            </svg>
+            <div class="preview-meta">
+              <span class="file" id="previewFile" title="so-do-tang-3.png">so-do-tang-3.png</span>
+              <span>· 2.4 MB · 1920×1080</span>
+              <span class="badge-pins" id="pinCount">12 pin đang đặt</span>
+            </div>
+          </div>
+
+          <!-- Thông báo pin tràn ngoài (ẩn mặc định) -->
+          <div class="banner-overflow" id="bannerOverflow" role="status">
+            <span class="msg" id="overflowMsg">3 pin nằm ngoài vùng ảnh mới được đánh dấu “cần đặt lại vị trí”.</span>
+            <button class="btn btn-secondary" onclick="goToS05()">Đặt lại ngay →</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" id="modalFooter">
+        <button class="btn btn-secondary" onclick="closeModal()">Đóng</button>
+        <button class="btn btn-primary" id="btnReplace" style="display:none;" onclick="onReplace()">Thay ảnh</button>
+        <button class="btn btn-danger" id="btnDelete" style="display:none;" onclick="onDelete()">🗑 Xóa ảnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Dialog: Thay ảnh ===== -->
+  <div class="dialog-overlay" id="dlgReplace" role="presentation">
+    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgReplaceTitle" aria-describedby="dlgReplaceDesc">
+      <h3 id="dlgReplaceTitle">Thay ảnh sơ đồ</h3>
+      <p id="dlgReplaceDesc">Sơ đồ này đang có <strong>12 pin</strong>. Hệ thống giữ nguyên vị trí tương đối của pin trên ảnh mới. Pin nằm ngoài vùng ảnh mới sẽ được đánh dấu “cần đặt lại”. Tiếp tục thay?</p>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" onclick="closeDialog('dlgReplace')">Hủy</button>
+        <button class="btn btn-primary" onclick="confirmReplace()">Tiếp tục thay</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Dialog: Xóa ảnh ===== -->
+  <div class="dialog-overlay" id="dlgDelete" role="presentation">
+    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dlgDeleteTitle" aria-describedby="dlgDeleteDesc">
+      <h3 id="dlgDeleteTitle">🗑 Xóa ảnh sơ đồ</h3>
+      <p id="dlgDeleteDesc">Xóa ảnh sẽ gỡ vị trí của <strong>12 tài sản</strong> (về “chưa có vị trí”). Hồ sơ tài sản được giữ nguyên. Tiếp tục?</p>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" onclick="closeDialog('dlgDelete')">Hủy</button>
+        <button class="btn btn-danger-solid" onclick="confirmDelete()">Xóa ảnh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Toasts ===== -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+  var overlay = document.getElementById('overlay');
+  var workspace = document.getElementById('workspace');
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+
+  /* ---- open/close modal ---- */
+  function setState(state){
+    var empty = document.getElementById('sectionEmpty');
+    var succ  = document.getElementById('sectionSuccess');
+    var btnR  = document.getElementById('btnReplace');
+    var btnD  = document.getElementById('btnDelete');
+    var err   = document.getElementById('dzError');
+    var prog  = document.getElementById('progressWrap');
+    err.classList.remove('show'); dropzone.classList.remove('error-state');
+    prog.classList.remove('show');
+    document.getElementById('bannerOverflow').classList.remove('show');
+
+    if(state === 'success'){
+      empty.style.display='none'; succ.style.display='block';
+      btnR.style.display=''; btnD.style.display='';
+    } else {
+      empty.style.display='block'; succ.style.display='none';
+      btnR.style.display='none'; btnD.style.display='none';
+      if(state === 'error'){ err.classList.add('show'); dropzone.classList.add('error-state'); }
+      if(state === 'loading'){ runProgress(); }
+    }
+  }
+
+  function openModal(state){
+    workspace.classList.add('dimmed');
+    overlay.classList.add('open');
+    setState(state || 'empty');
+  }
+  function closeModal(){
+    overlay.classList.add('closing');
+    workspace.classList.remove('dimmed');
+    setTimeout(function(){ overlay.classList.remove('open','closing'); }, 260);
+  }
+
+  /* ---- file pick + validate (mô phỏng) ---- */
+  function pickFile(){ fileInput.click(); }
+  fileInput.addEventListener('change', function(){
+    if(!this.files || !this.files[0]) return;
+    validateAndUpload(this.files[0]);
+    this.value='';
+  });
+  function validateAndUpload(file){
+    var okType = /image\/(png|jpeg)/.test(file.type);
+    var okSize = file.size <= 10*1024*1024; // 10 MB
+    var err = document.getElementById('dzError');
+    if(!okType || !okSize){
+      err.classList.add('show'); dropzone.classList.add('error-state');
+      return;
+    }
+    err.classList.remove('show'); dropzone.classList.remove('error-state');
+    runProgress(function(){
+      document.getElementById('previewFile').textContent = file.name;
+      document.getElementById('previewFile').title = file.name;
+      setState('success');
+      toast('success','Đã tải lên sơ đồ.');
+    });
+  }
+
+  /* ---- drag & drop highlight ---- */
+  ['dragenter','dragover'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.add('dragover'); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.remove('dragover'); });
+  });
+  dropzone.addEventListener('drop', function(e){
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) validateAndUpload(f);
+  });
+
+  /* ---- progress (loading state) ---- */
+  function runProgress(done){
+    var prog = document.getElementById('progressWrap');
+    var fill = document.getElementById('progressFill');
+    var pct  = document.getElementById('progressPct');
+    var bar  = document.getElementById('progressBar');
+    prog.classList.add('show'); fill.style.width='0';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      fill.style.width='100%'; pct.textContent='100%'; bar.setAttribute('aria-valuenow','100');
+    });});
+    setTimeout(function(){
+      prog.classList.remove('show'); fill.style.width='0'; pct.textContent='0%';
+      bar.setAttribute('aria-valuenow','0');
+      if(done) done();
+    }, 1300);
+  }
+
+  /* ---- replace flow ---- */
+  function onReplace(){ openDialog('dlgReplace'); }          // giả định nút còn pin
+  function confirmReplace(){
+    closeDialog('dlgReplace');
+    runProgress(function(){
+      toast('success','Đã thay ảnh sơ đồ.');
+      // mô phỏng pin tràn ngoài
+      document.getElementById('bannerOverflow').classList.add('show');
+    });
+  }
+
+  /* ---- delete flow ---- */
+  function onDelete(){ openDialog('dlgDelete'); }            // giả định nút còn pin
+  function confirmDelete(){
+    closeDialog('dlgDelete');
+    toast('success','Đã xóa sơ đồ.');
+    setState('empty');
+  }
+
+  /* ---- dialogs ---- */
+  function openDialog(id){ document.getElementById(id).classList.add('open'); }
+  function closeDialog(id){
+    var d = document.getElementById(id);
+    d.classList.add('closing');
+    setTimeout(function(){ d.classList.remove('open','closing'); }, 200);
+  }
+
+  function goToS05(){ toast('success','Điều hướng sang S05 — Danh sách pin cần đặt lại…'); closeModal(); }
+
+  /* ---- toast / snackbar ---- */
+  function toast(type, msg){
+    var wrap = document.getElementById('toastWrap');
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type==='error'?'error':'success');
+    t.setAttribute('role', type==='error'?'alert':'status');
+    t.innerHTML = '<span aria-hidden="true">'+(type==='error'?'⚠️':'✓')+'</span><span>'+msg+'</span>';
+    wrap.appendChild(t);
+    setTimeout(function(){ t.classList.add('leaving'); setTimeout(function(){ t.remove(); }, 200); }, 2600);
+  }
+
+  /* ---- Esc đóng modal/dialog ---- */
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    var openDlg = document.querySelector('.dialog-overlay.open');
+    if(openDlg){ closeDialog(openDlg.id); return; }
+    if(overlay.classList.contains('open')) closeModal();
+  });
+</script>
+</body>
+</html>

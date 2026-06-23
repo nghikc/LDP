@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Di dời tài sản (đơn & hàng loạt) — S04</title>
+<style>
+  :root{
+    --c-primary:#1565c0; --c-primary-d:#0d47a1; --c-primary-l:#e3f0fb;
+    --c-text:#1a1a1a; --c-text-2:#555; --c-text-3:#777;
+    --c-bg:#f4f6f9; --c-surface:#ffffff; --c-border:#d4dae2;
+    --c-danger:#c62828; --c-danger-bg:#fdecea; --c-success:#2e7d32; --c-success-bg:#e8f5e9;
+    --c-warn:#ef6c00; --c-warn-bg:#fff4e5; --c-lock:#6a4ea0; --c-lock-bg:#f0ebf8;
+    --c-overlay:rgba(20,30,45,.55);
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px;
+    --r:10px; --r-s:6px;
+    --shadow:0 12px 40px rgba(20,30,45,.22);
+    --fs-sm:13px; --fs-base:15px; --fs-lg:18px; --fs-xl:22px;
+    --dur-page:260ms; --dur-section:180ms; --dur-micro:130ms;
+    --ease-out:cubic-bezier(.2,.7,.3,1); --ease-in:cubic-bezier(.6,0,.8,.5);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    color:var(--c-text);background:var(--c-bg);font-size:var(--fs-base);line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+  /* ---- Khung demo S01 nền (mô phỏng bản đồ) ---- */
+  .s01{padding:var(--s3);transition:transform var(--dur-page) var(--ease-out),filter var(--dur-page) var(--ease-out);}
+  .s01.dimmed{transform:scale(.99);filter:brightness(.85) blur(1px);}
+  .s01 h1{font-size:var(--fs-xl);margin:0 0 var(--s1);}
+  .s01 .sub{color:var(--c-text-2);margin:0 0 var(--s3);}
+  .map{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r);
+    height:220px;display:flex;align-items:center;justify-content:center;color:var(--c-text-3);
+    position:relative;overflow:hidden;}
+  .pin{position:absolute;width:14px;height:14px;border-radius:50% 50% 50% 0;background:var(--c-primary);
+    transform:rotate(-45deg);box-shadow:0 2px 4px rgba(0,0,0,.3);}
+  .pin.pulse{animation:pinPulse 600ms var(--ease-out);}
+  @keyframes pinPulse{0%{transform:rotate(-45deg) scale(1);}40%{transform:rotate(-45deg) scale(1.7);}100%{transform:rotate(-45deg) scale(1);}}
+  .toolbar{display:flex;gap:var(--s1);flex-wrap:wrap;margin-bottom:var(--s2);}
+
+  /* ---- Nút ---- */
+  .btn{font:inherit;font-weight:600;border-radius:var(--r-s);padding:10px 18px;cursor:pointer;
+    border:1px solid transparent;transition:background var(--dur-micro),box-shadow var(--dur-micro),transform var(--dur-micro);}
+  .btn:focus-visible{outline:3px solid #94c2f0;outline-offset:2px;}
+  .btn-primary{background:var(--c-primary);color:#fff;}
+  .btn-primary:hover:not(:disabled){background:var(--c-primary-d);}
+  .btn-primary:disabled{background:#aeb9c6;cursor:not-allowed;}
+  .btn-secondary{background:var(--c-surface);color:var(--c-text);border-color:var(--c-border);}
+  .btn-secondary:hover{background:#eef1f5;}
+  .btn-ghost{background:transparent;color:var(--c-primary);border-color:var(--c-primary);}
+
+  /* ---- Overlay + Modal ---- */
+  .overlay{position:fixed;inset:0;background:var(--c-overlay);display:flex;align-items:flex-end;justify-content:center;
+    opacity:0;visibility:hidden;transition:opacity var(--dur-page) var(--ease-in),visibility var(--dur-page);z-index:50;}
+  .overlay.open{opacity:1;visibility:visible;transition:opacity var(--dur-page) var(--ease-out),visibility 0s;}
+  @media(min-width:768px){.overlay{align-items:center;}}
+
+  .modal{background:var(--c-surface);width:100%;max-width:640px;max-height:92vh;display:flex;flex-direction:column;
+    border-radius:var(--r) var(--r) 0 0;box-shadow:var(--shadow);
+    transform:translateY(40px);opacity:0;transition:transform var(--dur-page) var(--ease-in),opacity var(--dur-page) var(--ease-in);}
+  .overlay.open .modal{transform:translateY(0);opacity:1;transition:transform var(--dur-page) var(--ease-out),opacity var(--dur-page) var(--ease-out);}
+  @media(min-width:768px){.modal{border-radius:var(--r);}}
+
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:var(--s2) var(--s3);
+    border-bottom:1px solid var(--c-border);}
+  .modal-head h2{font-size:var(--fs-lg);margin:0;}
+  .close-btn{background:none;border:none;font-size:22px;line-height:1;color:var(--c-text-2);cursor:pointer;
+    width:36px;height:36px;border-radius:var(--r-s);}
+  .close-btn:hover{background:#eef1f5;}
+  .close-btn:focus-visible{outline:3px solid #94c2f0;outline-offset:2px;}
+
+  .modal-body{padding:var(--s3);overflow-y:auto;flex:1;}
+  .modal-foot{display:flex;gap:var(--s1);justify-content:flex-end;padding:var(--s2) var(--s3);
+    border-top:1px solid var(--c-border);background:var(--c-surface);position:sticky;bottom:0;}
+
+  /* ---- Section bước ---- */
+  .step{margin-bottom:var(--s3);}
+  .step-label{display:flex;align-items:center;justify-content:space-between;gap:var(--s1);margin-bottom:var(--s1);}
+  .step-label .t{font-weight:700;font-size:var(--fs-base);}
+  .step-label .t .num{display:inline-block;background:var(--c-primary);color:#fff;border-radius:50%;
+    width:22px;height:22px;text-align:center;font-size:var(--fs-sm);line-height:22px;margin-right:6px;}
+  .badge{background:var(--c-primary-l);color:var(--c-primary-d);font-size:var(--fs-sm);font-weight:600;
+    padding:3px 10px;border-radius:999px;transition:transform var(--dur-micro) var(--ease-out);}
+  .badge.bump{transform:scale(1.18);}
+
+  .box{border:1px solid var(--c-border);border-radius:var(--r-s);padding:var(--s2);}
+
+  /* radio cách chọn nguồn */
+  .source-mode{display:flex;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s2);}
+  .source-mode label{display:flex;align-items:center;gap:6px;cursor:pointer;}
+
+  /* ô tìm */
+  .field{margin-bottom:var(--s2);}
+  .field > label{display:block;font-weight:600;margin-bottom:6px;font-size:var(--fs-sm);color:var(--c-text-2);}
+  .input,textarea,.search{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--c-border);
+    border-radius:var(--r-s);background:#fff;color:var(--c-text);}
+  .input:focus,textarea:focus,.search:focus{outline:3px solid #94c2f0;outline-offset:1px;border-color:var(--c-primary);}
+  textarea{resize:vertical;min-height:64px;}
+  .char-count{font-size:var(--fs-sm);color:var(--c-text-3);text-align:right;margin-top:4px;}
+  .char-count.over{color:var(--c-danger);font-weight:600;}
+
+  /* danh sách tài sản */
+  .asset-list{list-style:none;margin:var(--s1) 0 0;padding:0;border:1px solid var(--c-border);border-radius:var(--r-s);max-height:200px;overflow-y:auto;}
+  .asset{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #eef1f5;
+    opacity:0;transform:translateY(6px);animation:rowIn var(--dur-section) var(--ease-out) forwards;}
+  .asset:last-child{border-bottom:none;}
+  .asset .meta{flex:1;min-width:0;}
+  .asset .name{font-weight:600;}
+  .asset .path{font-size:var(--fs-sm);color:var(--c-text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .asset.checked{background:var(--c-primary-l);}
+  .asset.locked{background:var(--c-lock-bg);}
+  .asset.locked .name{color:var(--c-text-2);}
+  .lock-tag{display:inline-flex;align-items:center;gap:4px;font-size:var(--fs-sm);color:var(--c-lock);font-weight:600;}
+  .asset input[type=checkbox]{width:18px;height:18px;cursor:pointer;}
+  .asset input[type=checkbox]:disabled{cursor:not-allowed;}
+  @keyframes rowIn{to{opacity:1;transform:none;}}
+
+  /* cây đích */
+  .tree{list-style:none;margin:0;padding:0;font-size:var(--fs-base);}
+  .tree ul{list-style:none;margin:0;padding-left:var(--s3);}
+  .tree li{padding:4px 0;}
+  .tree label{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:var(--r-s);}
+  .tree label:hover{background:#eef1f5;}
+  .tree .chosen{background:var(--c-success-bg);color:var(--c-success);font-weight:600;border-radius:var(--r-s);padding:2px 8px;}
+
+  /* dòng tự ghi */
+  .auto-info{font-size:var(--fs-sm);color:var(--c-text-2);background:#f7f9fb;border:1px dashed var(--c-border);
+    border-radius:var(--r-s);padding:10px 12px;}
+
+  /* state alerts */
+  .alert{border-radius:var(--r-s);padding:10px 12px;font-size:var(--fs-sm);margin-top:var(--s1);display:flex;gap:8px;align-items:flex-start;}
+  .alert-error{background:var(--c-danger-bg);color:var(--c-danger);}
+  .alert-empty{background:var(--c-warn-bg);color:var(--c-warn);}
+  [hidden]{display:none !important;}
+
+  /* skeleton loading */
+  .skel{height:46px;border-radius:var(--r-s);margin-bottom:8px;
+    background:linear-gradient(90deg,#eef1f5 25%,#e2e7ee 37%,#eef1f5 63%);background-size:400% 100%;
+    animation:shimmer 1.3s infinite;}
+  @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:-100% 0;}}
+
+  /* thanh tiến trình lô */
+  .progress-wrap{position:absolute;left:0;right:0;bottom:0;background:var(--c-surface);border-top:1px solid var(--c-border);
+    padding:var(--s2) var(--s3);transform:translateY(100%);opacity:0;
+    transition:transform var(--dur-section) var(--ease-in),opacity var(--dur-section) var(--ease-in);}
+  .progress-wrap.show{transform:translateY(0);opacity:1;transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out);}
+  .progress-wrap .t{font-weight:600;margin-bottom:8px;}
+  .bar{height:10px;background:#e2e7ee;border-radius:999px;overflow:hidden;}
+  .bar > i{display:block;height:100%;background:var(--c-primary);width:66%;border-radius:999px;transition:width .3s linear;}
+  .progress-wrap .pct{font-size:var(--fs-sm);color:var(--c-text-2);margin-top:6px;}
+
+  /* dialog tài sản bị khóa */
+  .dialog-overlay{position:absolute;inset:0;background:rgba(20,30,45,.4);display:flex;align-items:center;justify-content:center;
+    opacity:0;visibility:hidden;transition:opacity var(--dur-section) var(--ease-in),visibility var(--dur-section);border-radius:inherit;z-index:5;}
+  .dialog-overlay.open{opacity:1;visibility:visible;transition:opacity var(--dur-section) var(--ease-out),visibility 0s;}
+  .dialog{background:#fff;border-radius:var(--r);padding:var(--s3);max-width:380px;width:88%;box-shadow:var(--shadow);
+    transform:scale(.92);transition:transform var(--dur-section) var(--ease-in);}
+  .dialog-overlay.open .dialog{transform:scale(1);transition:transform var(--dur-section) var(--ease-out);}
+  .dialog h3{margin:0 0 var(--s1);font-size:var(--fs-lg);color:var(--c-warn);}
+  .dialog p{margin:0 0 var(--s2);color:var(--c-text-2);}
+  .dialog .acts{display:flex;gap:var(--s1);justify-content:flex-end;}
+
+  /* toast + snackbar */
+  .toast{position:fixed;top:var(--s3);left:50%;transform:translate(-50%,-20px);opacity:0;visibility:hidden;
+    background:var(--c-success);color:#fff;padding:12px 20px;border-radius:var(--r-s);font-weight:600;box-shadow:var(--shadow);
+    z-index:80;transition:transform var(--dur-section) var(--ease-in),opacity var(--dur-section) var(--ease-in),visibility var(--dur-section);}
+  .toast.show{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out),visibility 0s;}
+  .snackbar{position:fixed;bottom:var(--s3);left:50%;transform:translate(-50%,20px);opacity:0;visibility:hidden;
+    background:#2b3440;color:#fff;padding:12px 20px;border-radius:var(--r-s);box-shadow:var(--shadow);z-index:80;
+    display:flex;gap:var(--s2);align-items:center;max-width:92%;
+    transition:transform var(--dur-section) var(--ease-in),opacity var(--dur-section) var(--ease-in),visibility var(--dur-section);}
+  .snackbar.show{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out),visibility 0s;}
+  .snackbar button{background:none;border:none;color:#7fc4ff;font-weight:700;cursor:pointer;font:inherit;}
+
+  .demo-controls{position:fixed;right:12px;bottom:12px;background:#2b3440;color:#fff;padding:12px;border-radius:var(--r);
+    box-shadow:var(--shadow);z-index:90;font-size:var(--fs-sm);max-width:230px;}
+  .demo-controls strong{display:block;margin-bottom:6px;}
+  .demo-controls .btn{padding:6px 10px;font-size:var(--fs-sm);margin:3px 3px 0 0;}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;}
+    .s01{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ Nền S01 (mô phỏng) ============ -->
+<div class="s01" id="s01">
+  <h1>Bản đồ tài sản</h1>
+  <p class="sub">Tòa A › Tầng 3 › Phòng 305</p>
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="openModal('single')">Di dời (1 tài sản từ popup pin)</button>
+    <button class="btn btn-secondary" onclick="openModal('batch')">Di dời hàng loạt</button>
+  </div>
+  <div class="map" id="map">
+    Sơ đồ mặt bằng (mô phỏng)
+    <span class="pin" id="pinA" style="left:30%;top:40%"></span>
+    <span class="pin" id="pinB" style="left:55%;top:60%"></span>
+  </div>
+</div>
+
+<!-- ============ Modal di dời ============ -->
+<div class="overlay" id="overlay" role="presentation">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h2 id="modalTitle">Di dời tài sản</h2>
+      <button class="close-btn" aria-label="Đóng form di dời" onclick="closeModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- BƯỚC 1 -->
+      <section class="step" aria-labelledby="step1label">
+        <div class="step-label">
+          <span class="t" id="step1label"><span class="num">1</span>Tài sản cần di dời</span>
+          <span class="badge" id="countBadge" aria-live="polite">3 tài sản đã chọn</span>
+        </div>
+        <div class="box">
+          <div class="source-mode" id="sourceMode" role="radiogroup" aria-label="Cách chọn tài sản nguồn">
+            <label><input type="radio" name="src" value="single" checked onchange="setSourceMode('single')"> Chọn tài sản lẻ</label>
+            <label><input type="radio" name="src" value="loc" onchange="setSourceMode('loc')"> Chọn cả vị trí cũ (lấy hết)</label>
+          </div>
+
+          <!-- 1a: chọn tài sản lẻ -->
+          <div id="modeSingle">
+            <div class="field" style="margin-bottom:8px">
+              <label for="assetSearch">Tìm tài sản</label>
+              <input class="search" id="assetSearch" type="search" placeholder="Tìm mã/tên tài sản đã có vị trí...">
+            </div>
+
+            <!-- Loading skeleton -->
+            <div id="assetLoading" hidden>
+              <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+            </div>
+
+            <!-- Danh sách -->
+            <ul class="asset-list" id="assetList">
+              <li class="asset checked" style="animation-delay:0ms">
+                <input type="checkbox" id="a007" checked aria-label="Chọn A-007 Máy nén khí" onchange="toggleAsset(this)">
+                <span class="meta"><span class="name">A-007 · Máy nén khí</span><div class="path">Tòa A › Tầng 3 › Phòng 305</div></span>
+              </li>
+              <li class="asset checked" style="animation-delay:50ms">
+                <input type="checkbox" id="a014" checked aria-label="Chọn A-014 Máy hàn" onchange="toggleAsset(this)">
+                <span class="meta"><span class="name">A-014 · Máy hàn</span><div class="path">Tòa A › Tầng 3 › Phòng 305</div></span>
+              </li>
+              <li class="asset checked" style="animation-delay:100ms">
+                <input type="checkbox" id="a009" checked aria-label="Chọn A-009 Tủ điện" onchange="toggleAsset(this)">
+                <span class="meta"><span class="name">A-009 · Tủ điện</span><div class="path">Tòa A › Tầng 3 › Phòng 306</div></span>
+              </li>
+              <li class="asset locked" style="animation-delay:150ms">
+                <input type="checkbox" id="a021" disabled aria-label="A-021 Máy bơm — đang bị khóa, không chọn được">
+                <span class="meta"><span class="name">A-021 · Máy bơm</span>
+                  <div class="lock-tag" aria-hidden="false">🔒 Đang được người khác chỉnh sửa</div></span>
+              </li>
+            </ul>
+
+            <!-- Empty state: không chọn tài sản nào -->
+            <div class="alert alert-empty" id="emptySelect" hidden>
+              <span>⚠️</span><span>Chọn ít nhất một tài sản để di dời.</span>
+            </div>
+          </div>
+
+          <!-- 1b: chọn cả vị trí cũ -->
+          <div id="modeLoc" hidden>
+            <div class="field" style="margin-bottom:8px">
+              <label for="srcTree">Chọn nút khu vực nguồn (lấy hết tài sản)</label>
+              <select class="input" id="srcTree" onchange="pickSourceNode(this.value)">
+                <option value="">— Chọn vị trí nguồn —</option>
+                <option value="p305">Tòa A › Tầng 3 › Phòng 305 (5 tài sản)</option>
+                <option value="p306">Tòa A › Tầng 3 › Phòng 306 (2 tài sản)</option>
+                <option value="p309">Tòa A › Tầng 3 › Phòng 309 (0 tài sản)</option>
+              </select>
+            </div>
+            <!-- Empty: nút nguồn không có tài sản -->
+            <div class="alert alert-empty" id="emptyLoc" hidden>
+              <span>⚠️</span><span>Vị trí này không có tài sản để di dời.</span>
+            </div>
+            <p id="locLoaded" class="auto-info" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BƯỚC 2 -->
+      <section class="step" id="step2" aria-labelledby="step2label"
+        style="opacity:1;max-height:none;overflow:visible;transition:opacity var(--dur-section) var(--ease-out),max-height var(--dur-section) var(--ease-out);">
+        <div class="step-label">
+          <span class="t" id="step2label"><span class="num">2</span>Vị trí đích (bắt buộc)</span>
+        </div>
+        <div class="box">
+          <ul class="tree" role="tree" aria-label="Cây khu vực đích">
+            <li role="treeitem"><strong>▾ Tòa B</strong>
+              <ul>
+                <li role="treeitem"><strong>▾ Tầng 1</strong>
+                  <ul>
+                    <li><label><input type="radio" name="dest" value="Tòa B › Tầng 1 › Kho B-01" onchange="pickDest(this.value)"> Kho B-01</label></li>
+                    <li><label><input type="radio" name="dest" value="Tòa B › Tầng 1 › Kho B-02" onchange="pickDest(this.value)"> Kho B-02</label></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p id="destChosen" class="chosen" hidden></p>
+          <!-- Error: chưa chọn đích -->
+          <div class="alert alert-error" id="errDest" role="alert" aria-live="assertive" hidden>
+            <span>⛔</span><span>Vui lòng chọn khu vực đích.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- LÝ DO -->
+      <div class="field">
+        <label for="reason">Lý do di dời (tùy chọn)</label>
+        <textarea id="reason" maxlength="500" oninput="countReason(this)" placeholder="Nhập lý do di dời..."></textarea>
+        <div class="char-count" id="charCount" aria-live="polite">0/500</div>
+      </div>
+
+      <!-- TỰ GHI -->
+      <p class="auto-info">Người thực hiện: <strong>Nguyễn B</strong> (tự ghi) · Thời điểm: tự ghi khi lưu</p>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeModal()">Hủy</button>
+      <button class="btn btn-primary" id="submitBtn" onclick="onSubmit()">Di dời (3)</button>
+    </div>
+
+    <!-- Loading: thanh tiến trình lô -->
+    <div class="progress-wrap" id="progress" aria-live="polite">
+      <div class="t" id="progressTitle">Đang di dời 3 tài sản...</div>
+      <div class="bar"><i id="progressBar" style="width:66%"></i></div>
+      <div class="pct" id="progressPct">2/3 (không đóng cho tới khi xong)</div>
+    </div>
+
+    <!-- Dialog tài sản bị khóa -->
+    <div class="dialog-overlay" id="lockDialog" role="presentation">
+      <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="lockTitle" aria-describedby="lockDesc">
+        <h3 id="lockTitle">Một số tài sản đang bị khóa</h3>
+        <p id="lockDesc">1 tài sản đang bị khóa. Bỏ qua và tiếp tục với 2 tài sản còn lại?</p>
+        <div class="acts">
+          <button class="btn btn-secondary" onclick="closeLockDialog(false)">Hủy</button>
+          <button class="btn btn-primary" onclick="closeLockDialog(true)">Tiếp tục</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast thành công -->
+<div class="toast" id="toast" role="status" aria-live="polite">Đã di dời 3 tài sản.</div>
+
+<!-- Snackbar rollback -->
+<div class="snackbar" id="snackbar" role="alert">
+  <span>Mất kết nối, đã hoàn tác toàn bộ. Vui lòng thử lại.</span>
+  <button onclick="hideSnackbar()">Đóng</button>
+</div>
+
+<!-- Bảng điều khiển demo các state -->
+<div class="demo-controls">
+  <strong>Demo trạng thái</strong>
+  <button class="btn btn-ghost" onclick="demoLoading()">Loading danh sách</button>
+  <button class="btn btn-ghost" onclick="demoProgress()">Tiến trình lô</button>
+  <button class="btn btn-ghost" onclick="demoLockDialog()">Dialog khóa</button>
+  <button class="btn btn-ghost" onclick="demoRollback()">Rollback</button>
+</div>
+
+<script>
+  let countSelected = 3;
+  const $ = id => document.getElementById(id);
+
+  function openModal(mode){
+    $('overlay').classList.add('open');
+    $('s01').classList.add('dimmed');
+    // di dời đơn: ẩn bộ chọn cách lấy nguồn, khóa 1 tài sản
+    if(mode==='single'){
+      $('sourceMode').style.display='none';
+      $('modalTitle').textContent='Di dời tài sản';
+      // chỉ giữ A-007
+      ['a014','a009'].forEach(id=>{$(id).checked=false;$(id).closest('.asset').classList.remove('checked');});
+      countSelected=1; syncCount();
+    } else {
+      $('sourceMode').style.display='flex';
+      ['a007','a014','a009'].forEach(id=>{$(id).checked=true;$(id).closest('.asset').classList.add('checked');});
+      countSelected=3; syncCount();
+    }
+  }
+  function closeModal(){
+    $('overlay').classList.remove('open');
+    $('s01').classList.remove('dimmed');
+  }
+  function setSourceMode(m){
+    $('modeSingle').hidden = (m!=='single');
+    $('modeLoc').hidden = (m!=='loc');
+  }
+  function pickSourceNode(v){
+    $('emptyLoc').hidden = (v!=='p309');
+    if(v==='p309'){ $('locLoaded').hidden=true; countSelected=0; }
+    else if(v==='p305'){ $('locLoaded').hidden=false; $('locLoaded').textContent='Đã nạp 5 tài sản trong Phòng 305 vào lô.'; countSelected=5; }
+    else if(v==='p306'){ $('locLoaded').hidden=false; $('locLoaded').textContent='Đã nạp 2 tài sản trong Phòng 306 vào lô.'; countSelected=2; }
+    else { $('locLoaded').hidden=true; countSelected=0; }
+    syncCount();
+  }
+  function toggleAsset(cb){
+    cb.closest('.asset').classList.toggle('checked', cb.checked);
+    countSelected = document.querySelectorAll('#assetList .asset input:checked').length;
+    $('emptySelect').hidden = countSelected>0;
+    syncCount();
+  }
+  function syncCount(){
+    $('countBadge').textContent = countSelected+' tài sản đã chọn';
+    $('countBadge').classList.add('bump'); setTimeout(()=>$('countBadge').classList.remove('bump'),140);
+    $('submitBtn').textContent = 'Di dời ('+countSelected+')';
+    refreshSubmit();
+  }
+  let destChosen=false;
+  function pickDest(v){
+    destChosen=true;
+    $('destChosen').hidden=false;
+    $('destChosen').textContent='Đã chọn: '+v;
+    $('errDest').hidden=true;
+    refreshSubmit();
+  }
+  function refreshSubmit(){
+    $('submitBtn').disabled = !(countSelected>0 && destChosen);
+  }
+  function countReason(t){
+    const n=t.value.length;
+    $('charCount').textContent=n+'/500';
+    $('charCount').classList.toggle('over', n>=500);
+  }
+  function onSubmit(){
+    if(!destChosen){ $('errDest').hidden=false; return; }
+    // có tài sản bị khóa trong lô → hỏi
+    demoProgress();
+  }
+
+  /* ----- demos ----- */
+  function demoLoading(){
+    setSourceMode('single');
+    $('assetList').hidden=true; $('assetLoading').hidden=false;
+    setTimeout(()=>{ $('assetLoading').hidden=true; $('assetList').hidden=false; },1600);
+  }
+  function demoProgress(){
+    const p=$('progress'); p.classList.add('show');
+    let v=0; const total=countSelected||3;
+    const iv=setInterval(()=>{
+      v++; const pct=Math.round(v/total*100);
+      $('progressBar').style.width=pct+'%';
+      $('progressTitle').textContent='Đang di dời '+total+' tài sản...';
+      $('progressPct').textContent=v+'/'+total+' (không đóng cho tới khi xong)';
+      if(v>=total){ clearInterval(iv); setTimeout(()=>{ p.classList.remove('show'); showToast(total); },400); }
+    },350);
+  }
+  function showToast(n){
+    $('toast').textContent='Đã di dời '+n+' tài sản.';
+    $('toast').classList.add('show');
+    $('pinB').classList.add('pulse');
+    setTimeout(()=>{ $('toast').classList.remove('show'); closeModal(); $('pinB').classList.remove('pulse'); },1800);
+  }
+  function demoLockDialog(){ $('lockDialog').classList.add('open'); }
+  function closeLockDialog(cont){
+    $('lockDialog').classList.remove('open');
+    if(cont){ countSelected=2; syncCount(); demoProgress(); }
+  }
+  function demoRollback(){
+    const p=$('progress'); p.classList.add('show');
+    let v=0;
+    const iv=setInterval(()=>{
+      v++; $('progressBar').style.width=(v*8)+'%'; $('progressTitle').textContent='Đang di dời 200 tài sản...';
+      $('progressPct').textContent=(v*16)+'/200';
+      if(v>=5){ clearInterval(iv); p.classList.remove('show'); showSnackbar(); }
+    },300);
+  }
+  function showSnackbar(){
+    $('snackbar').classList.add('show');
+    setTimeout(()=>$('snackbar').classList.remove('show'),5000);
+  }
+  function hideSnackbar(){ $('snackbar').classList.remove('show'); }
+
+  // init
+  refreshSubmit();
+</script>
+</body>
+</html>

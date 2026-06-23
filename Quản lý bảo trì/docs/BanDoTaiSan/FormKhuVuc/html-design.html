@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form khu vực (Tạo/Sửa nút) — S02</title>
+<style>
+  /* ===== Design tokens (8pt scale, WCAG AA) ===== */
+  :root{
+    --c-bg:#0f172a;            /* nền workspace tối */
+    --c-overlay:rgba(15,23,42,.62);
+    --c-surface:#ffffff;
+    --c-surface-2:#f8fafc;
+    --c-text:#0f172a;          /* tương phản >7:1 trên surface */
+    --c-text-2:#475569;        /* >4.5:1 trên surface */
+    --c-muted:#64748b;
+    --c-border:#cbd5e1;
+    --c-border-strong:#94a3b8;
+    --c-primary:#1d4ed8;       /* trên #fff: 7.2:1 */
+    --c-primary-hover:#1e40af;
+    --c-primary-text:#ffffff;
+    --c-danger:#b91c1c;        /* trên #fff: 5.9:1 */
+    --c-danger-bg:#fef2f2;
+    --c-success:#15803d;
+    --c-success-bg:#052e16;
+    --c-focus:#1d4ed8;
+    /* spacing 8pt */
+    --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px;
+    --radius:12px; --radius-sm:8px;
+    /* motion */
+    --dur-enter:250ms; --dur-exit:200ms; --dur-section:160ms;
+    --ease-out:cubic-bezier(.16,1,.3,1);
+    --ease-in:cubic-bezier(.4,0,1,1);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font); color:var(--c-text);
+    background:var(--c-bg);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== Nền workspace S01 mô phỏng ===== */
+  .workspace{
+    padding:var(--s-5);
+    color:#cbd5e1;
+  }
+  .workspace h1{font-size:18px;margin:0 0 var(--s-2);color:#e2e8f0;}
+  .workspace p{font-size:13px;margin:0 0 var(--s-5);color:#94a3b8;}
+  .demo-bar{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-bottom:var(--s-5);}
+  .demo-bar button{
+    font:inherit;font-size:13px;cursor:pointer;
+    background:#1e293b;color:#e2e8f0;border:1px solid #334155;
+    border-radius:var(--radius-sm);padding:var(--s-2) var(--s-3);
+  }
+  .demo-bar button:hover{background:#334155;}
+  .demo-bar button:focus-visible{outline:3px solid #60a5fa;outline-offset:2px;}
+  .demo-label{font-size:12px;color:#64748b;width:100%;margin-top:var(--s-2);}
+
+  /* ===== Overlay + Modal ===== */
+  .overlay{
+    position:fixed;inset:0;background:var(--c-overlay);
+    display:flex;align-items:center;justify-content:center;
+    padding:var(--s-4);z-index:50;
+    opacity:0;visibility:hidden;
+    transition:opacity var(--dur-exit) var(--ease-in),visibility 0s linear var(--dur-exit);
+  }
+  .overlay.open{
+    opacity:1;visibility:visible;
+    transition:opacity var(--dur-enter) var(--ease-out),visibility 0s;
+  }
+
+  .modal{
+    background:var(--c-surface);
+    width:100%;max-width:480px;
+    border-radius:var(--radius);
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    display:flex;flex-direction:column;
+    max-height:calc(100vh - var(--s-6));
+    /* mobile: slide-up từ đáy */
+    transform:translateY(40px);opacity:0;
+    transition:transform var(--dur-exit) var(--ease-in),opacity var(--dur-exit) var(--ease-in);
+  }
+  .overlay.open .modal{
+    transform:translateY(0);opacity:1;
+    transition:transform var(--dur-enter) var(--ease-out),opacity var(--dur-enter) var(--ease-out);
+  }
+
+  .modal__header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:var(--s-5) var(--s-5) var(--s-3);
+  }
+  .modal__title{font-size:18px;font-weight:700;margin:0;color:var(--c-text);}
+  .btn-close{
+    appearance:none;border:none;background:transparent;cursor:pointer;
+    width:36px;height:36px;border-radius:var(--radius-sm);
+    font-size:22px;line-height:1;color:var(--c-text-2);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .btn-close:hover{background:var(--c-surface-2);}
+  .btn-close:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;}
+
+  .modal__body{padding:0 var(--s-5) var(--s-2);overflow-y:auto;}
+
+  .field{margin-bottom:var(--s-4);}
+  .field label{
+    display:block;font-size:13px;font-weight:600;
+    color:var(--c-text);margin-bottom:var(--s-2);
+  }
+  .req{color:var(--c-danger);font-weight:700;}
+  .field input[type=text],
+  .field select{
+    width:100%;font:inherit;font-size:15px;color:var(--c-text);
+    padding:10px var(--s-3);border:1px solid var(--c-border);
+    border-radius:var(--radius-sm);background:#fff;
+    transition:border-color var(--dur-section) var(--ease-out),box-shadow var(--dur-section) var(--ease-out);
+  }
+  .field input:hover,.field select:hover{border-color:var(--c-border-strong);}
+  .field input:focus-visible,.field select:focus-visible{
+    outline:none;border-color:var(--c-focus);
+    box-shadow:0 0 0 3px rgba(29,78,216,.30);
+  }
+  .helper{display:block;font-size:12px;color:var(--c-muted);margin-top:var(--s-1);}
+
+  /* lỗi field */
+  .field.has-error input,
+  .field.has-error select{
+    border-color:var(--c-danger);
+    box-shadow:0 0 0 3px rgba(185,28,28,.18);
+  }
+  .field-error{
+    display:none;align-items:flex-start;gap:6px;
+    font-size:12.5px;color:var(--c-danger);margin-top:var(--s-2);
+    font-weight:600;
+  }
+  .field.has-error .field-error{display:flex;}
+  .field.has-error input{animation:shake var(--dur-section) var(--ease-out);}
+  /* lỗi xuất hiện: slide-down + fade */
+  .field-error{
+    transform:translateY(-4px);opacity:0;
+    transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out);
+  }
+  .field.has-error .field-error{transform:translateY(0);opacity:1;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-4px);}
+    75%{transform:translateX(4px);}
+  }
+
+  .modal__footer{
+    display:flex;justify-content:flex-end;gap:var(--s-3);
+    padding:var(--s-4) var(--s-5) var(--s-5);
+    border-top:1px solid var(--c-surface-2);
+  }
+  .btn{
+    font:inherit;font-size:15px;font-weight:600;cursor:pointer;
+    padding:10px var(--s-5);border-radius:var(--radius-sm);
+    border:1px solid transparent;
+    transition:background-color var(--dur-section) var(--ease-out),border-color var(--dur-section) var(--ease-out);
+  }
+  .btn:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;}
+  .btn--secondary{background:#fff;color:var(--c-text);border-color:var(--c-border);}
+  .btn--secondary:hover{background:var(--c-surface-2);}
+  .btn--primary{background:var(--c-primary);color:var(--c-primary-text);}
+  .btn--primary:hover{background:var(--c-primary-hover);}
+  .btn--primary:disabled{
+    background:#cbd5e1;color:#64748b;cursor:not-allowed;
+  }
+
+  /* ===== Loading skeleton ===== */
+  .skeleton-wrap{display:none;padding:0 var(--s-5) var(--s-2);}
+  body.state-loading .skeleton-wrap{display:block;}
+  body.state-loading .modal__body{display:none;}
+  body.state-loading .modal__footer .btn{opacity:.6;pointer-events:none;}
+  .sk-field{margin-bottom:var(--s-4);}
+  .sk-line{
+    height:14px;border-radius:6px;margin-bottom:var(--s-2);
+    background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 37%,#e2e8f0 63%);
+    background-size:400% 100%;animation:shimmer 1.2s ease-in-out infinite;
+  }
+  .sk-line.label{width:38%;height:11px;}
+  .sk-line.input{width:100%;height:40px;}
+  @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+
+  /* ===== Toast (Success trên S01) ===== */
+  .toast{
+    position:fixed;left:50%;top:var(--s-5);transform:translate(-50%,-16px);
+    background:var(--c-success-bg);color:#dcfce7;
+    padding:var(--s-3) var(--s-5);border-radius:var(--radius-sm);
+    font-size:14px;font-weight:600;z-index:80;
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+    display:flex;align-items:center;gap:var(--s-2);
+    opacity:0;visibility:hidden;
+    transition:transform var(--dur-section) var(--ease-in),opacity var(--dur-section) var(--ease-in),visibility 0s linear var(--dur-section);
+  }
+  .toast.show{
+    transform:translate(-50%,0);opacity:1;visibility:visible;
+    transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out),visibility 0s;
+  }
+
+  /* ===== Snackbar lỗi mạng ===== */
+  .snackbar{
+    position:fixed;left:50%;bottom:var(--s-5);transform:translate(-50%,16px);
+    background:#7f1d1d;color:#fee2e2;
+    padding:var(--s-3) var(--s-5);border-radius:var(--radius-sm);
+    font-size:14px;font-weight:600;z-index:80;
+    opacity:0;visibility:hidden;
+    transition:transform var(--dur-section) var(--ease-in),opacity var(--dur-section) var(--ease-in),visibility 0s linear var(--dur-section);
+  }
+  .snackbar.show{
+    transform:translate(-50%,0);opacity:1;visibility:visible;
+    transition:transform var(--dur-section) var(--ease-out),opacity var(--dur-section) var(--ease-out),visibility 0s;
+  }
+
+  /* ===== Responsive: ≥768px modal giữa; <768px tấm trượt đáy full-width ===== */
+  @media (max-width:767.98px){
+    .overlay{align-items:flex-end;padding:0;}
+    .modal{
+      max-width:none;border-radius:var(--radius) var(--radius) 0 0;
+      max-height:92vh;
+    }
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion:reduce){
+    .overlay,.overlay .modal,.field-error,.toast,.snackbar,.btn,.field input,.field select{
+      transition-duration:1ms !important;
+    }
+    .overlay .modal,.toast,.snackbar{transform:none !important;}
+    .overlay.open .modal{transform:none !important;}
+    .field.has-error input{animation:none !important;}
+    .sk-line{animation:none !important;background:#e2e8f0 !important;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Nền workspace S01 mô phỏng + bộ điều khiển demo các UI state -->
+  <div class="workspace">
+    <h1>Bản đồ tài sản (S01 — Workspace)</h1>
+    <p>Bản dựng tĩnh minh hoạ Form khu vực S02 (modal slide-up). Dùng các nút dưới để xem từng trạng thái UI.</p>
+    <div class="demo-bar" role="group" aria-label="Bộ điều khiển xem trạng thái">
+      <button type="button" onclick="showCreate()">⚪ Empty — chế độ Tạo</button>
+      <button type="button" onclick="showEdit()">✏️ Sửa (đã nạp dữ liệu)</button>
+      <button type="button" onclick="showLoading()">🔄 Loading (Sửa)</button>
+      <button type="button" onclick="showError()">🔴 Error (lỗi field)</button>
+      <button type="button" onclick="showSuccess()">🟢 Success (toast)</button>
+      <button type="button" onclick="showNetErr()">📶 Lỗi mạng (snackbar)</button>
+      <span class="demo-label">Thu hẹp cửa sổ &lt; 768px để thấy modal chuyển thành tấm trượt đáy.</span>
+    </div>
+  </div>
+
+  <!-- Toast thành công -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span aria-hidden="true">✓</span><span id="toastMsg">Đã thêm khu vực.</span>
+  </div>
+  <!-- Snackbar lỗi mạng -->
+  <div id="snackbar" class="snackbar" role="alert" aria-live="assertive">
+    <span aria-hidden="true">⚠</span> Lỗi kết nối, chưa lưu được.
+  </div>
+
+  <!-- ===== Modal ===== -->
+  <div id="overlay" class="overlay" onclick="onOverlayClick(event)">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="event.stopPropagation()">
+
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Thêm khu vực</h2>
+        <button type="button" class="btn-close" aria-label="Đóng" onclick="closeModal()">×</button>
+      </div>
+
+      <!-- Skeleton (Loading) -->
+      <div class="skeleton-wrap" aria-hidden="true">
+        <div class="sk-field"><div class="sk-line label"></div><div class="sk-line input"></div></div>
+        <div class="sk-field"><div class="sk-line label"></div><div class="sk-line input"></div></div>
+        <div class="sk-field"><div class="sk-line label"></div><div class="sk-line input"></div></div>
+        <div class="sk-field"><div class="sk-line label"></div><div class="sk-line input"></div></div>
+      </div>
+
+      <!-- Form -->
+      <form class="modal__body" id="areaForm" novalidate onsubmit="onSubmit(event)">
+
+        <div class="field" id="f-name">
+          <label for="ten">Tên khu vực <span class="req" aria-hidden="true">*</span><span class="helper" style="display:inline"> (bắt buộc)</span></label>
+          <input type="text" id="ten" name="ten" placeholder="Nhập tên khu vực"
+                 maxlength="151" aria-required="true" aria-describedby="err-name"
+                 oninput="onNameInput()" value="Phòng 305">
+          <span class="field-error" id="err-name" role="alert"><span aria-hidden="true">⚠</span> Vui lòng nhập tên khu vực.</span>
+        </div>
+
+        <div class="field" id="f-code">
+          <label for="ma">Mã khu vực</label>
+          <input type="text" id="ma" name="ma" placeholder="VD: P305"
+                 maxlength="51" aria-describedby="help-code err-code" value="P305">
+          <span class="helper" id="help-code">(tùy chọn — duy nhất nếu nhập)</span>
+          <span class="field-error" id="err-code" role="alert"><span aria-hidden="true">⚠</span> Mã khu vực đã tồn tại.</span>
+        </div>
+
+        <div class="field" id="f-type">
+          <label for="loai">Loại khu vực</label>
+          <select id="loai" name="loai">
+            <option value="">(Không chọn)</option>
+            <option value="Site">Site</option>
+            <option value="Tòa">Tòa</option>
+            <option value="Tầng">Tầng</option>
+            <option value="Phòng" selected>Phòng</option>
+            <option value="Khu">Khu</option>
+          </select>
+        </div>
+
+        <div class="field" id="f-parent">
+          <label for="cha">Nút cha</label>
+          <select id="cha" name="cha" aria-describedby="help-parent err-parent">
+            <option value="">(Gốc — không có nút cha)</option>
+            <optgroup label="Tòa A">
+              <!-- Chế độ Sửa "Tầng 3": chính nút & nhánh con (Phòng 305/306) bị loại khỏi danh sách -->
+              <option value="ta-t3" selected>Tòa A › Tầng 3</option>
+              <option value="ta-t4">Tòa A › Tầng 4</option>
+            </optgroup>
+            <optgroup label="Tòa B">
+              <option value="tb">Tòa B</option>
+            </optgroup>
+          </select>
+          <span class="helper" id="help-parent">(để trống = khu vực gốc · loại trừ chính nút và nhánh con)</span>
+          <span class="field-error" id="err-parent" role="alert"><span aria-hidden="true">⚠</span> Không thể đặt khu vực vào chính nó hoặc nhánh con của nó.</span>
+        </div>
+      </form>
+
+      <div class="modal__footer">
+        <button type="button" class="btn btn--secondary" onclick="closeModal()">Hủy</button>
+        <button type="submit" form="areaForm" class="btn btn--primary" id="btnSave">Lưu</button>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  var overlay = document.getElementById('overlay');
+  var body = document.body;
+  function clearErrors(){
+    ['f-name','f-code','f-parent'].forEach(function(id){
+      document.getElementById(id).classList.remove('has-error');
+    });
+  }
+  function setMode(title){
+    document.getElementById('modalTitle').textContent = title;
+  }
+  function open(){ overlay.classList.add('open'); }
+
+  function showCreate(){
+    body.className='';
+    clearErrors();
+    setMode('Thêm khu vực');
+    document.getElementById('ten').value='';
+    document.getElementById('ma').value='';
+    document.getElementById('loai').value='';
+    document.getElementById('cha').value='';
+    onNameInput();
+    open();
+    setTimeout(function(){ document.getElementById('ten').focus(); },60);
+  }
+  function showEdit(){
+    body.className='';
+    clearErrors();
+    setMode('Sửa khu vực');
+    document.getElementById('ten').value='Phòng 305';
+    document.getElementById('ma').value='P305';
+    document.getElementById('loai').value='Phòng';
+    document.getElementById('cha').value='ta-t3';
+    onNameInput();
+    open();
+  }
+  function showLoading(){
+    showEdit();
+    setMode('Sửa khu vực');
+    body.className='state-loading';
+    // mô phỏng nạp xong sau 1.4s
+    setTimeout(function(){ body.className=''; },1400);
+  }
+  function showError(){
+    showCreate();
+    setMode('Thêm khu vực');
+    document.getElementById('ten').value='';
+    document.getElementById('ma').value='P305';
+    document.getElementById('cha').value='ta-t3';
+    // bật cả 3 lỗi để minh hoạ trạng thái Error
+    document.getElementById('f-name').classList.add('has-error');
+    document.getElementById('f-code').classList.add('has-error');
+    document.getElementById('f-parent').classList.add('has-error');
+  }
+  function showSuccess(){
+    closeModal();
+    var t=document.getElementById('toast');
+    document.getElementById('toastMsg').textContent='Đã thêm khu vực.';
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); },2600);
+  }
+  function showNetErr(){
+    var s=document.getElementById('snackbar');
+    s.classList.add('show');
+    setTimeout(function(){ s.classList.remove('show'); },2800);
+  }
+  function closeModal(){ overlay.classList.remove('open'); }
+  function onOverlayClick(e){ if(e.target===overlay) closeModal(); }
+
+  // Lưu vô hiệu khi Tên trống (sau trim)
+  function onNameInput(){
+    var v=document.getElementById('ten').value.trim();
+    document.getElementById('btnSave').disabled = v.length===0;
+    if(v.length>0) document.getElementById('f-name').classList.remove('has-error');
+  }
+  function onSubmit(e){
+    e.preventDefault();
+    clearErrors();
+    var name=document.getElementById('ten').value.trim();
+    var nameRaw=document.getElementById('ten').value;
+    var hasErr=false;
+    var nameErr=document.getElementById('err-name').lastChild;
+    if(name.length===0){
+      document.getElementById('f-name').classList.add('has-error');
+      document.getElementById('err-name').childNodes[2].nodeValue=' Vui lòng nhập tên khu vực.';
+      hasErr=true;
+    } else if(nameRaw.length>150){
+      document.getElementById('f-name').classList.add('has-error');
+      document.getElementById('err-name').childNodes[2].nodeValue=' Tên khu vực tối đa 150 ký tự.';
+      hasErr=true;
+    }
+    var ma=document.getElementById('ma').value.trim();
+    if(ma.length>50){
+      document.getElementById('f-code').classList.add('has-error');
+      document.getElementById('err-code').childNodes[2].nodeValue=' Mã khu vực tối đa 50 ký tự.';
+      hasErr=true;
+    }
+    if(hasErr) return;
+    showSuccess();
+  }
+  // Esc = Hủy
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  // Mở mặc định ở chế độ Tạo khi tải trang
+  window.addEventListener('load',showCreate);
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch sử di chuyển tài sản — S06</title>
+<style>
+  /* ===== Design tokens (8pt spacing, WCAG AA palette) ===== */
+  :root{
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s05:4px;
+    --c-bg:#0f172a;            /* nền tối phía sau (S01 workspace) */
+    --c-panel:#ffffff;
+    --c-ink:#1f2937;           /* text chính, contrast cao */
+    --c-muted:#5b6675;         /* text phụ ~AA trên trắng */
+    --c-line:#e2e8f0;
+    --c-primary:#1d4ed8;       /* CTA primary, AA trên trắng */
+    --c-primary-ink:#ffffff;
+    --c-old:#b45309;           /* vị trí cũ (amber, AA) */
+    --c-new:#047857;           /* vị trí mới (green, AA) */
+    --c-err-bg:#fef2f2; --c-err:#b91c1c; --c-err-line:#fecaca;
+    --c-dot:#1d4ed8;
+    --c-focus:#1d4ed8;
+    --radius:10px;
+    --t-panel:280ms; --t-section:180ms;
+    --e-out:cubic-bezier(.16,1,.3,1); --e-in:cubic-bezier(.4,0,1,1);
+    --shadow:0 10px 40px rgba(2,6,23,.28);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;overflow-x:hidden;background:var(--c-bg);font-family:var(--font);color:var(--c-ink);}
+  body{min-height:100vh;padding:var(--s3);display:flex;flex-direction:column;gap:var(--s2);align-items:flex-end;}
+
+  /* faux S01 backdrop hint */
+  .workspace-hint{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#64748b;font-size:14px;letter-spacing:.5px;pointer-events:none;z-index:0;}
+
+  /* ===== Demo controls (không thuộc UI sản phẩm) ===== */
+  .demo-bar{position:relative;z-index:5;display:flex;flex-wrap:wrap;gap:var(--s1);
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+    padding:var(--s1) var(--s2);border-radius:var(--radius);width:100%;align-items:center;}
+  .demo-bar span{color:#cbd5e1;font-size:13px;margin-right:var(--s1);}
+  .demo-bar button{font:inherit;font-size:13px;cursor:pointer;border:1px solid rgba(255,255,255,.25);
+    background:#1e293b;color:#e2e8f0;padding:6px 12px;border-radius:8px;}
+  .demo-bar button[aria-pressed="true"]{background:var(--c-primary);border-color:var(--c-primary);color:#fff;}
+  .demo-bar button:focus-visible{outline:3px solid #93c5fd;outline-offset:2px;}
+
+  /* ===== Scrim + Panel ===== */
+  .scrim{position:fixed;inset:0;background:rgba(2,6,23,.45);z-index:10;
+    opacity:0;transition:opacity var(--t-panel) var(--e-in);}
+  .panel-wrap{position:fixed;top:0;right:0;height:100vh;width:min(560px,100%);z-index:20;
+    transform:translateX(100%);transition:transform var(--t-panel) var(--e-in);
+    display:flex;}
+  body.panel-open .scrim{opacity:1;transition:opacity var(--t-panel) var(--e-out);}
+  body.panel-open .panel-wrap{transform:translateX(0);transition:transform var(--t-panel) var(--e-out);}
+
+  .panel{background:var(--c-panel);box-shadow:var(--shadow);height:100vh;width:100%;
+    display:flex;flex-direction:column;}
+
+  /* ===== Header ===== */
+  .p-head{padding:var(--s2) var(--s3);border-bottom:1px solid var(--c-line);display:flex;
+    align-items:flex-start;gap:var(--s2);}
+  .icon-btn{flex:0 0 auto;width:40px;height:40px;border-radius:8px;border:1px solid var(--c-line);
+    background:#fff;cursor:pointer;font-size:18px;line-height:1;color:var(--c-ink);
+    display:flex;align-items:center;justify-content:center;}
+  .icon-btn:hover{background:#f1f5f9;}
+  .icon-btn:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;}
+  .p-title{flex:1 1 auto;min-width:0;}
+  .p-title h1{margin:0;font-size:18px;line-height:1.3;}
+  .p-asset{margin:var(--s05) 0 0;font-size:14px;color:var(--c-muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  /* ===== Filter bar ===== */
+  .filter{padding:var(--s2) var(--s3);border-bottom:1px solid var(--c-line);
+    display:flex;flex-wrap:wrap;gap:var(--s2);align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:var(--s05);min-width:140px;flex:1 1 140px;}
+  .field label{font-size:13px;color:var(--c-muted);font-weight:600;}
+  .field input{font:inherit;font-size:14px;padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;
+    color:var(--c-ink);background:#fff;}
+  .field input:focus-visible{outline:3px solid var(--c-focus);outline-offset:1px;border-color:var(--c-primary);}
+  .filter-actions{display:flex;gap:var(--s1);flex:0 0 auto;}
+  .btn{font:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:8px;padding:9px 16px;border:1px solid transparent;}
+  .btn-primary{background:var(--c-primary);color:var(--c-primary-ink);}
+  .btn-primary:hover{background:#1742b8;}
+  .btn-secondary{background:#fff;color:var(--c-primary);border-color:#cbd5e1;}
+  .btn-secondary:hover{background:#f1f5f9;}
+  .btn:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .filter-error{flex:1 1 100%;display:none;background:var(--c-err-bg);border:1px solid var(--c-err-line);
+    color:var(--c-err);font-size:13px;padding:8px 12px;border-radius:8px;}
+  body.state-badrange .filter-error{display:block;animation:slideDownFade var(--t-section) var(--e-out);}
+
+  /* ===== Body / scroll area ===== */
+  .body{flex:1 1 auto;overflow-y:auto;padding:var(--s3);}
+
+  /* ===== Timeline ===== */
+  .timeline{list-style:none;margin:0;padding:0;position:relative;}
+  .timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--c-line);}
+  .tl-item{position:relative;padding:0 0 var(--s3) var(--s4);}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{content:"";position:absolute;left:0;top:4px;width:16px;height:16px;border-radius:50%;
+    background:#fff;border:3px solid var(--c-dot);}
+  .tl-when{font-size:14px;font-weight:700;color:var(--c-ink);}
+  .tl-who{font-size:13px;color:var(--c-muted);}
+  .tl-when .dotsep{color:var(--c-muted);font-weight:400;margin:0 6px;}
+  .tl-move{margin:var(--s1) 0 0;font-size:13px;line-height:1.5;display:flex;flex-wrap:wrap;
+    align-items:center;gap:6px;}
+  .crumb{padding:2px 8px;border-radius:6px;background:#f1f5f9;white-space:nowrap;max-width:100%;
+    overflow:hidden;text-overflow:ellipsis;}
+  .crumb.old{color:var(--c-old);background:#fff7ed;}
+  .crumb.new{color:var(--c-new);background:#ecfdf5;}
+  .arrow{font-weight:700;color:var(--c-muted);}
+  .tl-reason{margin:6px 0 0;font-size:13px;color:var(--c-ink);}
+  .tl-reason.none{color:var(--c-muted);font-style:italic;}
+
+  .list-end{text-align:center;color:var(--c-muted);font-size:13px;padding:var(--s2) 0 0;}
+
+  /* stagger entrance */
+  body.state-success .tl-item{opacity:0;transform:translateY(12px);
+    animation:itemIn var(--t-section) var(--e-out) forwards;}
+  body.state-success .tl-item:nth-child(1){animation-delay:.00s;}
+  body.state-success .tl-item:nth-child(2){animation-delay:.04s;}
+  body.state-success .tl-item:nth-child(3){animation-delay:.08s;}
+  body.state-success .tl-item:nth-child(4){animation-delay:.12s;}
+
+  /* ===== Loading skeleton ===== */
+  .skel-item{position:relative;padding:0 0 var(--s3) var(--s4);}
+  .skel-item::before{content:"";position:absolute;left:0;top:4px;width:16px;height:16px;border-radius:50%;
+    background:#e2e8f0;}
+  .skel{height:12px;border-radius:6px;background:linear-gradient(90deg,#eef2f7 25%,#e2e8f0 37%,#eef2f7 63%);
+    background-size:400% 100%;animation:shimmer 1.4s ease infinite;margin-bottom:8px;}
+  .skel.w60{width:60%;} .skel.w90{width:90%;} .skel.w40{width:40%;}
+
+  /* ===== Empty / Error blocks ===== */
+  .state-block{text-align:center;padding:var(--s4) var(--s2);max-width:360px;margin:var(--s4) auto;
+    animation:blockIn var(--t-section) var(--e-out);}
+  .state-block .ill{width:72px;height:72px;margin:0 auto var(--s2);}
+  .state-block h2{margin:0 0 var(--s1);font-size:17px;color:var(--c-ink);}
+  .state-block p{margin:0 0 var(--s2);font-size:14px;color:var(--c-muted);line-height:1.5;}
+
+  /* ===== State visibility wiring ===== */
+  .view{display:none;}
+  body.state-loading  #v-loading{display:block;}
+  body.state-success  #v-success{display:block;}
+  body.state-empty    #v-empty{display:block;}
+  body.state-error    #v-error{display:block;}
+  body.state-filtered-empty #v-filtered-empty{display:block;}
+  /* bad-range keeps success list visible behind inline error */
+  body.state-badrange #v-success{display:block;}
+
+  .load-more{text-align:center;padding-top:var(--s2);}
+  .spinner{display:none;width:22px;height:22px;border:3px solid var(--c-line);border-top-color:var(--c-primary);
+    border-radius:50%;margin:var(--s2) auto 0;animation:spin .8s linear infinite;}
+  body.loading-more .spinner{display:block;}
+  body.loading-more .list-end{display:none;}
+
+  /* ===== Keyframes ===== */
+  @keyframes itemIn{to{opacity:1;transform:translateY(0);}}
+  @keyframes blockIn{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:scale(1);}}
+  @keyframes slideDownFade{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ===== Responsive: tablet/mobile <768 → panel full-width, filter stacks ===== */
+  @media (max-width:767px){
+    body{padding:var(--s1);}
+    .panel-wrap{width:100%;}
+    .p-head,.filter,.body{padding-left:var(--s2);padding-right:var(--s2);}
+    .filter-actions{flex:1 1 100%;}
+    .filter-actions .btn{flex:1 1 auto;}
+    .field{flex:1 1 100%;}
+  }
+
+  /* ===== Reduced motion ===== */
+  @media (prefers-reduced-motion:reduce){
+    .scrim,.panel-wrap{transition:opacity 1ms linear;}
+    body.panel-open .panel-wrap{transform:translateX(0);transition:opacity 1ms linear;}
+    .panel-wrap{transform:translateX(0);}
+    body:not(.panel-open) .panel-wrap{opacity:0;}
+    body.panel-open .panel-wrap{opacity:1;}
+    body.state-success .tl-item{animation:none;opacity:1;transform:none;}
+    .state-block,.filter-error{animation:none;}
+    .skel{animation:none;}
+    .spinner{animation:spin 1.2s linear infinite;}
+  }
+</style>
+</head>
+<body class="panel-open state-success">
+
+  <div class="workspace-hint" aria-hidden="true">[ S01 · Bản đồ tài sản — workspace phía sau ]</div>
+
+  <!-- Demo state switcher (không thuộc sản phẩm) -->
+  <div class="demo-bar" role="group" aria-label="Chuyển trạng thái demo">
+    <span>Trạng thái demo:</span>
+    <button data-state="state-success" aria-pressed="true">Success</button>
+    <button data-state="state-loading" aria-pressed="false">Loading</button>
+    <button data-state="state-empty" aria-pressed="false">Empty</button>
+    <button data-state="state-filtered-empty" aria-pressed="false">Rỗng-sau-lọc</button>
+    <button data-state="state-error" aria-pressed="false">Error</button>
+    <button data-state="state-badrange" aria-pressed="false">Lỗi khoảng ngày</button>
+    <button id="toggle-panel" aria-pressed="true">Đóng/mở panel</button>
+    <button id="toggle-loadmore" aria-pressed="false">Tải thêm (spinner)</button>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+
+  <div class="panel-wrap">
+    <section class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+
+      <header class="p-head">
+        <button class="icon-btn" id="btn-back" aria-label="Quay lại Bản đồ tài sản (S01)">←</button>
+        <div class="p-title">
+          <h1 id="panel-title">Lịch sử di chuyển</h1>
+          <p class="p-asset" id="asset-label">A-007 · Máy nén khí</p>
+        </div>
+        <button class="icon-btn" id="btn-close" aria-label="Đóng panel lịch sử">✕</button>
+      </header>
+
+      <!-- Bộ lọc khoảng thời gian -->
+      <form class="filter" id="filter-form" novalidate>
+        <div class="field">
+          <label for="tu-ngay">Từ ngày</label>
+          <input type="date" id="tu-ngay" name="tu_ngay" value="2026-01-01" max="2026-06-22">
+        </div>
+        <div class="field">
+          <label for="den-ngay">Đến ngày</label>
+          <input type="date" id="den-ngay" name="den_ngay" value="2026-06-22" max="2026-06-22">
+        </div>
+        <div class="filter-actions">
+          <button type="submit" class="btn btn-primary" id="btn-apply">Áp dụng</button>
+          <button type="button" class="btn btn-secondary" id="btn-clear">Xóa lọc</button>
+        </div>
+        <p class="filter-error" id="filter-error" role="alert">Từ ngày không được sau Đến ngày.</p>
+      </form>
+
+      <div class="body" id="body">
+
+        <!-- SUCCESS: timeline -->
+        <div class="view" id="v-success">
+          <ol class="timeline" aria-label="Dòng thời gian di chuyển tài sản A-007">
+            <li class="tl-item">
+              <div class="tl-when">22/06/2026 14:30 <span class="dotsep">·</span><span class="tl-who">Nguyễn Văn A</span></div>
+              <p class="tl-move">
+                <span class="crumb old">Tòa A › Tầng 3 › Phòng 305</span>
+                <span class="arrow" aria-label="chuyển đến">→</span>
+                <span class="crumb new">Tòa A › Tầng 4 › Phòng 410</span>
+              </p>
+              <p class="tl-reason">Lý do: Chuyển sang dây chuyền mới</p>
+            </li>
+            <li class="tl-item">
+              <div class="tl-when">10/03/2026 09:05 <span class="dotsep">·</span><span class="tl-who">Trần Thị B</span></div>
+              <p class="tl-move">
+                <span class="crumb old">Tòa A › Tầng 2 › Kho</span>
+                <span class="arrow" aria-label="chuyển đến">→</span>
+                <span class="crumb new">Tòa A › Tầng 3 › Phòng 305</span>
+              </p>
+              <p class="tl-reason none">(Không có lý do)</p>
+            </li>
+            <li class="tl-item">
+              <div class="tl-when">02/01/2026 08:00 <span class="dotsep">·</span><span class="tl-who">Trần Thị B</span></div>
+              <p class="tl-move">
+                <span class="crumb old">(Chưa có vị trí)</span>
+                <span class="arrow" aria-label="chuyển đến">→</span>
+                <span class="crumb new">Tòa A › Tầng 2 › Kho</span>
+              </p>
+              <p class="tl-reason">Lý do: Gán vị trí lần đầu khi nhập kho</p>
+            </li>
+          </ol>
+          <div class="load-more">
+            <p class="list-end">— Đã hiển thị hết lịch sử —</p>
+            <div class="spinner" role="status" aria-label="Đang tải thêm"></div>
+          </div>
+        </div>
+
+        <!-- LOADING: skeleton -->
+        <div class="view" id="v-loading" aria-busy="true" aria-label="Đang tải lịch sử">
+          <div class="skel-item"><div class="skel w40"></div><div class="skel w90"></div><div class="skel w60"></div></div>
+          <div class="skel-item"><div class="skel w40"></div><div class="skel w90"></div><div class="skel w60"></div></div>
+          <div class="skel-item"><div class="skel w40"></div><div class="skel w90"></div></div>
+        </div>
+
+        <!-- EMPTY: tài sản chưa di chuyển -->
+        <div class="view" id="v-empty">
+          <div class="state-block">
+            <svg class="ill" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>
+            </svg>
+            <h2>Tài sản chưa có lần di chuyển nào.</h2>
+            <p>Mọi thay đổi vị trí sẽ được ghi lại và hiện ở đây.</p>
+          </div>
+        </div>
+
+        <!-- FILTERED EMPTY: rỗng sau lọc -->
+        <div class="view" id="v-filtered-empty">
+          <div class="state-block">
+            <svg class="ill" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+            </svg>
+            <h2>Không có lần di chuyển nào trong khoảng đã chọn.</h2>
+            <p>Thử mở rộng khoảng thời gian hoặc xóa bộ lọc để xem toàn bộ lịch sử.</p>
+            <button class="btn btn-secondary" onclick="setState('state-success')">Xóa lọc</button>
+          </div>
+        </div>
+
+        <!-- ERROR -->
+        <div class="view" id="v-error">
+          <div class="state-block">
+            <svg class="ill" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="1.6"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 9v4"></path><path d="M12 17h.01"></path>
+              <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path>
+            </svg>
+            <h2>Không tải được lịch sử.</h2>
+            <p>Đã có lỗi khi tải dữ liệu. Vui lòng thử lại.</p>
+            <button class="btn btn-primary" onclick="setState('state-loading');setTimeout(function(){setState('state-success');},900)">Thử lại</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+<script>
+  function setState(s){
+    var states=['state-success','state-loading','state-empty','state-filtered-empty','state-error','state-badrange'];
+    states.forEach(function(c){document.body.classList.remove(c);});
+    document.body.classList.add(s);
+    if(s==='state-empty'){document.getElementById('asset-label').textContent='A-045 · Tủ điện';}
+    else{document.getElementById('asset-label').textContent='A-007 · Máy nén khí';}
+    document.querySelectorAll('.demo-bar [data-state]').forEach(function(b){
+      b.setAttribute('aria-pressed', b.dataset.state===s ? 'true':'false');
+    });
+  }
+  document.querySelectorAll('.demo-bar [data-state]').forEach(function(b){
+    b.addEventListener('click',function(){setState(b.dataset.state);});
+  });
+
+  // toggle panel open/close (slide in/out)
+  document.getElementById('toggle-panel').addEventListener('click',function(){
+    document.body.classList.toggle('panel-open');
+    this.setAttribute('aria-pressed', document.body.classList.contains('panel-open')?'true':'false');
+  });
+  function closePanel(){document.body.classList.remove('panel-open');
+    document.getElementById('toggle-panel').setAttribute('aria-pressed','false');}
+  document.getElementById('btn-close').addEventListener('click',closePanel);
+  document.getElementById('btn-back').addEventListener('click',closePanel);
+  document.getElementById('scrim').addEventListener('click',closePanel);
+
+  // toggle load-more spinner demo
+  document.getElementById('toggle-loadmore').addEventListener('click',function(){
+    document.body.classList.toggle('loading-more');
+    this.setAttribute('aria-pressed', document.body.classList.contains('loading-more')?'true':'false');
+  });
+
+  // filter validation: Từ ngày > Đến ngày → inline error, không tải
+  document.getElementById('filter-form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var tu=document.getElementById('tu-ngay').value, den=document.getElementById('den-ngay').value;
+    if(tu && den && tu>den){ setState('state-badrange'); }
+    else { setState('state-loading'); setTimeout(function(){setState('state-success');},700); }
+  });
+  document.getElementById('btn-clear').addEventListener('click',function(){
+    document.getElementById('tu-ngay').value='2026-01-01';
+    document.getElementById('den-ngay').value='2026-06-22';
+    setState('state-success');
+  });
+</script>
+</body>
+</html>
