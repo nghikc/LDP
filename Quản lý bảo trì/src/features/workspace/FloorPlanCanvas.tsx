@@ -11,10 +11,12 @@ interface Props {
   onClickTrong: (x: number, y: number) => void;
   /** Click một vị trí → trả danh sách mã tài sản + tọa độ vị trí đó. */
   onClickViTri: (maTaiSans: string[], x: number, y: number) => void;
+  /** Tên đặt cho một vị trí (nếu có) theo tọa độ. */
+  tenViTri?: (x: number, y: number) => string | undefined;
 }
 
 /** Khung sơ đồ mặt bằng: ảnh + pin theo tọa độ %, breadcrumb, states (F09, R-S01-02/04). */
-export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong, onClickViTri }: Props) {
+export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong, onClickViTri, tenViTri }: Props) {
   if (!nutChon) {
     return (
       <section className="canvas" aria-label="Sơ đồ mặt bằng">
@@ -75,12 +77,16 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
           const dsMa = c.pins.map((p) => p.maTaiSan);
           const lamNoi = !!pinLamNoi && dsMa.includes(pinLamNoi);
           const nhieu = c.pins.length > 1;
+          const ten = tenViTri?.(c.toaDoX, c.toaDoY);
+          // Nhãn nhất quán: tên vị trí (nếu đặt) → mã tài sản (nếu 1) → "N tài sản".
+          const nhan = ten ?? (nhieu ? `${c.pins.length} tài sản` : c.pins[0].maTaiSan);
+          const moTa = ten ? `Vị trí ${ten}` : nhieu ? `Vị trí ${c.pins.length} tài sản` : `Tài sản ${c.pins[0].maTaiSan}`;
           return (
             <button
               key={nhieu ? `vt-${i}` : c.pins[0].maTaiSan}
               className={`pin pin-${c.pins[0].trangThai} ${lamNoi ? "pin-lam-noi" : ""} ${nhieu ? "pin-cum" : ""}`}
               style={{ left: `${c.toaDoX}%`, top: `${c.toaDoY}%` }}
-              aria-label={nhieu ? `Vị trí ${c.pins.length} tài sản` : `Tài sản ${c.pins[0].maTaiSan}`}
+              aria-label={moTa}
               data-trangthai={c.pins[0].trangThai}
               onClick={(e) => {
                 e.stopPropagation();
@@ -88,7 +94,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
               }}
             >
               <span className="pin-cham" aria-hidden="true">{nhieu ? c.pins.length : ""}</span>
-              {!nhieu && <span className="pin-nhan">{c.pins[0].maTaiSan}</span>}
+              <span className="pin-nhan">{nhan}</span>
             </button>
           );
         })}

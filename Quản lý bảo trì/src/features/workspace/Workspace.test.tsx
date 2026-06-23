@@ -106,6 +106,17 @@ describe("Workspace S01 — một vị trí nhiều tài sản (change request)"
     expect(within(ds).queryByText(/B-021/)).not.toBeInTheDocument();
   });
 
+  it("đặt tên vị trí khi gán → marker hiển thị tên", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.type(screen.getByLabelText("Tên vị trí"), "Khu thử");
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    expect(screen.getByRole("button", { name: "Vị trí Khu thử" })).toBeInTheDocument();
+  });
+
   it("gán 2 tài sản vào cùng một vị trí → toast số nhiều + marker vị trí", async () => {
     const user = userEvent.setup();
     render(<Workspace />);

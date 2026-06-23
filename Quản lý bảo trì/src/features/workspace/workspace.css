@@ -112,6 +112,10 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .o-gan ul[role="listbox"] li { border-bottom: 1px solid var(--mau-vien); }
 .o-gan ul[role="listbox"] li:last-child { border-bottom: none; }
 .o-gan-trong { padding: var(--kc-2); color: var(--mau-chu-phu); text-align: center; font-size: 13px; }
+.vt-doi-ten { display: flex; gap: var(--kc-1); margin: var(--kc-1) 0 var(--kc-2); }
+.vt-doi-ten input { flex: 1; padding: 8px var(--kc-1); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; background: #fafbfc; }
+.vt-doi-ten input:focus { outline: none; background: #fff; border-color: var(--mau-chinh); box-shadow: 0 0 0 2px rgba(20,86,184,.2); }
+.vt-doi-ten button { padding: 8px var(--kc-2); border: 1px solid var(--mau-vien); border-radius: var(--r); background: #fff; cursor: pointer; font-size: 14px; }
 .vt-popup-nut { display: flex; gap: var(--kc-1); justify-content: space-between; align-items: center; margin-top: var(--kc-2); }
 .vt-popup-nut > button:last-child { background: none; border: none; cursor: pointer; color: var(--mau-chu-phu); font-size: 14px; }
 
@@ -142,7 +146,14 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .lop-noi {
   position: fixed; inset: 0; background: rgba(17,24,33,.45);
   display: flex; align-items: center; justify-content: center; z-index: 20;
-  animation: mo-nen var(--t-vao) ease-out;
+  animation: mo-nen var(--t-vao) ease-out both;
+  /* Ép tạo layer riêng → vẽ ngay, tránh lỗi Chromium "chỉ hiện khi rê chuột". */
+  transform: translateZ(0); will-change: opacity;
+}
+/* Mọi thẻ nổi/panel: ép layer riêng + giữ khung cuối của animation. */
+.o-gan, .pin-popup, .xoa-dialog, .form-khu-vuc, .di-doi-form, .panel,
+.sodo-lop-phu, .pin-cdl-panel, .xbc-lop-phu {
+  transform: translateZ(0); animation-fill-mode: both;
 }
 .o-gan, .pin-popup, .xoa-dialog {
   background: #fff; border-radius: var(--r-lon); padding: var(--kc-3);

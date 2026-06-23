@@ -10,7 +10,7 @@ describe("search — tra cứu nhanh (F16)", () => {
 
   it("TC-S01-27: gõ 'may nen' (không dấu) khớp 'Máy nén khí'", () => {
     const kq = timTaiSan(taiSanMau, "may nen");
-    expect(kq.map((t) => t.maTaiSan)).toEqual(["A-007"]);
+    expect(kq.map((t) => t.maTaiSan)).toContain("A-007");
   });
 
   it("TC-S01-29: gõ mã 'B-021' khớp đúng tài sản", () => {

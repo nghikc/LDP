@@ -14,6 +14,11 @@ import type { BanGhiLichSu } from "./lich-su/lichSuService";
 
 export type LichSuTheoTaiSan = Record<string, BanGhiLichSu[]>;
 
+/** Khóa định danh một vị trí trên sơ đồ theo nút + tọa độ. */
+export function khoaViTri(maNut: string, x: number, y: number): string {
+  return `${maNut}:${x}:${y}`;
+}
+
 const NGUOI_HIEN_TAI = "giangnb";
 
 export function useWorkspace(
@@ -25,6 +30,7 @@ export function useWorkspace(
   const [pins, setPins] = useState<ViTriPin[]>(viTriPinMau);
   const [auditLog, setAuditLog] = useState<BanGhiKiemToan[]>([]);
   const [lichSu, setLichSu] = useState<LichSuTheoTaiSan>({});
+  const [viTriTen, setViTriTen] = useState<Record<string, string>>({});
   const [vaiTro] = useState<VaiTro>(vaiTroBanDau);
   const demId = useRef(0);
 
@@ -110,6 +116,22 @@ export function useWorkspace(
 
   const anhHuongXoa = useCallback((maNut: string) => demAnhHuongXoa(nodes, pins, maNut), [nodes, pins]);
 
+  /** Đặt/đổi tên một vị trí (theo nút + tọa độ); tên rỗng = xóa tên. */
+  const datTenViTri = useCallback((maNut: string, x: number, y: number, ten: string) => {
+    const key = khoaViTri(maNut, x, y);
+    setViTriTen((m) => {
+      const n = { ...m };
+      if (ten.trim()) n[key] = ten.trim();
+      else delete n[key];
+      return n;
+    });
+  }, []);
+
+  const layTenViTri = useCallback(
+    (maNut: string, x: number, y: number) => viTriTen[khoaViTri(maNut, x, y)],
+    [viTriTen],
+  );
+
   // ---- S02: tạo / sửa nút khu vực ----
   const themNut = useCallback(
     (data: DuLieuForm) => {
@@ -179,8 +201,8 @@ export function useWorkspace(
   );
 
   return {
-    nodes, taiSan, pins, auditLog, lichSu, vaiTro, nguoi: NGUOI_HIEN_TAI,
+    nodes, taiSan, pins, auditLog, lichSu, viTriTen, vaiTro, nguoi: NGUOI_HIEN_TAI,
     gan, ganNhieu, go, xoa, chuyen, anhHuongXoa,
-    themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin,
+    themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin, datTenViTri, layTenViTri,
   };
 }
