@@ -53,6 +53,12 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, san
 .nut-toggle, .nut-toggle-trong { width: 20px; background: none; border: none; cursor: pointer; }
 .nut-ten { background: none; border: none; cursor: pointer; padding: 4px var(--kc-1); border-radius: 4px; font-size: 14px; }
 .nut-ten.dang-chon { background: #e3edfb; color: var(--mau-chinh); font-weight: 600; }
+.nut-menu { position: relative; margin-left: auto; }
+.nut-menu > button { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+.nut-menu-list { position: absolute; right: 0; top: 100%; z-index: 8; list-style: none; margin: 2px 0 0; padding: 4px 0; background: #fff; border: 1px solid var(--mau-vien); border-radius: var(--r); box-shadow: 0 6px 24px rgba(0,0,0,.14); min-width: 160px; animation: hien-xuong var(--t-vao) ease-out; }
+.nut-menu-list button { display: block; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 6px var(--kc-2); font-size: 13px; }
+.nut-menu-list button:hover, .nut-menu-list button:focus-visible { background: #eef2f8; }
+.nut-nhat-ky { margin-left: auto; background: none; border: 1px solid var(--mau-vien); border-radius: var(--r); padding: var(--kc-1) var(--kc-2); cursor: pointer; }
 
 .breadcrumb { padding: var(--kc-1) var(--kc-2); border-bottom: 1px solid var(--mau-vien); font-size: 13px; color: #44505f; }
 .canvas { display: flex; flex-direction: column; flex: 1; min-height: 0; }

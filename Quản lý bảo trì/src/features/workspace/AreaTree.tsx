@@ -37,6 +37,7 @@ function NhanhCay({ node, nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: Pr
   const con = layNutCon(nodes, node.maNut);
   const coCon = con.length > 0;
   const [mo, setMo] = useState(false);
+  const [menuMo, setMenuMo] = useState(false);
   const keoThaDuoc = vaiTro === "QuanTri" && !!onChuyen;
 
   return (
@@ -74,9 +75,31 @@ function NhanhCay({ node, nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: Pr
         </button>
         {vaiTro === "QuanTri" && onMenu && (
           <span className="nut-menu">
-            <button aria-label={`Menu ${node.tenKhuVuc}`} onClick={() => onMenu(node.maNut, "sua")}>
+            <button aria-label={`Menu ${node.tenKhuVuc}`} aria-expanded={menuMo} onClick={() => setMenuMo((v) => !v)}>
               ⋮
             </button>
+            {menuMo && (
+              <ul className="nut-menu-list" role="menu">
+                {([
+                  ["them-con", "Thêm con"],
+                  ["sua", "Sửa"],
+                  ["anh-so-do", "Quản lý ảnh sơ đồ"],
+                  ["xoa", "Xóa"],
+                ] as const).map(([hd, nhan]) => (
+                  <li key={hd} role="none">
+                    <button
+                      role="menuitem"
+                      onClick={() => {
+                        setMenuMo(false);
+                        onMenu(node.maNut, hd);
+                      }}
+                    >
+                      {nhan}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </span>
         )}
       </div>

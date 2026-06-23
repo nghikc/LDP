@@ -45,4 +45,13 @@ Quản lý bảo trì/
 | S07 Nhật ký kiểm toán | ✅ dev xong | Đã merge `main` (PR #4); 27 test, 21/21 TC Auto Pass |
 | S03 Quản lý ảnh sơ đồ | ✅ dev xong | Nhánh `feature/qlvt-s03-s05-s08`; 44 test, 22/22 TC Auto Pass |
 | S05 Pin cần đặt lại | ✅ dev xong | Cùng nhánh; 23 test, 15/15 TC Auto Pass |
-| S08 Xuất báo cáo | ✅ dev xong | Cùng nhánh; 33 test, 19/19 TC Auto Pass. **Toàn bộ 8/8 màn dev xong — 248 test xanh.** |
+| S08 Xuất báo cáo | ✅ dev xong | Cùng nhánh; 33 test, 19/19 TC Auto Pass. **Toàn bộ 8/8 màn dev xong.** |
+
+## Tích hợp S01 ↔ vệ tinh (2026-06-23)
+`useWorkspace` là store trung tâm (nodes/pins/auditLog/lichSu + handlers). S01 Workspace mở 7 màn vệ tinh:
+- Cây: menu ⋮ (Thêm con/Sửa → **S02**, Quản lý ảnh → **S03**, Xóa); "+ Thêm khu vực" → S02
+- Popup pin: "Di dời" → **S04** (đơn), "Xem lịch sử" → **S06**
+- Thanh công cụ: "Di dời hàng loạt" → **S04** (lô), "Xuất báo cáo" → **S08**
+- Header: "Nhật ký kiểm toán" → **S07** (chỉ Quản trị)
+- Dải cảnh báo "N pin cần đặt lại" → **S05**
+Di dời sinh lịch sử (hiện ở S06) + nhật ký (hiện ở S07). **257 test xanh** (9 integration test mới).
