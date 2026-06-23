@@ -39,4 +39,5 @@ Quản lý bảo trì/
 | Màn | Trạng thái | Ghi chú |
 |-----|-----------|---------|
 | S01 Workspace | ✅ dev xong | Đã merge `main` (PR #1); 46 test, 24/24 TC Auto Pass |
-| S02 Form khu vực | ✅ dev xong | Nhánh `feature/qlvt-s02-formkhuvuc`; 34 test, 26/26 TC Auto Pass; build+lint sạch |
+| S02 Form khu vực | ✅ dev xong | Đã merge `main` (PR #2); 34 test, 26/26 TC Auto Pass |
+| S04 Di dời tài sản | ✅ dev xong | Nhánh `feature/qlvt-s04-didoi`; 25 test, 16/16 TC Auto Pass; build+lint sạch |

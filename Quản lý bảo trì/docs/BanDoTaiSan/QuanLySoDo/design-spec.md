@@ -1,5 +1,12 @@
 # Design Spec — Quản lý ảnh sơ đồ mặt bằng (Mã màn: S03)
 
+## Bản Figma (preview)
+- Node: `291:452` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: thao tác tải/thay/xóa ảnh **nhanh, an toàn, không mơ hồ**. Người dùng luôn biết trước hậu quả lên pin (giữ vị trí khi thay, gỡ vị trí khi xóa). Modal nhẹ, gọn trong một bước, không rời khỏi ngữ cảnh khu vực đang chọn.
 - Thiết bị mục tiêu: **Web/Desktop-first** (đồng bộ với workspace S01); modal co giãn vừa màn hẹp.

@@ -1,5 +1,12 @@
 # Design Spec — Danh sách pin cần đặt lại (Mã màn: S05)
 
+## Bản Figma (preview)
+- Node: `291:506` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: gom mọi pin bị lệch ra ngoài sơ đồ (sau khi thay ảnh) về một chỗ và giúp người dùng xử lý dứt điểm từng pin với ít bước nhất. Tạo cảm giác "kiểm soát được, không pin nào bị bỏ sót". Trạng thái lý tưởng là danh sách rỗng.
 - Thiết bị mục tiêu: **Web/Desktop-first** (đi cùng Workspace S01); panel co lại vừa màn hẹp, vẫn trượt từ phải.

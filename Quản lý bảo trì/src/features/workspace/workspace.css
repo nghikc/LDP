@@ -97,6 +97,20 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, san
 .form-khu-vuc [aria-invalid="true"] { border-color: var(--mau-nguy-hiem); }
 .loi-field { color: var(--mau-nguy-hiem); font-size: 12px; margin: 4px 0 0; animation: hien-xuong var(--t-ra) ease-out; }
 
+.di-doi-form { background: #fff; border-radius: var(--r); padding: var(--kc-3); min-width: 420px; max-width: 92vw; max-height: 88vh; overflow: auto; animation: hien-len var(--t-vao) ease-out; }
+.di-doi-form h2 { margin-top: 0; }
+.di-doi-form label { display: block; margin-top: var(--kc-2); font-size: 13px; color: #44505f; }
+.di-doi-form select, .di-doi-form textarea { display: block; width: 100%; margin-top: 4px; padding: var(--kc-1); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; }
+.di-doi-form textarea { min-height: 64px; resize: vertical; }
+.che-do-nguon { display: flex; gap: var(--kc-3); margin: var(--kc-2) 0; }
+.che-do-nguon label { display: inline-flex; align-items: center; gap: 4px; margin: 0; }
+.ds-tai-san { list-style: none; margin: var(--kc-1) 0; padding: 0; max-height: 200px; overflow: auto; border: 1px solid var(--mau-vien); border-radius: var(--r); }
+.ds-tai-san li label { display: flex; align-items: center; gap: var(--kc-1); margin: 0; padding: var(--kc-1) var(--kc-2); }
+.nhan-khoa { color: var(--mau-canh-bao); font-size: 12px; }
+.bo-dem-chon { font-weight: 600; margin: var(--kc-1) 0; }
+.bo-dem-ky-tu { font-size: 12px; color: #5a6573; text-align: right; margin: 4px 0 0; }
+.goi-y-chon { font-size: 12px; color: #5a6573; }
+
 .toast, .snackbar {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: var(--kc-3);
   padding: var(--kc-1) var(--kc-3); border-radius: var(--r); color: #fff; z-index: 30;

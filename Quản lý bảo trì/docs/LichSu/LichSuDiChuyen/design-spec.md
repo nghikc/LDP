@@ -1,5 +1,12 @@
 # Design Spec — Lịch sử di chuyển tài sản (Mã màn: S06)
 
+## Bản Figma (preview)
+- Node: `291:533` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: đọc-hiểu nhanh hành trình của một tài sản; cảm giác minh bạch, đáng tin (dữ liệu truy vết không thể chỉnh). Trình bày dạng **timeline** để mắt lướt theo dòng thời gian, thấy ngay "đi từ đâu tới đâu".
 - Thiết bị mục tiêu: **Web/Desktop-first**, hiển thị như **panel trượt từ phải** chồng lên S01; thu hẹp gọn trên màn hẹp (panel chiếm phần lớn bề ngang).

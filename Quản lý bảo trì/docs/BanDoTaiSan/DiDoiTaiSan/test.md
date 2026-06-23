@@ -13,7 +13,9 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 
 | Tổng TC | Pass | Fail | Blocked | Skip | Chưa chạy | % Pass | Lần chạy cuối |
 |---------|------|------|---------|------|-----------|--------|---------------|
-| 31 | 0 | 0 | 0 | 0 | 31 | 0% | — |
+| 31 | 16 | 0 | 0 | 0 | 15 | 52% | 2026-06-23 |
+
+> 16 TC `Auto` đã Pass (Vitest: 25 test / 2 file cho S04; tổng dự án 105 test). 15 TC `Manual` còn `Chưa chạy` → checklist test tay (rollback thật khi mất mạng/đóng tab, khóa tự mở 5 phút, hiệu năng 500 tài sản <5s, biên lý do/đích trùng UI…). Logic rollback all-or-nothing & cùng-một-đích đã phủ ở tầng service.
 
 **Phủ theo nguồn (truy vết nhanh):**
 
@@ -40,57 +42,57 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-01 | Positive | EP | R-S04-01 / UC-S04-01 (chính) / GWT-1,2 | Cao | Critical | Đăng nhập (Nguyễn B); tài sản A-007 đang ở "Tòa A › Tầng 3 › Phòng 305", không bị khóa | 1. Mở popup pin A-007 trên S01, bấm "Di dời"<br>2. Xác nhận modal mở, A-007 chọn sẵn, ẩn bộ chọn cách lấy nguồn<br>3. Chọn đích "Tòa B › Tầng 1 › Kho B-01"<br>4. Bấm "Di dời (1)" | Tài sản: `A-007 · Máy nén khí`; đích: `Tòa B › Tầng 1 › Kho B-01` | Modal mở đúng 1 tài sản chọn sẵn; pin A-007 chuyển sang Kho B-01; toast "Đã di dời 1 tài sản."; fade về S01 | Auto | Chưa chạy |
-| TC-S04-02 | Negative | DT | R-S04-04 / UC-S04-01 (ngoại lệ) / GWT-3 | Cao | High | Như TC-S04-01, modal đã mở với A-007 | 1. KHÔNG chọn đích<br>2. Bấm "Di dời"<br>(nếu nút bật) hoặc kiểm tra trạng thái nút | Đích: (để trống) | Nút "Di dời" tắt khi chưa chọn đích; nếu bị ép submit → chặn lưu, báo "Vui lòng chọn khu vực đích." qua aria-live | Auto | Chưa chạy |
+| TC-S04-01 | Positive | EP | R-S04-01 / UC-S04-01 (chính) / GWT-1,2 | Cao | Critical | Đăng nhập (Nguyễn B); tài sản A-007 đang ở "Tòa A › Tầng 3 › Phòng 305", không bị khóa | 1. Mở popup pin A-007 trên S01, bấm "Di dời"<br>2. Xác nhận modal mở, A-007 chọn sẵn, ẩn bộ chọn cách lấy nguồn<br>3. Chọn đích "Tòa B › Tầng 1 › Kho B-01"<br>4. Bấm "Di dời (1)" | Tài sản: `A-007 · Máy nén khí`; đích: `Tòa B › Tầng 1 › Kho B-01` | Modal mở đúng 1 tài sản chọn sẵn; pin A-007 chuyển sang Kho B-01; toast "Đã di dời 1 tài sản."; fade về S01 | Auto | Pass |
+| TC-S04-02 | Negative | DT | R-S04-04 / UC-S04-01 (ngoại lệ) / GWT-3 | Cao | High | Như TC-S04-01, modal đã mở với A-007 | 1. KHÔNG chọn đích<br>2. Bấm "Di dời"<br>(nếu nút bật) hoặc kiểm tra trạng thái nút | Đích: (để trống) | Nút "Di dời" tắt khi chưa chọn đích; nếu bị ép submit → chặn lưu, báo "Vui lòng chọn khu vực đích." qua aria-live | Auto | Pass |
 | TC-S04-03 | Positive | ST | R-S04-01 / UC-S04-01 (Hủy) | Trung bình | Medium | Modal mở với A-007, đã chọn đích Kho B-01 | 1. Bấm "Hủy"<br>2. Quan sát S01 | Tài sản: `A-007`; đích đã chọn: `Kho B-01` | Modal đóng (slide-down + fade), KHÔNG thay đổi; A-007 vẫn ở "Phòng 305"; không sinh lịch sử/nhật ký | Manual | Chưa chạy |
 
 ## Chức năng: Di dời hàng loạt — chọn tài sản lẻ (F13) — Risk: Cao
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-04 | Positive | EP | R-S04-02 / UC-S04-02 (chính) / US-S04-02 GWT-1,2 | Cao | Critical | Đăng nhập; tồn tại các tài sản đã có vị trí | 1. Bấm "Di dời hàng loạt" trên S01<br>2. Xác nhận chế độ "Chọn tài sản lẻ"<br>3. Tìm và tick A-007, A-014, A-009<br>4. Chọn đích Kho B-01<br>5. Bấm "Di dời (3)" | Tick 3 tài sản: `A-007, A-014, A-009` (đều ở Phòng 305/306); đích `Tòa B › Tầng 1 › Kho B-01` | Bộ đếm "3 tài sản đã chọn"; cả 3 về đúng Kho B-01; toast "Đã di dời 3 tài sản."; fade về S01 | Auto | Chưa chạy |
-| TC-S04-05 | Negative | DT | R-S04-02 / US-S04-02 GWT-3 | Cao | High | Modal mở chế độ "Chọn tài sản lẻ", chưa tick gì | 1. Không tick tài sản nào<br>2. Quan sát nút "Di dời" | Danh sách chọn: (rỗng) | Nút "Di dời" tắt; gợi ý "Chọn ít nhất một tài sản để di dời." | Auto | Chưa chạy |
+| TC-S04-04 | Positive | EP | R-S04-02 / UC-S04-02 (chính) / US-S04-02 GWT-1,2 | Cao | Critical | Đăng nhập; tồn tại các tài sản đã có vị trí | 1. Bấm "Di dời hàng loạt" trên S01<br>2. Xác nhận chế độ "Chọn tài sản lẻ"<br>3. Tìm và tick A-007, A-014, A-009<br>4. Chọn đích Kho B-01<br>5. Bấm "Di dời (3)" | Tick 3 tài sản: `A-007, A-014, A-009` (đều ở Phòng 305/306); đích `Tòa B › Tầng 1 › Kho B-01` | Bộ đếm "3 tài sản đã chọn"; cả 3 về đúng Kho B-01; toast "Đã di dời 3 tài sản."; fade về S01 | Auto | Pass |
+| TC-S04-05 | Negative | DT | R-S04-02 / US-S04-02 GWT-3 | Cao | High | Modal mở chế độ "Chọn tài sản lẻ", chưa tick gì | 1. Không tick tài sản nào<br>2. Quan sát nút "Di dời" | Danh sách chọn: (rỗng) | Nút "Di dời" tắt; gợi ý "Chọn ít nhất một tài sản để di dời." | Auto | Pass |
 | TC-S04-06 | Negative | EP | R-S04-02 / BRule-S04-06 | Trung bình | Medium | Tồn tại tài sản A-100 **chưa có vị trí** (chưa gán pin) | 1. Mở chế độ "Chọn tài sản lẻ"<br>2. Tìm "A-100" trong ô tìm | Tìm mã: `A-100` (chưa có vị trí) | A-100 KHÔNG xuất hiện trong danh sách (chỉ liệt kê tài sản đã có vị trí) | Manual | Chưa chạy |
 
 ## Chức năng: Di dời hàng loạt — chọn cả vị trí cũ (F13) — Risk: Cao
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-07 | Positive | EP | R-S04-03 / UC-S04-03 (chính) / US-S04-03 GWT-1 | Cao | Critical | Nút nguồn "Phòng 305" chứa đúng 5 tài sản đã có vị trí | 1. Bấm "Di dời hàng loạt"<br>2. Chọn chế độ "Chọn cả vị trí cũ (lấy hết)"<br>3. Chọn nút nguồn "Phòng 305"<br>4. Chọn đích "Phòng 306"<br>5. Bấm "Di dời (5)" | Nguồn: `Tòa A › Tầng 3 › Phòng 305` (5 tài sản); đích: `Tòa A › Tầng 3 › Phòng 306` | Nạp hết 5 tài sản; bộ đếm "5 tài sản đã chọn"; cả 5 chuyển sang Phòng 306; toast "Đã di dời 5 tài sản." | Auto | Chưa chạy |
-| TC-S04-08 | Negative | EP | R-S04-03 / UC-S04-03 (ngoại lệ) / US-S04-03 GWT-2 | Cao | High | Nút "Phòng 309" trống (0 tài sản) | 1. Chọn chế độ "Chọn cả vị trí cũ"<br>2. Chọn nút nguồn "Phòng 309" | Nguồn: `Phòng 309` (0 tài sản) | Báo "Vị trí này không có tài sản để di dời."; lô vẫn rỗng; nút Di dời tắt | Auto | Chưa chạy |
+| TC-S04-07 | Positive | EP | R-S04-03 / UC-S04-03 (chính) / US-S04-03 GWT-1 | Cao | Critical | Nút nguồn "Phòng 305" chứa đúng 5 tài sản đã có vị trí | 1. Bấm "Di dời hàng loạt"<br>2. Chọn chế độ "Chọn cả vị trí cũ (lấy hết)"<br>3. Chọn nút nguồn "Phòng 305"<br>4. Chọn đích "Phòng 306"<br>5. Bấm "Di dời (5)" | Nguồn: `Tòa A › Tầng 3 › Phòng 305` (5 tài sản); đích: `Tòa A › Tầng 3 › Phòng 306` | Nạp hết 5 tài sản; bộ đếm "5 tài sản đã chọn"; cả 5 chuyển sang Phòng 306; toast "Đã di dời 5 tài sản." | Auto | Pass |
+| TC-S04-08 | Negative | EP | R-S04-03 / UC-S04-03 (ngoại lệ) / US-S04-03 GWT-2 | Cao | High | Nút "Phòng 309" trống (0 tài sản) | 1. Chọn chế độ "Chọn cả vị trí cũ"<br>2. Chọn nút nguồn "Phòng 309" | Nguồn: `Phòng 309` (0 tài sản) | Báo "Vị trí này không có tài sản để di dời."; lô vẫn rỗng; nút Di dời tắt | Auto | Pass |
 | TC-S04-09 | Edge | BVA | R-S04-03 / UC-S04-03 | Trung bình | Medium | Nút "Tủ A1" chứa đúng 1 tài sản (biên dưới ≥1) | 1. Chọn chế độ "Chọn cả vị trí cũ"<br>2. Chọn nút "Tủ A1" | Nguồn: `Tủ A1` (1 tài sản: `A-055`) | Nạp 1 tài sản; bộ đếm "1 tài sản đã chọn"; cho phép sang Bước 2 | Manual | Chưa chạy |
 
 ## Chức năng: Chọn vị trí đích (F12, F13) — Risk: Cao
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-10 | Negative | DT | R-S04-04 / UC-S04-02 (ngoại lệ) | Cao | Critical | Lô có 3 tài sản đã chọn; chưa chọn đích | 1. Không chọn đích<br>2. Cố bấm "Di dời" | Tài sản: `A-007, A-014, A-009`; đích: (trống) | Nút Di dời tắt do thiếu đích; nếu ép → "Vui lòng chọn khu vực đích." | Auto | Chưa chạy |
-| TC-S04-11 | Positive | DT | R-S04-04 / BRule-S04-01 | Cao | Critical | Lô 5 tài sản từ nhiều phòng khác nhau | 1. Chọn 1 đích duy nhất "Kho B-01"<br>2. Di dời<br>3. Kiểm tra vị trí từng tài sản | 5 tài sản nguồn khác phòng; đích duy nhất `Kho B-01` | TẤT CẢ 5 tài sản về cùng "Kho B-01" (không tài sản nào lệch đích) | Auto | Chưa chạy |
+| TC-S04-10 | Negative | DT | R-S04-04 / UC-S04-02 (ngoại lệ) | Cao | Critical | Lô có 3 tài sản đã chọn; chưa chọn đích | 1. Không chọn đích<br>2. Cố bấm "Di dời" | Tài sản: `A-007, A-014, A-009`; đích: (trống) | Nút Di dời tắt do thiếu đích; nếu ép → "Vui lòng chọn khu vực đích." | Auto | Pass |
+| TC-S04-11 | Positive | DT | R-S04-04 / BRule-S04-01 | Cao | Critical | Lô 5 tài sản từ nhiều phòng khác nhau | 1. Chọn 1 đích duy nhất "Kho B-01"<br>2. Di dời<br>3. Kiểm tra vị trí từng tài sản | 5 tài sản nguồn khác phòng; đích duy nhất `Kho B-01` | TẤT CẢ 5 tài sản về cùng "Kho B-01" (không tài sản nào lệch đích) | Auto | Pass |
 | TC-S04-12 | Negative | EP | R-S04-04 (đúng 1 nút hợp lệ) | Trung bình | Medium | Modal mở, Bước 2 | 1. Cố chọn 2 nút đích cùng lúc trên cây | Chọn: `Kho B-01` rồi `Kho B-02` | Chỉ giữ đúng 1 nút đích (lựa chọn sau thay lựa chọn trước); không cho chọn nhiều đích | Manual | Chưa chạy |
 
 ## Chức năng: Lý do di dời (F12, F13) — Risk: Trung bình
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-13 | Positive | EP | R-S04-05 / US-S04-04 GWT-1 | Trung bình | Medium | Lô hợp lệ, đã chọn đích | 1. Để TRỐNG lý do<br>2. Bấm "Di dời" | Lý do: (trống) | Vẫn lưu được; lịch sử ghi đúng người + thời điểm; trường lý do trống | Auto | Chưa chạy |
+| TC-S04-13 | Positive | EP | R-S04-05 / US-S04-04 GWT-1 | Trung bình | Medium | Lô hợp lệ, đã chọn đích | 1. Để TRỐNG lý do<br>2. Bấm "Di dời" | Lý do: (trống) | Vẫn lưu được; lịch sử ghi đúng người + thời điểm; trường lý do trống | Auto | Pass |
 | TC-S04-14 | Edge | BVA | R-S04-05 (max 500) | Trung bình | Medium | Lô hợp lệ, đã chọn đích | 1. Nhập lý do đúng 500 ký tự<br>2. Bấm "Di dời" | Lý do: chuỗi `"Di dời do bảo trì..."` đúng `500` ký tự | Chấp nhận; lưu đủ 500 ký tự; bộ đếm hiện "500/500" | Manual | Chưa chạy |
-| TC-S04-15 | Negative | BVA | R-S04-05 / US-S04-04 GWT-2 | Trung bình | High | Lô hợp lệ | 1. Cố nhập 501 ký tự vào ô lý do | Lý do: chuỗi `501` ký tự | Chặn nhập vượt 500 (cắt ở 500); báo "Lý do tối đa 500 ký tự." | Auto | Chưa chạy |
+| TC-S04-15 | Negative | BVA | R-S04-05 / US-S04-04 GWT-2 | Trung bình | High | Lô hợp lệ | 1. Cố nhập 501 ký tự vào ô lý do | Lý do: chuỗi `501` ký tự | Chặn nhập vượt 500 (cắt ở 500); báo "Lý do tối đa 500 ký tự." | Auto | Pass |
 | TC-S04-16 | Edge | BVA | R-S04-05 (biên 499/1) | Thấp | Low | Lô hợp lệ | 1. Nhập 1 ký tự<br>2. Nhập 499 ký tự | Lý do: `"x"` (1 ký tự); rồi `499` ký tự | Cả hai chấp nhận; bộ đếm "1/500" và "499/500" | Manual | Chưa chạy |
 
 ## Chức năng: Truy vết tự động — người, thời điểm, lịch sử, nhật ký (F12, F13) — Risk: Cao
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-17 | Positive | EP | R-S04-06 / US-S04-04 GWT-1 | Cao | High | Đăng nhập là "Nguyễn B"; di dời 1 tài sản lúc 14:30 | 1. Di dời A-007 sang Kho B-01<br>2. Mở lịch sử tài sản A-007 | Người đăng nhập: `Nguyễn B`; thời điểm hệ thống: `2026-06-23 14:30` | Bản ghi ghi đúng người `Nguyễn B` + dấu thời gian khi lưu; người dùng KHÔNG nhập tay | Auto | Chưa chạy |
-| TC-S04-18 | Positive | EP | R-S04-07 / US-S04-04 GWT-3 | Cao | High | Di dời A-007 từ Phòng 305 → Kho B-01, lý do "Bảo trì" | 1. Di dời thành công<br>2. Xem lịch sử di chuyển A-007<br>3. Xem nhật ký kiểm toán | Vị trí cũ `Phòng 305`; mới `Kho B-01`; lý do `"Bảo trì"` | Lịch sử có: cũ→mới, người, thời điểm, lý do "Bảo trì"; nhật ký kiểm toán có bản ghi tương ứng (người · hành động · đối tượng · thời gian · cũ→mới) | Auto | Chưa chạy |
+| TC-S04-17 | Positive | EP | R-S04-06 / US-S04-04 GWT-1 | Cao | High | Đăng nhập là "Nguyễn B"; di dời 1 tài sản lúc 14:30 | 1. Di dời A-007 sang Kho B-01<br>2. Mở lịch sử tài sản A-007 | Người đăng nhập: `Nguyễn B`; thời điểm hệ thống: `2026-06-23 14:30` | Bản ghi ghi đúng người `Nguyễn B` + dấu thời gian khi lưu; người dùng KHÔNG nhập tay | Auto | Pass |
+| TC-S04-18 | Positive | EP | R-S04-07 / US-S04-04 GWT-3 | Cao | High | Di dời A-007 từ Phòng 305 → Kho B-01, lý do "Bảo trì" | 1. Di dời thành công<br>2. Xem lịch sử di chuyển A-007<br>3. Xem nhật ký kiểm toán | Vị trí cũ `Phòng 305`; mới `Kho B-01`; lý do `"Bảo trì"` | Lịch sử có: cũ→mới, người, thời điểm, lý do "Bảo trì"; nhật ký kiểm toán có bản ghi tương ứng (người · hành động · đối tượng · thời gian · cũ→mới) | Auto | Pass |
 
 ## Chức năng: Khóa đồng thời (F13, F22) — Risk: Cao
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-19 | Negative | ST | R-S04-08 / UC-S04-05 (đơn) / US-S04-06 GWT-1 | Cao | Critical | A-021 đang bị người dùng khác khóa (chưa hết 5 phút) | 1. Mở chế độ chọn tài sản lẻ<br>2. Tìm A-021 trong danh sách | Tài sản: `A-021 · Máy bơm` (đang bị khóa) | A-021 hiện icon khóa 🔒 + nhãn "đang được người khác chỉnh sửa"; ô tick bị vô hiệu, không tick được | Auto | Chưa chạy |
-| TC-S04-20 | Edge | DT | R-S04-08 / UC-S04-05 (hàng loạt) / US-S04-06 GWT-2 | Cao | Critical | Lô có 2 tài sản hợp lệ (A-007, A-009) + 1 đang khóa (A-021); đã chọn đích | 1. Bấm "Di dời"<br>2. Dialog "tài sản bị khóa" hiện<br>3. Bấm "Tiếp tục" | Lô: `A-007, A-009` (hợp lệ) + `A-021` (khóa); đích `Kho B-01` | Dialog "1 tài sản đang bị khóa. Bỏ qua và tiếp tục với 2 tài sản còn lại?"; chọn Tiếp tục → di dời 2 tài sản hợp lệ; A-021 giữ nguyên | Auto | Chưa chạy |
-| TC-S04-21 | Negative | DT | R-S04-08 / UC-S04-05 (từ chối) | Cao | High | Như TC-S04-20, dialog khóa đang hiện | 1. Bấm "Hủy" trong dialog tài sản bị khóa | Lô: 2 hợp lệ + `A-021` khóa | Hủy toàn lô; KHÔNG tài sản nào bị di dời; A-007, A-009, A-021 giữ nguyên vị trí | Auto | Chưa chạy |
+| TC-S04-19 | Negative | ST | R-S04-08 / UC-S04-05 (đơn) / US-S04-06 GWT-1 | Cao | Critical | A-021 đang bị người dùng khác khóa (chưa hết 5 phút) | 1. Mở chế độ chọn tài sản lẻ<br>2. Tìm A-021 trong danh sách | Tài sản: `A-021 · Máy bơm` (đang bị khóa) | A-021 hiện icon khóa 🔒 + nhãn "đang được người khác chỉnh sửa"; ô tick bị vô hiệu, không tick được | Auto | Pass |
+| TC-S04-20 | Edge | DT | R-S04-08 / UC-S04-05 (hàng loạt) / US-S04-06 GWT-2 | Cao | Critical | Lô có 2 tài sản hợp lệ (A-007, A-009) + 1 đang khóa (A-021); đã chọn đích | 1. Bấm "Di dời"<br>2. Dialog "tài sản bị khóa" hiện<br>3. Bấm "Tiếp tục" | Lô: `A-007, A-009` (hợp lệ) + `A-021` (khóa); đích `Kho B-01` | Dialog "1 tài sản đang bị khóa. Bỏ qua và tiếp tục với 2 tài sản còn lại?"; chọn Tiếp tục → di dời 2 tài sản hợp lệ; A-021 giữ nguyên | Auto | Pass |
+| TC-S04-21 | Negative | DT | R-S04-08 / UC-S04-05 (từ chối) | Cao | High | Như TC-S04-20, dialog khóa đang hiện | 1. Bấm "Hủy" trong dialog tài sản bị khóa | Lô: 2 hợp lệ + `A-021` khóa | Hủy toàn lô; KHÔNG tài sản nào bị di dời; A-007, A-009, A-021 giữ nguyên vị trí | Auto | Pass |
 | TC-S04-22 | Negative | ST | R-S04-08 / UC-S04-05 (đơn, bấm Di dời) | Cao | Critical | Di dời đơn A-021; A-021 vừa bị người khác khóa sau khi mở modal | 1. Bấm "Di dời (1)" với A-021 | Tài sản: `A-021` (bị khóa giữa chừng) | Chặn; báo "Tài sản đang được người khác chỉnh sửa. Vui lòng thử lại sau."; không di dời | Manual | Chưa chạy |
 
 ## Chức năng: Rollback all-or-nothing khi gián đoạn (F13) — Risk: Cao
@@ -105,7 +107,7 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 
 | Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
 |-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
-| TC-S04-26 | Positive | EP | R-S04-10 / BRule-S04-02 | Trung bình | High | A-007 ở Phòng 305 | 1. Di dời A-007 sang Kho B-01<br>2. Mở sơ đồ Phòng 305 và Kho B-01 trên S01 | Tài sản: `A-007`; cũ `Phòng 305` → mới `Kho B-01` | Pin A-007 biến mất ở Phòng 305, xuất hiện ở Kho B-01; A-007 vẫn chỉ 1 vị trí (BRule-01) | Auto | Chưa chạy |
+| TC-S04-26 | Positive | EP | R-S04-10 / BRule-S04-02 | Trung bình | High | A-007 ở Phòng 305 | 1. Di dời A-007 sang Kho B-01<br>2. Mở sơ đồ Phòng 305 và Kho B-01 trên S01 | Tài sản: `A-007`; cũ `Phòng 305` → mới `Kho B-01` | Pin A-007 biến mất ở Phòng 305, xuất hiện ở Kho B-01; A-007 vẫn chỉ 1 vị trí (BRule-01) | Auto | Pass |
 
 ## Phi chức năng: Khóa tự mở, hiệu năng, truy vết, đích trùng — Risk: Cao
 

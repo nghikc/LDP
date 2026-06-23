@@ -1,5 +1,12 @@
 # Design Spec — Xuất báo cáo / kiểm kê (Mã màn: S08)
 
+## Bản Figma (preview)
+- Node: `291:603` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: cho người dùng cấu hình phạm vi và xuất một file Excel kiểm kê **nhanh, ít bước, không sai phạm vi**. Phản hồi rõ ràng về số tài sản sẽ xuất và trạng thái khi xuất tập lớn.
 - Thiết bị mục tiêu: **Web/Desktop-first** (đi cùng workspace S01); modal vừa khít, không tràn màn.

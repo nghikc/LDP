@@ -1,5 +1,12 @@
 # Design Spec — Nhật ký kiểm toán (Mã màn: S07)
 
+## Bản Figma (preview)
+- Node: `291:559` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: tra vết nhanh và đáng tin — Quản trị mở màn, lọc theo điều kiện, đọc được "ai làm gì, khi nào, với đối tượng nào" trong vài thao tác. Cảm giác **chỉ đọc, an toàn, bất biến**: rõ ràng đây là bản ghi không sửa được.
 - Thiết bị mục tiêu: **Web/Desktop-first** (bảng nhiều cột, panel lọc rộng); trên màn hẹp, panel lọc xếp dọc và bảng cuộn ngang.

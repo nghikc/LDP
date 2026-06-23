@@ -1,5 +1,12 @@
 # Design Spec — Form khu vực (Tạo/Sửa nút) (Mã màn: S02)
 
+## Bản Figma (preview)
+- Node: `291:422` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: nhập liệu **nhanh, ít trường, ít ma sát**; cảm giác an toàn (không sợ tạo nhầm/mất dữ liệu). Một form duy nhất dùng cho cả Tạo và Sửa để người dùng học một lần dùng mãi.
 - Thiết bị mục tiêu: **Web/Desktop-first** (đi cùng workspace S01); modal co giãn tốt, trên màn hẹp chuyển thành tấm trượt full-width.
