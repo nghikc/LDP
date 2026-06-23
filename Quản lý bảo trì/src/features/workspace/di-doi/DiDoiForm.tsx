@@ -9,6 +9,7 @@ import {
   MAX_LY_DO,
   type KetQuaDiDoi,
 } from "./diDoiService";
+import { timTaiSan } from "../logic/search";
 
 interface Props {
   nodes: NutKhuVuc[];
@@ -37,8 +38,14 @@ export function DiDoiForm({
   const [maNutDich, setMaNutDich] = useState<string | null>(null);
   const [lyDo, setLyDo] = useState("");
   const [hoiKhoa, setHoiKhoa] = useState<string[] | null>(null);
+  const [timLe, setTimLe] = useState("");
 
+  const LE_HIEN_TOI_DA = 50;
   const dsCoViTri = useMemo(() => taiSanCoViTri(taiSan, pins), [taiSan, pins]);
+  const dsCoViTriLoc = useMemo(
+    () => (timLe.trim() ? timTaiSan(dsCoViTri, timLe) : dsCoViTri),
+    [dsCoViTri, timLe],
+  );
   const nguonRong = cheDo === "vi-tri-cu" && nutNguon !== null && taiSanTrongNut(pins, nutNguon).length === 0;
 
   // Tài sản trong lô: đơn = cố định; hàng loạt lẻ = tick; cả vị trí cũ = lấy hết trong nút.
@@ -84,25 +91,33 @@ export function DiDoiForm({
         )}
 
         {!laDon && cheDo === "le" && (
-          <ul className="ds-tai-san" role="listbox" aria-label="Tài sản đã có vị trí">
-            {dsCoViTri.map((t) => {
-              const khoa = taiSanDangKhoa.has(t.maTaiSan);
-              return (
-                <li key={t.maTaiSan}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={chon.includes(t.maTaiSan)}
-                      disabled={khoa}
-                      onChange={() => toggle(t.maTaiSan)}
-                    />
-                    {t.maTaiSan} · {t.ten}
-                    {khoa && <span className="nhan-khoa"> 🔒 đang được người khác chỉnh sửa</span>}
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            <input className="ds-tim" type="search" placeholder="Tìm theo mã/tên tài sản..."
+              aria-label="Tìm tài sản" value={timLe} onChange={(e) => setTimLe(e.target.value)} />
+            <p className="ds-meta">
+              {dsCoViTriLoc.length} kết quả{dsCoViTriLoc.length > LE_HIEN_TOI_DA ? ` (hiện ${LE_HIEN_TOI_DA} đầu — gõ để thu hẹp)` : ""} · Đã chọn {chon.length}
+            </p>
+            <ul className="ds-tai-san" role="listbox" aria-label="Tài sản đã có vị trí">
+              {dsCoViTriLoc.slice(0, LE_HIEN_TOI_DA).map((t) => {
+                const khoa = taiSanDangKhoa.has(t.maTaiSan);
+                return (
+                  <li key={t.maTaiSan}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={chon.includes(t.maTaiSan)}
+                        disabled={khoa}
+                        onChange={() => toggle(t.maTaiSan)}
+                      />
+                      {t.maTaiSan} · {t.ten}
+                      {khoa && <span className="nhan-khoa"> 🔒 đang được người khác chỉnh sửa</span>}
+                    </label>
+                  </li>
+                );
+              })}
+              {dsCoViTriLoc.length === 0 && <li className="o-gan-trong">Không tìm thấy tài sản phù hợp.</li>}
+            </ul>
+          </>
         )}
 
         {!laDon && cheDo === "vi-tri-cu" && (

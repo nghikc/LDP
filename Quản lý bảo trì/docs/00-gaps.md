@@ -20,6 +20,7 @@
 | ID | Mức | Scope | Mô tả | Vị trí | Sửa bằng |
 |----|-----|-------|-------|--------|----------|
 | G02 | 🟡 Quan trọng | S01–S08 | **Chưa có `test.md`** cho cả 8 màn → mọi R-S/GWT/luồng use case chưa có TC truy vết. Đây là **bước kế tiếp đúng tiến độ** (chưa chạy `ba-test`), không phải lỗi đặc tả. | `docs/**/` (8 màn) | `ba-test` |
+| G03 | 🟢 Nhỏ (✅ đã xử lý 2026-06-23) | S01 | **Tính khám phá (discoverability) của thao tác tạo vị trí:** F11 chỉ mô tả "click điểm trống" — một cử chỉ ẩn, không có nút/affordance/hint nào trên màn báo cho người dùng cách tạo vị trí. Người dùng phản hồi "không thấy chỗ bấm". | `BanDoTaiSan/Workspace/{srs,design-spec,ascii-screen}.md` | **Đã bổ sung:** CTA `+ Gán vị trí` trên thanh công cụ (bật *chế độ đặt pin* + dải hướng dẫn + nút Thoát) **R-S01-06**, và empty-state "sơ đồ có ảnh nhưng chưa có pin" **R-S01-11** + **BRule-S01-06**; vẽ lại Figma S01 |
 | G01 | 🟢 Nhỏ | requirements | NFR-06 ("pin lưu tọa độ tương đối %") gắn nhãn *Khả dụng* nhưng không có số đo — bản chất là ràng buộc thiết kế. Người dùng đã **quyết định bỏ qua**. | `01-requirements.md` §4.2 | `ba-requirements` |
 
 ## Cần xác nhận

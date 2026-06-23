@@ -5,8 +5,10 @@ import { taiSanMau, viTriPinMau } from "../sampleData";
 describe("assign — gán vị trí (F11)", () => {
   it("TC-S01-14/16: chỉ liệt kê tài sản chưa có vị trí (ẩn A-007/A-009 đã có)", () => {
     const ds = taiSanChuaCoViTri(taiSanMau, viTriPinMau).map((t) => t.maTaiSan);
-    expect(ds).toEqual(["B-021", "B-045"]);
-    expect(ds).not.toContain("A-007");
+    expect(ds).toContain("B-021");
+    expect(ds).toContain("B-045");
+    expect(ds).not.toContain("A-007"); // đã có vị trí
+    expect(ds).not.toContain("A-009"); // đã có vị trí
   });
 
   it("TC-S01-15: gán B-021 tại (40,55) tạo pin đúng tọa độ", () => {

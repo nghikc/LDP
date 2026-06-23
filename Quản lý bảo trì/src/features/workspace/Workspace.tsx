@@ -21,7 +21,7 @@ import { XuatBaoCaoModal } from "./xuat-bao-cao/XuatBaoCaoModal";
 import { SO_DO_MAU } from "./soDoPlaceholder";
 import "./workspace.css";
 
-interface DraftGan { x: number; y: number; maTaiSan: string | null; }
+interface DraftGan { x: number; y: number; maTaiSans: string[]; }
 interface FormKVState { nutSua?: string; nutChaMacDinh?: string | null; }
 
 const NHAN_HANH_DONG_AUDIT: Record<string, LoaiHanhDong> = {
@@ -40,12 +40,15 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [pinLamNoi, setPinLamNoi] = useState<string | null>(null);
   const [thongBaoTraCuu, setThongBaoTraCuu] = useState<string | null>(null);
   const [draft, setDraft] = useState<DraftGan | null>(null);
-  const [pinPopup, setPinPopup] = useState<string | null>(null);
+  const [viTriPopup, setViTriPopup] = useState<{ maTaiSans: string[]; x: number; y: number } | null>(null);
   const [goConfirm, setGoConfirm] = useState<string | null>(null);
   const [xoaDialog, setXoaDialog] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
   const [locPin, setLocPin] = useState<TrangThaiPin | "tat-ca">("tat-ca");
+  const [timGan, setTimGan] = useState("");
+  const [tenGan, setTenGan] = useState("");
+  const [tenSuaVt, setTenSuaVt] = useState("");
 
   // Vệ tinh
   const [formKV, setFormKV] = useState<FormKVState | null>(null);
@@ -60,6 +63,11 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const nodeChon = useMemo(() => nodes.find((n) => n.maNut === nutChon) ?? null, [nodes, nutChon]);
   const goiY = useMemo(() => (tuKhoa ? timTaiSan(taiSan, tuKhoa) : []), [taiSan, tuKhoa]);
   const taiSanGanDuoc = useMemo(() => taiSanChuaCoViTri(taiSan, pins), [taiSan, pins]);
+  const GAN_HIEN_TOI_DA = 50;
+  const ketQuaGan = useMemo(
+    () => (timGan.trim() ? timTaiSan(taiSanGanDuoc, timGan) : taiSanGanDuoc),
+    [taiSanGanDuoc, timGan],
+  );
   const pinTrongNut = useMemo(() => {
     const cua = pins.filter((p) => p.maNut === nutChon);
     return locPin === "tat-ca" ? cua : locPinTheoTrangThai(cua, locPin);
@@ -96,15 +104,29 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   }
 
   function xacNhanGan() {
-    if (!draft || !nodeChon) return;
-    const kq = ws.gan(draft.maTaiSan, nodeChon.maNut, draft.x, draft.y);
-    if (kq.ok) { setToast(kq.toast!); setDraft(null); } else setSnackbar(kq.loi!);
+    if (!draft || !nodeChon || draft.maTaiSans.length === 0) return;
+    const kq = ws.ganNhieu(draft.maTaiSans, nodeChon.maNut, draft.x, draft.y);
+    if (kq.ok) {
+      if (tenGan.trim()) ws.datTenViTri(nodeChon.maNut, draft.x, draft.y, tenGan);
+      setToast(kq.toast!); setDraft(null); setTimGan(""); setTenGan("");
+    } else setSnackbar(kq.loi!);
+  }
+
+  function toggleTaiSanGan(ma: string) {
+    setDraft((d) => d ? { ...d, maTaiSans: d.maTaiSans.includes(ma) ? d.maTaiSans.filter((m) => m !== ma) : [...d.maTaiSans, ma] } : d);
   }
 
   function xacNhanGo(maTaiSan: string) {
     const kq = ws.go(maTaiSan);
-    if (kq.ok) { setToast(kq.toast!); setGoConfirm(null); setPinPopup(null); }
-    else { setSnackbar(kq.loi!); setGoConfirm(null); }
+    if (kq.ok) {
+      setToast(kq.toast!);
+      setGoConfirm(null);
+      setViTriPopup((vt) => {
+        if (!vt) return null;
+        const con = vt.maTaiSans.filter((m) => m !== maTaiSan);
+        return con.length ? { ...vt, maTaiSans: con } : null;
+      });
+    } else { setSnackbar(kq.loi!); setGoConfirm(null); }
   }
 
   function xacNhanXoa(maNut: string) {
@@ -200,8 +222,9 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
             </div>
           )}
           <FloorPlanCanvas nodes={nodes} nutChon={nodeChon} pins={pinTrongNut} pinLamNoi={pinLamNoi}
-            onClickTrong={(x, y) => nodeChon?.soDoUrl && setDraft({ x, y, maTaiSan: null })}
-            onClickPin={(m) => setPinPopup(m)} />
+            onClickTrong={(x, y) => { if (nodeChon?.soDoUrl) { setDraft({ x, y, maTaiSans: [] }); setTimGan(""); } }}
+            onClickViTri={(ds, x, y) => { setViTriPopup({ maTaiSans: ds, x, y }); setTenSuaVt((nutChon && ws.layTenViTri(nutChon, x, y)) || ""); }}
+            tenViTri={(x, y) => (nutChon ? ws.layTenViTri(nutChon, x, y) : undefined)} />
           {soCanDatLai > 0 && (
             <button className="dai-canh-bao" aria-label={`${soCanDatLai} pin cần đặt lại vị trí`} onClick={() => setMoS05(true)}>
               ⚠ {soCanDatLai} pin cần đặt lại vị trí
@@ -214,30 +237,70 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
         <div className="lop-noi" role="dialog" aria-label="Gán vị trí tài sản">
           <div className="o-gan">
             <h2>Gán vị trí tại điểm đã chọn</h2>
+            <p className="o-gan-huong-dan">Tìm và chọn một hoặc nhiều tài sản (chưa có vị trí) để gán vào vị trí này.</p>
+            <input className="o-gan-tim" type="search" placeholder="Tìm theo mã/tên tài sản..."
+              aria-label="Tìm tài sản chưa có vị trí" value={timGan} onChange={(e) => setTimGan(e.target.value)} />
+            <p className="o-gan-meta">
+              {taiSanGanDuoc.length === 0
+                ? "Không còn tài sản chưa có vị trí."
+                : `${ketQuaGan.length} kết quả${ketQuaGan.length > GAN_HIEN_TOI_DA ? ` (hiện ${GAN_HIEN_TOI_DA} đầu — gõ để thu hẹp)` : ""} · Đã chọn ${draft.maTaiSans.length}`}
+            </p>
             <ul role="listbox" aria-label="Tài sản chưa có vị trí">
-              {taiSanGanDuoc.map((t) => (
+              {ketQuaGan.slice(0, GAN_HIEN_TOI_DA).map((t) => (
                 <li key={t.maTaiSan}>
-                  <label><input type="radio" name="tai-san-gan" checked={draft.maTaiSan === t.maTaiSan}
-                    onChange={() => setDraft({ ...draft, maTaiSan: t.maTaiSan })} />{t.maTaiSan} · {t.ten}</label>
+                  <label><input type="checkbox" checked={draft.maTaiSans.includes(t.maTaiSan)}
+                    onChange={() => toggleTaiSanGan(t.maTaiSan)} />{t.maTaiSan} · {t.ten}</label>
                 </li>
               ))}
+              {ketQuaGan.length === 0 && taiSanGanDuoc.length > 0 && (
+                <li className="o-gan-trong">Không tìm thấy tài sản phù hợp.</li>
+              )}
             </ul>
+            <input className="o-gan-tim" type="text" placeholder="Tên vị trí (tùy chọn) — vd Khu máy nén"
+              aria-label="Tên vị trí" value={tenGan} onChange={(e) => setTenGan(e.target.value)} />
             <div className="o-gan-nut">
-              <button onClick={() => setDraft(null)}>Hủy</button>
-              <button className="cta" disabled={!draft.maTaiSan} onClick={xacNhanGan}>Gán vị trí</button>
+              <button onClick={() => { setDraft(null); setTimGan(""); setTenGan(""); }}>Hủy</button>
+              <button className="cta" disabled={draft.maTaiSans.length === 0} onClick={xacNhanGan}>
+                Gán vị trí{draft.maTaiSans.length > 0 ? ` (${draft.maTaiSans.length})` : ""}
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {pinPopup && (
-        <div className="lop-noi" role="dialog" aria-label="Chi tiết tài sản">
+      {/* Popup danh sách tài sản tại một vị trí */}
+      {viTriPopup && (
+        <div className="lop-noi" role="dialog" aria-label="Tài sản tại vị trí">
           <div className="pin-popup">
-            <h2>{pinPopup}</h2>
-            <button onClick={() => { setLichSuCua({ ma: pinPopup, ten: taiSan.find((t) => t.maTaiSan === pinPopup)?.ten ?? pinPopup }); setPinPopup(null); }}>Xem lịch sử</button>
-            <button onClick={() => { setDiDoi({ taiSanDon: pinPopup }); setPinPopup(null); }}>Di dời</button>
-            <button className="nguy-hiem" onClick={() => setGoConfirm(pinPopup)}>Gỡ vị trí</button>
-            <button onClick={() => setPinPopup(null)}>Đóng</button>
+            <h2>{(nutChon && ws.layTenViTri(nutChon, viTriPopup.x, viTriPopup.y)) || (viTriPopup.maTaiSans.length === 1 ? "Chi tiết tài sản" : `${viTriPopup.maTaiSans.length} tài sản tại vị trí này`)}</h2>
+            <div className="vt-doi-ten">
+              <input type="text" aria-label="Tên vị trí" placeholder="Đặt tên vị trí (vd Khu máy nén)"
+                value={tenSuaVt} onChange={(e) => setTenSuaVt(e.target.value)} />
+              <button onClick={() => { if (nutChon) { ws.datTenViTri(nutChon, viTriPopup.x, viTriPopup.y, tenSuaVt); setToast(tenSuaVt.trim() ? "Đã đặt tên vị trí." : "Đã xóa tên vị trí."); } }}>Lưu tên</button>
+            </div>
+            <ul className="ds-vi-tri">
+              {viTriPopup.maTaiSans.map((ma) => {
+                const ten = taiSan.find((t) => t.maTaiSan === ma)?.ten ?? ma;
+                return (
+                  <li key={ma}>
+                    <span className="vt-ten">{ma} · {ten}</span>
+                    <span className="vt-nut">
+                      <button onClick={() => { setLichSuCua({ ma, ten }); setViTriPopup(null); }}>Xem lịch sử</button>
+                      <button onClick={() => { setDiDoi({ taiSanDon: ma }); setViTriPopup(null); }}>Di dời</button>
+                      <button className="nguy-hiem" onClick={() => setGoConfirm(ma)}>Gỡ vị trí</button>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="vt-popup-nut">
+              {taiSanGanDuoc.length > 0 && (
+                <button className="cta" onClick={() => { setDraft({ x: viTriPopup.x, y: viTriPopup.y, maTaiSans: [] }); setTimGan(""); setViTriPopup(null); }}>
+                  + Gán thêm tài sản vào vị trí này
+                </button>
+              )}
+              <button onClick={() => setViTriPopup(null)}>Đóng</button>
+            </div>
           </div>
         </div>
       )}

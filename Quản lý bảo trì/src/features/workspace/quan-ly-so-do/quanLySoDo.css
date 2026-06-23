@@ -65,7 +65,7 @@
 }
 .sodo-breadcrumb {
   font-size: 13px;
-  color: #64748b;
+  color: #5e6c84;
   margin: 0 0 12px;
 }
 
@@ -75,38 +75,38 @@
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  color: #475569;
+  color: #5e6c84;
   padding: 4px 8px;
   border-radius: 6px;
 }
-.sodo-dong:hover { background: #f1f5f9; }
+.sodo-dong:hover { background: #f4f5f7; }
 
 /* Vùng kéo-thả (chưa có sơ đồ). */
 .sodo-dropzone {
-  border: 2px dashed #94a3b8;
+  border: 2px dashed #5e6c84;
   border-radius: 10px;
   padding: 40px 20px;
   text-align: center;
-  color: #475569;
-  background: #f8fafc;
+  color: #5e6c84;
+  background: #f7f8fa;
   transition: border-color 120ms, background 120ms;
 }
 .sodo-dropzone.keo-vao {
-  border-color: #2563eb;
-  background: #eff6ff;
+  border-color: #1456b8;
+  background: #e9f2ff;
 }
 .sodo-dropzone.co-loi {
-  border-color: #dc2626;
-  background: #fef2f2;
+  border-color: #c9372c;
+  background: #fdeceb;
 }
 .sodo-dropzone-huong-dan {
   margin: 8px 0 0;
   font-size: 13px;
-  color: #64748b;
+  color: #5e6c84;
 }
 
 .sodo-loi {
-  color: #b91c1c;
+  color: #a8261d;
   font-size: 13px;
   margin: 10px 0 0;
 }
@@ -116,13 +116,13 @@
   width: 100%;
   max-height: 360px;
   object-fit: contain;
-  background: #f1f5f9;
+  background: #f4f5f7;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dfe1e6;
 }
 .sodo-metadata {
   font-size: 13px;
-  color: #475569;
+  color: #5e6c84;
   margin: 10px 0 2px;
 }
 .sodo-ten-file {
@@ -135,14 +135,14 @@
 }
 .sodo-so-pin {
   font-size: 13px;
-  color: #64748b;
+  color: #5e6c84;
   margin: 0 0 12px;
 }
 
 /* Banner pin tràn ngoài. */
 .sodo-banner-tran {
-  background: #fffbeb;
-  border: 1px solid #fcd34d;
+  background: #fff7e0;
+  border: 1px solid #f0d99b;
   border-radius: 8px;
   padding: 12px 14px;
   margin: 12px 0;
@@ -150,7 +150,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  color: #92400e;
+  color: #7a4f01;
   font-size: 13px;
 }
 
@@ -163,32 +163,32 @@
 .sodo-btn {
   padding: 9px 16px;
   border-radius: 8px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #dfe1e6;
   background: #ffffff;
-  color: #1e293b;
+  color: #172b4d;
   font-size: 14px;
   cursor: pointer;
 }
-.sodo-btn:hover { background: #f8fafc; }
+.sodo-btn:hover { background: #f7f8fa; }
 .sodo-btn.cta {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: #1456b8;
+  border-color: #1456b8;
   color: #fff;
 }
-.sodo-btn.cta:hover { background: #1d4ed8; }
+.sodo-btn.cta:hover { background: #0a3d8f; }
 .sodo-btn.nguy-hiem {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: #c9372c;
+  border-color: #c9372c;
   color: #fff;
 }
-.sodo-btn.nguy-hiem:hover { background: #b91c1c; }
+.sodo-btn.nguy-hiem:hover { background: #a8261d; }
 
 /* Focus-visible rõ ràng cho WCAG AA. */
 .sodo-btn:focus-visible,
 .sodo-dong:focus-visible,
 .sodo-dropzone:focus-visible,
 .sodo-input-file:focus-visible + .sodo-nhan-chon {
-  outline: 3px solid #2563eb;
+  outline: 3px solid #1456b8;
   outline-offset: 2px;
 }
 
@@ -196,8 +196,8 @@
   display: inline-block;
   padding: 9px 16px;
   border-radius: 8px;
-  border: 1px solid #2563eb;
-  background: #2563eb;
+  border: 1px solid #1456b8;
+  background: #1456b8;
   color: #fff;
   font-size: 14px;
   cursor: pointer;
@@ -226,4 +226,4 @@
   padding: 20px 22px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
-.sodo-dialog p { margin: 0 0 16px; color: #1e293b; font-size: 14px; line-height: 1.5; }
+.sodo-dialog p { margin: 0 0 16px; color: #172b4d; font-size: 14px; line-height: 1.5; }

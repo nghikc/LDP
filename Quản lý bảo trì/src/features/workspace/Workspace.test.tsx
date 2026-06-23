@@ -79,7 +79,7 @@ describe("Workspace S01 — gán vị trí", () => {
     await moNhanhToiPhong305(user);
     fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
     await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
-    await user.click(screen.getByRole("button", { name: "Gán vị trí" }));
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
     expect(screen.getByRole("status")).toHaveTextContent("Đã gán vị trí cho tài sản.");
   });
 
@@ -90,6 +90,74 @@ describe("Workspace S01 — gán vị trí", () => {
     fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
     await user.click(screen.getByRole("button", { name: "Hủy" }));
     expect(screen.queryByRole("listbox", { name: "Tài sản chưa có vị trí" })).not.toBeInTheDocument();
+  });
+});
+
+describe("Workspace S01 — một vị trí nhiều tài sản (change request)", () => {
+  it("ô gán có tìm kiếm: gõ 'tủ' chỉ còn B-045 (UX nhiều tài sản)", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    const ds = screen.getByRole("listbox", { name: "Tài sản chưa có vị trí" });
+    expect(within(ds).getByText(/B-021 · Máy bơm/)).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Tìm tài sản chưa có vị trí"), "tu dien");
+    expect(within(ds).getByText(/B-045 · Tủ điện/)).toBeInTheDocument();
+    expect(within(ds).queryByText(/B-021/)).not.toBeInTheDocument();
+  });
+
+  it("đặt tên vị trí khi gán → marker hiển thị tên", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.type(screen.getByLabelText("Tên vị trí"), "Khu thử");
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    expect(screen.getByRole("button", { name: "Vị trí Khu thử" })).toBeInTheDocument();
+  });
+
+  it("gán 2 tài sản vào cùng một vị trí → toast số nhiều + marker vị trí", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.click(screen.getByLabelText(/B-045 · Tủ điện/));
+    await user.click(screen.getByRole("button", { name: "Gán vị trí (2)" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Đã gán vị trí cho 2 tài sản.");
+    expect(screen.getByRole("button", { name: "Vị trí 2 tài sản" })).toBeInTheDocument();
+  });
+
+  it("gán thêm tài sản vào một vị trí đã có → vị trí gom 2 tài sản", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    // tạo vị trí với B-021
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    // mở vị trí → gán thêm B-045
+    await user.click(screen.getByRole("button", { name: "Tài sản B-021" }));
+    await user.click(screen.getByRole("button", { name: "+ Gán thêm tài sản vào vị trí này" }));
+    await user.click(screen.getByLabelText(/B-045 · Tủ điện/));
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    expect(screen.getByRole("button", { name: "Vị trí 2 tài sản" })).toBeInTheDocument();
+  });
+
+  it("click vị trí nhiều tài sản → popup liệt kê danh sách", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.click(screen.getByLabelText(/B-045 · Tủ điện/));
+    await user.click(screen.getByRole("button", { name: "Gán vị trí (2)" }));
+    await user.click(screen.getByRole("button", { name: "Vị trí 2 tài sản" }));
+    const popup = screen.getByRole("dialog", { name: "Tài sản tại vị trí" });
+    expect(popup).toHaveTextContent("2 tài sản tại vị trí này");
+    expect(within(popup).getByText(/B-021 · Máy bơm/)).toBeInTheDocument();
+    expect(within(popup).getByText(/B-045 · Tủ điện/)).toBeInTheDocument();
   });
 });
 

@@ -7,12 +7,12 @@
   bottom: 0;
   width: min(520px, 100vw);
   background: #fff;
-  border-left: 1px solid var(--mau-vien, #d4dae3);
+  border-left: 1px solid var(--mau-vien, #dfe1e6);
   box-shadow: -8px 0 24px rgba(0, 0, 0, 0.1);
   padding: var(--kc-2, 16px);
   overflow: auto;
   animation: pin-cdl-truot-vao var(--t-vao, 200ms) ease-out;
-  color: var(--mau-chu, #1b2330);
+  color: var(--mau-chu, #172b4d);
 }
 
 /* Trạng thái đóng — slide-out sang phải trước khi gỡ khỏi DOM. */
@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   gap: var(--kc-1, 8px);
-  border-bottom: 1px solid var(--mau-vien, #d4dae3);
+  border-bottom: 1px solid var(--mau-vien, #dfe1e6);
   padding-bottom: var(--kc-1, 8px);
 }
 .pin-cdl-header h2 {
@@ -34,7 +34,7 @@
 
 .pin-cdl-bo-dem {
   font-size: 13px;
-  color: #44505f;
+  color: #5e6c84;
   margin: var(--kc-1, 8px) 0 var(--kc-2, 16px);
   font-weight: 600;
 }
@@ -50,7 +50,7 @@
   align-items: center;
   gap: var(--kc-2, 16px);
   padding: var(--kc-1, 8px) 0;
-  border-bottom: 1px solid var(--mau-vien, #d4dae3);
+  border-bottom: 1px solid var(--mau-vien, #dfe1e6);
   overflow: hidden;
 }
 
@@ -67,7 +67,7 @@
 .pin-cdl-muc-duongdan,
 .pin-cdl-muc-sodo {
   font-size: 12px;
-  color: #5a6573;
+  color: #5e6c84;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,8 +81,8 @@
 .pin-cdl-nut {
   flex-shrink: 0;
   padding: 6px 12px;
-  border: 1px solid var(--mau-chinh, #1457b8);
-  background: var(--mau-chinh, #1457b8);
+  border: 1px solid var(--mau-chinh, #1456b8);
+  background: var(--mau-chinh, #1456b8);
   color: var(--mau-chinh-chu, #fff);
   border-radius: 4px;
   cursor: pointer;
@@ -92,26 +92,26 @@
   filter: brightness(1.08);
 }
 .pin-cdl-nut:disabled {
-  background: #c5ccd6;
-  border-color: #c5ccd6;
-  color: #6b7480;
+  background: #dfe1e6;
+  border-color: #dfe1e6;
+  color: #5e6c84;
   cursor: not-allowed;
 }
 .pin-cdl-nut:focus-visible {
-  outline: 3px solid #ffbf47;
+  outline: 3px solid #f0c44d;
   outline-offset: 2px;
 }
 
 .pin-cdl-canh-bao-khoa {
   font-size: 12px;
-  color: var(--mau-canh-bao, #8a5a00);
+  color: var(--mau-canh-bao, #7a4f01);
   margin-top: 4px;
 }
 
 .pin-cdl-trong,
 .pin-cdl-loi {
   text-align: center;
-  color: #5a6573;
+  color: #5e6c84;
   padding: var(--kc-3, 24px) var(--kc-2, 16px);
 }
 .pin-cdl-trong .phu {
@@ -129,7 +129,7 @@
 }
 
 .pin-cdl-loi p {
-  color: var(--mau-nguy-hiem, #b3261e);
+  color: var(--mau-nguy-hiem, #c9372c);
 }
 
 button.pin-cdl-quay-lai {
@@ -142,7 +142,7 @@ button.pin-cdl-quay-lai {
 button.pin-cdl-quay-lai:focus-visible,
 .pin-cdl-loi button:focus-visible,
 .pin-cdl-trong button:focus-visible {
-  outline: 3px solid #ffbf47;
+  outline: 3px solid #f0c44d;
   outline-offset: 2px;
 }
 

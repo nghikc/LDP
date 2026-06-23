@@ -19,11 +19,12 @@ Màn hub tích hợp nhiều chức năng. Trace:
 | R-S01-03 | Cho phép tra cứu tài sản theo mã/tên và nhảy tới làm nổi pin | F16 / FR-04 | Gõ ≥1 ký tự → gợi ý khớp một phần, không phân biệt dấu, trả về < 1s; chọn kết quả → tự mở sơ đồ, làm nổi pin, hiện breadcrumb đường dẫn | Must |
 | R-S01-04 | Hiển thị pin tài sản trên sơ đồ theo tọa độ tương đối | F09 / FR-02 | Mỗi pin đúng vị trí tương đối (%) khi zoom/pan/đổi kích thước; click pin → popup chi tiết (mã, tên, trạng thái, đường dẫn) | Must |
 | R-S01-05 | Gom cụm pin khi sơ đồ vượt 500 điểm và cho lọc pin | F10 / FR-13 | Khi > 500 pin/sơ đồ, pin gần nhau gộp thành cụm hiển thị số lượng; click cụm → tách/zoom; bộ lọc thu hẹp pin hiển thị | Should |
-| R-S01-06 | Gán vị trí: click điểm trống → chọn tài sản chưa có vị trí → tạo pin | F11 / FR-03 | Click điểm trống mở ô tìm chỉ liệt kê tài sản **chưa có vị trí**; chọn + xác nhận → pin xuất hiện tại tọa độ click; ghi nhật ký kiểm toán | Must |
+| R-S01-06 | Gán vị trí: có **nút "+ Gán vị trí"** trên thanh công cụ (điểm vào trực quan, bật *chế độ đặt pin*) **và/hoặc** click trực tiếp điểm trống → chọn tài sản chưa có vị trí → tạo pin | F11 / FR-03 | Thanh công cụ có CTA **"+ Gán vị trí"**; bấm → vào *chế độ đặt vị trí*: con trỏ đổi dạng "đặt pin" + dải hướng dẫn "Click lên sơ đồ để đặt tài sản" (có nút **Thoát**). Trong chế độ này, hoặc khi click thẳng điểm trống, → mở ô tìm chỉ liệt kê tài sản **chưa có vị trí**; chọn + xác nhận → pin xuất hiện tại tọa độ click; ghi nhật ký kiểm toán | Must |
 | R-S01-07 | Gỡ vị trí tài sản qua popup pin (có xác nhận) | F14 / FR-03 | Popup pin có nút Gỡ; xác nhận → pin biến mất, tài sản về "chưa có vị trí"; ghi nhật ký kiểm toán | Should |
 | R-S01-08 | Di chuyển nút trong cây bằng kéo-thả, chặn tạo vòng lặp | F05 / FR-01 | Kéo nút sang nhánh khác → cập nhật cha; **chặn** thả nút vào chính nó hoặc nhánh con của nó, báo lỗi | Should |
 | R-S01-09 | Xóa nút khu vực với hộp xác nhận cảnh báo số lượng bị ảnh hưởng | F03 / FR-12 | Chọn Xóa → dialog hiện số tài sản bị gỡ vị trí + số khu con bị xóa; xác nhận → xóa nhánh, gỡ vị trí tài sản (không xóa hồ sơ); ghi nhật ký kiểm toán | Must |
 | R-S01-10 | Điều hướng tới các màn vệ tinh từ workspace | F09 / FR-02 | Có lối vào S02 (thêm/sửa nút), S03 (ảnh sơ đồ), S04 (di dời/di dời hàng loạt), S05 (pin cần đặt lại), S06 (lịch sử), S08 (xuất báo cáo) | Must |
+| R-S01-11 | Empty-state khi sơ đồ **đã có ảnh nhưng chưa có pin nào**: gợi ý cách đặt tài sản đầu tiên | F11 / FR-03 | Nút đã có ảnh sơ đồ và **0 pin** → khung sơ đồ hiện lớp gợi ý "Chưa có tài sản nào trên sơ đồ — bấm **'+ Gán vị trí'** rồi click lên sơ đồ để đặt tài sản đầu tiên"; lớp ẩn ngay khi có ≥1 pin. (Giám sát vẫn thấy — vai trò này được phép gán) | Should |
 
 ## Yêu cầu phi chức năng (Non-functional)
 | Mã | Loại | Yêu cầu đo được | Trace |
@@ -41,6 +42,7 @@ Màn hub tích hợp nhiều chức năng. Trace:
 | BRule-S01-03 | Xóa nút còn tài sản/khu con: cho xóa, gỡ vị trí tài sản (về "chưa có vị trí"), không xóa hồ sơ tài sản | R-S01-09 |
 | BRule-S01-04 | Vai trò **Giám sát** không thấy thao tác quản lý cấu trúc (Thêm/Sửa/Xóa nút, tải/thay/xóa ảnh); vẫn gán/gỡ/di dời/tra cứu | R-S01-01, R-S01-09 |
 | BRule-S01-05 | Pin lưu **tọa độ tương đối (%)**; pin tràn ngoài vùng ảnh mới bị đánh dấu "cần đặt lại" | R-S01-04 |
+| BRule-S01-06 | Nút "+ Gán vị trí" và *chế độ đặt pin* chỉ là **điểm vào trực quan** cho cùng thao tác gán; vẫn áp BRule-S01-01 (ô chọn chỉ liệt kê tài sản chưa có vị trí). Gán cho tài sản **đã có vị trí** = di dời (ghi lịch sử, BRule-02 cấp dự án) | R-S01-06, R-S01-11 |
 
 ## Yêu cầu dữ liệu — Validation từng field
 | Field | Kiểu | Bắt buộc | Định dạng/Ràng buộc | Min/Max | Thông báo lỗi |
@@ -73,6 +75,8 @@ sequenceDiagram
   actor U as Người dùng
   participant FE as Giao diện workspace
   participant BE as Hệ thống
+  U->>FE: Bấm "+ Gán vị trí" (vào chế độ đặt pin) — hoặc click thẳng điểm trống
+  FE-->>U: Con trỏ "đặt pin" + dải hướng dẫn "Click lên sơ đồ để đặt tài sản"
   U->>FE: Click điểm trống trên sơ đồ
   FE-->>U: Mở ô tìm tài sản chưa có vị trí
   U->>FE: Chọn tài sản + Xác nhận gán
