@@ -108,7 +108,10 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .o-gan-tim, .ds-tim { width: 100%; margin: var(--kc-1) 0; padding: 9px var(--kc-2); border: 1px solid var(--mau-vien); border-radius: var(--r); font-size: 14px; background: #fafbfc; }
 .o-gan-tim:focus, .ds-tim:focus { outline: none; background: #fff; border-color: var(--mau-chinh); box-shadow: 0 0 0 2px rgba(20,86,184,.2); }
 .o-gan-meta, .ds-meta { font-size: 12px; color: var(--mau-chu-phu); margin: 0 0 4px; }
-.o-gan ul[role="listbox"] { max-height: 280px; overflow: auto; border: 1px solid var(--mau-vien); border-radius: var(--r); margin: 0; }
+/* Modal gán: cột co giãn, danh sách cuộn riêng, footer luôn hiển thị. */
+.o-gan { display: flex; flex-direction: column; max-height: 86vh; }
+.o-gan ul[role="listbox"] { flex: 1 1 auto; min-height: 80px; max-height: 320px; overflow: auto; border: 1px solid var(--mau-vien); border-radius: var(--r); margin: 0; }
+.o-gan-nut { flex-shrink: 0; }
 .o-gan ul[role="listbox"] li { border-bottom: 1px solid var(--mau-vien); }
 .o-gan ul[role="listbox"] li:last-child { border-bottom: none; }
 .o-gan-trong { padding: var(--kc-2); color: var(--mau-chu-phu); text-align: center; font-size: 13px; }
@@ -165,7 +168,8 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
   padding: 8px var(--kc-2); border-radius: var(--r); border: 1px solid var(--mau-vien);
   background: #fff; cursor: pointer; font-size: 14px; font-weight: 500;
 }
-.o-gan-nut .cta, .xoa-nut .cta, .form-nut .cta { border-color: transparent; }
+.o-gan-nut .cta, .xoa-nut .cta, .form-nut .cta { background: var(--mau-chinh); color: var(--mau-chinh-chu); border-color: transparent; }
+.o-gan-nut .cta:hover:not(:disabled), .xoa-nut .cta:hover:not(:disabled), .form-nut .cta:hover:not(:disabled) { background: var(--mau-chinh-dam); }
 .xoa-nut .nguy-hiem, .o-gan-nut .nguy-hiem { border-color: var(--mau-nguy-hiem); }
 /* Popup pin: hành động dạng link */
 .pin-popup > button, .ds-vi-tri .vt-nut button {
