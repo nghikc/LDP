@@ -38,4 +38,4 @@ Quản lý bảo trì/
 ## Tiến độ dev theo màn
 | Màn | Trạng thái | Ghi chú |
 |-----|-----------|---------|
-| S01 Workspace | ⚠️ đang dev | Nhánh `feature/qlvt-s01-workspace` |
+| S01 Workspace | ✅ dev xong | Nhánh `feature/qlvt-s01-workspace`; 46 test Vitest xanh, 24/24 TC Auto Pass; build+lint sạch |
