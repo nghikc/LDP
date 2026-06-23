@@ -1,5 +1,12 @@
 # Design Spec — Di dời tài sản (đơn & hàng loạt) (Mã màn: S04)
 
+## Bản Figma (preview)
+- Node: `291:474` · Page: `Genysic — Company Profile 2026` · Section: `QLVT — Quản lý bảo trì (8 màn)` (`291:371`)
+- Trạng thái: **Đã dựng** · Ngày: 2026-06-23
+- Palette: primary `#0b5cab` · bg `#f4f6f8` · surface `#fff` · border `#cbd3dd` · text `#1b2430` · danger `#b3261e` · warn `#fff4e0` · radius 8
+- Ghi chú: figma-mcp-go thao tác trên file Figma đang mở, không trả URL share. Mở Figma → chọn node theo id ở trên để copy link chia sẻ.
+
+
 ## 1. Tổng quan UX
 - Mục tiêu UX: di dời nhanh, cảm giác an toàn và "đảo ngược được". Form dẫn dắt theo hai bước rõ ràng (chọn tài sản → chọn đích), giảm rủi ro chọn nhầm đích cho cả lô; mọi thao tác lô hoặc thành công trọn vẹn hoặc không đổi gì.
 - Thiết bị mục tiêu: **Web/Desktop-first** (đồng bộ với S01); trên màn hẹp modal chiếm gần toàn màn, hai bước xếp dọc.
