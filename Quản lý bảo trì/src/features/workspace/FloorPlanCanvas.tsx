@@ -78,7 +78,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
           return (
             <button
               key={nhieu ? `vt-${i}` : c.pins[0].maTaiSan}
-              className={`pin pin-${c.pins[0].trangThai} ${lamNoi ? "pin-lam-noi" : ""} ${nhieu ? "pin-nhieu" : ""}`}
+              className={`pin pin-${c.pins[0].trangThai} ${lamNoi ? "pin-lam-noi" : ""} ${nhieu ? "pin-cum" : ""}`}
               style={{ left: `${c.toaDoX}%`, top: `${c.toaDoY}%` }}
               aria-label={nhieu ? `Vị trí ${c.pins.length} tài sản` : `Tài sản ${c.pins[0].maTaiSan}`}
               data-trangthai={c.pins[0].trangThai}
@@ -87,7 +87,8 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
                 onClickViTri(dsMa);
               }}
             >
-              {nhieu ? <>📍<span className="pin-dem">{c.pins.length}</span></> : "📍"}
+              <span className="pin-cham" aria-hidden="true">{nhieu ? c.pins.length : ""}</span>
+              {!nhieu && <span className="pin-nhan">{c.pins[0].maTaiSan}</span>}
             </button>
           );
         })}
