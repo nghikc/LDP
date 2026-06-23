@@ -12,11 +12,11 @@
 - Create: component bảng `AuditLogTable` (5 cột: thời điểm · người · hành động · đối tượng · vị trí cũ→mới; badge phân biệt loại; "—" cho hành động Xóa)
 - Test: test API trả đủ trường + thứ tự mới nhất trước; test render dòng Xóa hiển thị "—"
 
-- [ ] Step 1: Viết test thất bại (TC-S07-01 hiển thị đủ 5 trường, mới nhất trước; TC-S07-02 đủ trường truy vết; TC-S07-03 cột vị trí = "—" cho Xóa)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu cho pass (endpoint đọc + map dữ liệu + render bảng)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S07-01 hiển thị đủ 5 trường, mới nhất trước; TC-S07-02 đủ trường truy vết; TC-S07-03 cột vị trí = "—" cho Xóa)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu cho pass (endpoint đọc + map dữ liệu + render bảng)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S07-01/02/03 pass · bảng read-only không có nút Sửa/Xóa dòng · BRule-S07-04 (Xóa → "—") đúng · không lỗi lint · sắp xếp mặc định mới nhất trước.
 
@@ -28,11 +28,11 @@
 - Create: component `Pagination` (tổng số bản ghi + Trước/Trang/Sau, ẩn/khóa khi 1 trang) + header cột Thời điểm sortable (đảo aria-sort + mũi tên)
 - Test: test phân trang giữ điều kiện lọc khi đổi trang; test ẩn pager khi ≤25; test đảo sắp xếp
 
-- [ ] Step 1: Viết test thất bại (TC-S07-15 "1–25 / 1.284"; TC-S07-16 sang trang giữ lọc; TC-S07-17 ≤25 ẩn pager; TC-S07-18/19 đảo sắp xếp)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu cho pass
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S07-15 "1–25 / 1.284"; TC-S07-16 sang trang giữ lọc; TC-S07-17 ≤25 ẩn pager; TC-S07-18/19 đảo sắp xếp)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu cho pass
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S07-15..19 pass · "Hiển thị {từ}–{đến} / {tổng} bản ghi." đúng · 25 dòng/trang · pager ẩn khi 1 trang · đổi trang không mất bộ lọc · không lỗi lint.
 
@@ -44,11 +44,11 @@
 - Create: trạng thái "Từ chối truy cập" (thông báo + lối về S01); ẩn lối vào màn khỏi điều hướng của Giám sát ở S01
 - Test: test Giám sát → màn từ chối, response không chứa bản ghi nào; test ẩn entry point; test lối quay lại
 
-- [ ] Step 1: Viết test thất bại (TC-S07-21 màn từ chối + không bản ghi; TC-S07-22 backend chặn payload; TC-S07-23 ẩn lối vào; TC-S07-24 quay lại S01)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu cho pass (guard + state từ chối)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S07-21 màn từ chối + không bản ghi; TC-S07-22 backend chặn payload; TC-S07-23 ẩn lối vào; TC-S07-24 quay lại S01)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu cho pass (guard + state từ chối)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S07-21..24 pass · chặn cả ở giao diện lẫn truy vấn dữ liệu (R-S07-N01, BRule-S07-02) · Giám sát không nhận bất kỳ bản ghi nào · lối vào ẩn khỏi điều hướng · luôn có lối về S01 · không lỗi lint.
 
@@ -60,11 +60,11 @@
 - Create: panel bộ lọc (`FilterPanel`) — dropdown người/hành động, date picker, ô đối tượng (≤100 ký tự); nút Áp dụng lọc / Xóa lọc; lỗi inline ngày & ký tự; trạng thái rỗng "Không có bản ghi phù hợp."
 - Test: test từng bộ lọc, tổ hợp AND, biên ngày, max ký tự, kết quả rỗng, Xóa lọc về mặc định
 
-- [ ] Step 1: Viết test thất bại (TC-S07-04 lọc người; TC-S07-05 lọc hành động; TC-S07-06/07/08 thời gian + Từ>Đến + biên Từ=Đến; TC-S07-09/10/11 đối tượng + max 100 + rỗng; TC-S07-12 tổ hợp AND "Di dời của Nguyễn Văn A trong 06/2026"; TC-S07-13 AND giao rỗng; TC-S07-14 Xóa lọc)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu cho pass (filter panel + query AND)
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S07-04 lọc người; TC-S07-05 lọc hành động; TC-S07-06/07/08 thời gian + Từ>Đến + biên Từ=Đến; TC-S07-09/10/11 đối tượng + max 100 + rỗng; TC-S07-12 tổ hợp AND "Di dời của Nguyễn Văn A trong 06/2026"; TC-S07-13 AND giao rỗng; TC-S07-14 Xóa lọc)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu cho pass (filter panel + query AND)
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S07-04..14 pass · lọc AND giao nhau đúng (R-S07-06) · Từ>Đến chặn áp dụng + nút disable (BRule-S07-05) · ô đối tượng ≤100 ký tự · kết quả rỗng hiển thị đúng wording · Xóa lọc đưa mọi điều kiện về mặc định và nạp lại đầy đủ · không lỗi lint.
 
@@ -76,10 +76,10 @@
 - Modify: đảm bảo tầng dữ liệu append-only — không expose API tạo/sửa/xóa bản ghi; chỉ mục/truy vấn đạt < 2s ở mức 50.000 tài sản
 - Test: test quay lại S01 giữ ngữ cảnh; test bất biến (không có API ghi/sửa/xóa); test lỗi tải hiển thị retry; đo hiệu năng
 
-- [ ] Step 1: Viết test thất bại (TC-S07-20 quay lại S01; TC-S07-25 < 2s; TC-S07-26 không nút/API sửa-xóa; TC-S07-27 lỗi tải + Thử lại)
-- [ ] Step 2: Chạy test, xác nhận FAIL
-- [ ] Step 3: Viết code tối thiểu cho pass
-- [ ] Step 4: Chạy test, xác nhận PASS
-- [ ] Step 5: Commit
+- [x] Step 1: Viết test thất bại (TC-S07-20 quay lại S01; TC-S07-25 < 2s; TC-S07-26 không nút/API sửa-xóa; TC-S07-27 lỗi tải + Thử lại)
+- [x] Step 2: Chạy test, xác nhận FAIL
+- [x] Step 3: Viết code tối thiểu cho pass
+- [x] Step 4: Chạy test, xác nhận PASS
+- [x] Step 5: Commit
 
 **Definition of Done:** TC-S07-20/25/26/27 pass · quay lại S01 không mất ngữ cảnh (R-S07-09) · không có thao tác tạo/sửa/xóa bản ghi (R-S07-N03, BRule-S07-01) · trang đầu + lọc < 2s ở 50.000 tài sản (R-S07-N02) · lỗi tải có retry · không lỗi lint.
