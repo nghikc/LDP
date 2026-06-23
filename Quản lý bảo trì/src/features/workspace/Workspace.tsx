@@ -18,6 +18,7 @@ import type { SoDoMatBang } from "./quan-ly-so-do/quanLySoDoService";
 import { PinCanDatLaiPanel } from "./pin-can-dat-lai/PinCanDatLaiPanel";
 import type { PinCanDatLai } from "./pin-can-dat-lai/pinCanDatLaiService";
 import { XuatBaoCaoModal } from "./xuat-bao-cao/XuatBaoCaoModal";
+import { SO_DO_MAU } from "./soDoPlaceholder";
 import "./workspace.css";
 
 interface DraftGan { x: number; y: number; maTaiSan: string | null; }
@@ -276,8 +277,8 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
       {/* S03 — Quản lý ảnh sơ đồ */}
       {soDoNut && (
         <QuanLySoDoModal nodes={nodes} maNut={soDoNut} soDo={soDoHienTai} pins={pins} nguoi={ws.nguoi}
-          onTaiLen={(kq) => { if (kq.ok && kq.soDo) { ws.apDungSoDo(soDoNut, `/so-do/${kq.soDo.tenFile}`); setToast("Đã tải lên sơ đồ."); setSoDoNut(null); } }}
-          onThay={(kq) => { if (kq.ok && kq.soDo) { ws.apDungSoDo(soDoNut, `/so-do/${kq.soDo.tenFile}`, kq.pins); setToast("Đã thay sơ đồ."); setSoDoNut(null); } }}
+          onTaiLen={(kq) => { if (kq.ok && kq.soDo) { ws.apDungSoDo(soDoNut, SO_DO_MAU); setToast("Đã tải lên sơ đồ."); setSoDoNut(null); } }}
+          onThay={(kq) => { if (kq.ok && kq.soDo) { ws.apDungSoDo(soDoNut, SO_DO_MAU, kq.pins); setToast("Đã thay sơ đồ."); setSoDoNut(null); } }}
           onXoa={(kq) => { ws.apDungSoDo(soDoNut, undefined, kq.pins); setToast("Đã xóa sơ đồ."); setSoDoNut(null); }}
           onDatLaiNgay={() => { setSoDoNut(null); setMoS05(true); }}
           onDong={() => setSoDoNut(null)} />
