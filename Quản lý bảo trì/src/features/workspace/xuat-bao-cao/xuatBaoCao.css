@@ -1,0 +1,144 @@
+/* S08 — Modal Xuất báo cáo / kiểm kê. Style tự chứa, thang spacing 8pt, WCAG AA,
+   animation in/out tôn trọng prefers-reduced-motion. Dùng lại biến CSS từ workspace.css
+   (không sửa workspace.css). */
+
+.xbc-lop-nen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--kc-2, 16px);
+  z-index: 40;
+  animation: xbc-mo-nen var(--t-vao, 200ms) ease-out;
+}
+.xbc-lop-nen.xbc-dong {
+  animation: xbc-an-nen var(--t-ra, 150ms) ease-in forwards;
+}
+
+.xbc-modal {
+  background: #fff;
+  border-radius: var(--r, 8px);
+  padding: var(--kc-3, 24px);
+  width: min(560px, 96vw);
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  animation: xbc-hien-len var(--t-vao, 200ms) ease-out;
+}
+.xbc-lop-nen.xbc-dong .xbc-modal {
+  animation: xbc-an-xuong var(--t-ra, 150ms) ease-in forwards;
+}
+
+.xbc-modal h2 {
+  margin: 0 0 var(--kc-2, 16px);
+  font-size: 18px;
+}
+
+.xbc-nhom {
+  border: 1px solid var(--mau-vien, #d4dae3);
+  border-radius: var(--r, 8px);
+  padding: var(--kc-2, 16px);
+  margin-bottom: var(--kc-2, 16px);
+}
+.xbc-nhom > legend {
+  font-weight: 600;
+  padding: 0 var(--kc-1, 8px);
+}
+.xbc-nhom label {
+  display: flex;
+  align-items: center;
+  gap: var(--kc-1, 8px);
+  padding: 4px 0;
+  cursor: pointer;
+}
+.xbc-nhom label.xbc-khoa {
+  color: #8a93a3;
+  cursor: not-allowed;
+}
+
+.xbc-breadcrumb {
+  margin: 4px 0 4px var(--kc-3, 24px);
+  font-size: 13px;
+  color: var(--mau-chinh, #1457b8);
+}
+.xbc-gom-con {
+  margin-left: var(--kc-3, 24px);
+}
+
+.xbc-uoc-tinh {
+  font-size: 14px;
+  font-weight: 600;
+  margin: var(--kc-1, 8px) 0;
+  animation: xbc-hien-len var(--t-vao, 200ms) ease-out;
+}
+
+.xbc-rong {
+  border: 1px dashed var(--mau-canh-bao, #8a5a00);
+  border-radius: var(--r, 8px);
+  padding: var(--kc-2, 16px);
+  text-align: center;
+  margin-bottom: var(--kc-2, 16px);
+}
+.xbc-rong p {
+  margin: 0 0 var(--kc-1, 8px);
+}
+
+.xbc-loi {
+  color: var(--mau-nguy-hiem, #b3261e);
+  font-size: 13px;
+  margin: 4px 0;
+}
+.xbc-thanh-cong {
+  color: #1b6b2f;
+  font-weight: 600;
+  margin: var(--kc-1, 8px) 0;
+}
+
+.xbc-nut {
+  display: flex;
+  gap: var(--kc-1, 8px);
+  justify-content: flex-end;
+  margin-top: var(--kc-2, 16px);
+}
+.xbc-nut button {
+  padding: var(--kc-1, 8px) var(--kc-2, 16px);
+  border: 1px solid var(--mau-vien, #d4dae3);
+  border-radius: var(--r, 8px);
+  background: #fff;
+  color: var(--mau-chu, #1b2330);
+  font-size: 14px;
+  cursor: pointer;
+}
+.xbc-nut button.xbc-cta {
+  background: var(--mau-chinh, #1457b8);
+  color: var(--mau-chinh-chu, #fff);
+  border-color: var(--mau-chinh, #1457b8);
+}
+.xbc-nut button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Focus rõ ràng cho bàn phím (WCAG AA). */
+.xbc-modal :focus-visible {
+  outline: 2px solid var(--mau-chinh, #1457b8);
+  outline-offset: 2px;
+}
+
+@keyframes xbc-mo-nen { from { opacity: 0; } to { opacity: 1; } }
+@keyframes xbc-an-nen { from { opacity: 1; } to { opacity: 0; } }
+@keyframes xbc-hien-len { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes xbc-an-xuong { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .xbc-lop-nen,
+  .xbc-lop-nen.xbc-dong,
+  .xbc-modal,
+  .xbc-lop-nen.xbc-dong .xbc-modal,
+  .xbc-uoc-tinh {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

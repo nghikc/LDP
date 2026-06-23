@@ -8,11 +8,11 @@ Cột `dev` = trạng thái code của màn (do `dev-run` quản: ⚠️ đang d
 |-------|-----------|------|----------|--------|-------|------------|-----|---------|-----------|-------------|------|------|------|-----|-----------|---------------|
 | F04, F05, F09, F10, F11, F14, F16, F03 | Bản đồ tài sản (Workspace) | BanDoTaiSan | Workspace | `docs/BanDoTaiSan/Workspace/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (24 TC Auto Pass) | 2026-06-23 |
 | F01, F02 | Form khu vực (Tạo/Sửa nút) | BanDoTaiSan | FormKhuVuc | `docs/BanDoTaiSan/FormKhuVuc/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (26 TC Auto Pass) | 2026-06-23 |
-| F06, F07, F08 | Quản lý ảnh sơ đồ mặt bằng | BanDoTaiSan | QuanLySoDo | `docs/BanDoTaiSan/QuanLySoDo/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ | Sẵn sàng dev | 2026-06-23 |
+| F06, F07, F08 | Quản lý ảnh sơ đồ mặt bằng | BanDoTaiSan | QuanLySoDo | `docs/BanDoTaiSan/QuanLySoDo/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (22 TC Auto Pass) | 2026-06-23 |
 | F12, F13 | Di dời tài sản | BanDoTaiSan | DiDoiTaiSan | `docs/BanDoTaiSan/DiDoiTaiSan/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (16 TC Auto Pass) | 2026-06-23 |
-| F15 | Danh sách pin cần đặt lại | BanDoTaiSan | PinCanDatLai | `docs/BanDoTaiSan/PinCanDatLai/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ | Sẵn sàng dev | 2026-06-23 |
+| F15 | Danh sách pin cần đặt lại | BanDoTaiSan | PinCanDatLai | `docs/BanDoTaiSan/PinCanDatLai/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (15 TC Auto Pass) | 2026-06-23 |
 | F17 | Lịch sử di chuyển tài sản | LichSu | LichSuDiChuyen | `docs/LichSu/LichSuDiChuyen/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (16 TC Auto Pass) | 2026-06-23 |
 | F19 | Nhật ký kiểm toán | LichSu | NhatKyKiemToan | `docs/LichSu/NhatKyKiemToan/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (21 TC Auto Pass) | 2026-06-23 |
-| F20 | Xuất báo cáo / kiểm kê | — | XuatBaoCao | `docs/XuatBaoCao/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⬜ | Sẵn sàng dev | 2026-06-23 |
+| F20 | Xuất báo cáo / kiểm kê | — | XuatBaoCao | `docs/XuatBaoCao/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (19 TC Auto Pass) | 2026-06-23 |
 
 > **Chức năng nền không gắn màn:** F18 (ghi audit tự động), F21 (phân quyền), F22 (khóa khi đang sửa) — thực thi xuyên suốt, không có dòng màn riêng.
