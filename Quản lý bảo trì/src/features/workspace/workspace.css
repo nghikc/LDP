@@ -80,7 +80,7 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .canvas { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .canvas-trong { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: var(--kc-2); color: var(--mau-chu-phu); background: var(--mau-canvas); border-radius: var(--r-lon); }
 .canvas-anh { position: relative; flex: 1; overflow: hidden; background: var(--mau-canvas); border-radius: var(--r-lon); border: 1px solid var(--mau-vien); }
-.anh-so-do { width: 100%; height: 100%; object-fit: cover; opacity: .9; }
+.anh-so-do { width: 100%; height: 100%; object-fit: contain; }
 
 /* Pin = chấm tròn xanh + nhãn mã; cụm = vòng navy có số (theo Figma). */
 .pin {
