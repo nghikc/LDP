@@ -9,8 +9,8 @@ interface Props {
   pins: ViTriPin[];
   pinLamNoi?: string | null; // mã tài sản đang được làm nổi (pulse)
   onClickTrong: (x: number, y: number) => void;
-  /** Click một vị trí → trả danh sách mã tài sản tại vị trí đó (≥1). */
-  onClickViTri: (maTaiSans: string[]) => void;
+  /** Click một vị trí → trả danh sách mã tài sản + tọa độ vị trí đó. */
+  onClickViTri: (maTaiSans: string[], x: number, y: number) => void;
 }
 
 /** Khung sơ đồ mặt bằng: ảnh + pin theo tọa độ %, breadcrumb, states (F09, R-S01-02/04). */
@@ -84,7 +84,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
               data-trangthai={c.pins[0].trangThai}
               onClick={(e) => {
                 e.stopPropagation();
-                onClickViTri(dsMa);
+                onClickViTri(dsMa, c.toaDoX, c.toaDoY);
               }}
             >
               <span className="pin-cham" aria-hidden="true">{nhieu ? c.pins.length : ""}</span>

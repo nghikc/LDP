@@ -106,6 +106,22 @@ describe("Workspace S01 — một vị trí nhiều tài sản (change request)"
     expect(screen.getByRole("button", { name: "Vị trí 2 tài sản" })).toBeInTheDocument();
   });
 
+  it("gán thêm tài sản vào một vị trí đã có → vị trí gom 2 tài sản", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    // tạo vị trí với B-021
+    fireEvent.click(screen.getByTestId("khung-so-do"), { clientX: 40, clientY: 55 });
+    await user.click(screen.getByLabelText(/B-021 · Máy bơm/));
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    // mở vị trí → gán thêm B-045
+    await user.click(screen.getByRole("button", { name: "Tài sản B-021" }));
+    await user.click(screen.getByRole("button", { name: "+ Gán thêm tài sản vào vị trí này" }));
+    await user.click(screen.getByLabelText(/B-045 · Tủ điện/));
+    await user.click(screen.getByRole("button", { name: /^Gán vị trí/ }));
+    expect(screen.getByRole("button", { name: "Vị trí 2 tài sản" })).toBeInTheDocument();
+  });
+
   it("click vị trí nhiều tài sản → popup liệt kê danh sách", async () => {
     const user = userEvent.setup();
     render(<Workspace />);

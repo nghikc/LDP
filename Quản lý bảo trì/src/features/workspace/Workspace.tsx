@@ -40,7 +40,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [pinLamNoi, setPinLamNoi] = useState<string | null>(null);
   const [thongBaoTraCuu, setThongBaoTraCuu] = useState<string | null>(null);
   const [draft, setDraft] = useState<DraftGan | null>(null);
-  const [viTriPopup, setViTriPopup] = useState<string[] | null>(null);
+  const [viTriPopup, setViTriPopup] = useState<{ maTaiSans: string[]; x: number; y: number } | null>(null);
   const [goConfirm, setGoConfirm] = useState<string | null>(null);
   const [xoaDialog, setXoaDialog] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -110,7 +110,11 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
     if (kq.ok) {
       setToast(kq.toast!);
       setGoConfirm(null);
-      setViTriPopup((vt) => { const con = vt?.filter((m) => m !== maTaiSan) ?? null; return con && con.length ? con : null; });
+      setViTriPopup((vt) => {
+        if (!vt) return null;
+        const con = vt.maTaiSans.filter((m) => m !== maTaiSan);
+        return con.length ? { ...vt, maTaiSans: con } : null;
+      });
     } else { setSnackbar(kq.loi!); setGoConfirm(null); }
   }
 
@@ -208,7 +212,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
           )}
           <FloorPlanCanvas nodes={nodes} nutChon={nodeChon} pins={pinTrongNut} pinLamNoi={pinLamNoi}
             onClickTrong={(x, y) => nodeChon?.soDoUrl && setDraft({ x, y, maTaiSans: [] })}
-            onClickViTri={(ds) => setViTriPopup(ds)} />
+            onClickViTri={(ds, x, y) => setViTriPopup({ maTaiSans: ds, x, y })} />
           {soCanDatLai > 0 && (
             <button className="dai-canh-bao" aria-label={`${soCanDatLai} pin cần đặt lại vị trí`} onClick={() => setMoS05(true)}>
               ⚠ {soCanDatLai} pin cần đặt lại vị trí
@@ -244,9 +248,9 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
       {viTriPopup && (
         <div className="lop-noi" role="dialog" aria-label="Tài sản tại vị trí">
           <div className="pin-popup">
-            <h2>{viTriPopup.length === 1 ? "Chi tiết tài sản" : `${viTriPopup.length} tài sản tại vị trí này`}</h2>
+            <h2>{viTriPopup.maTaiSans.length === 1 ? "Chi tiết tài sản" : `${viTriPopup.maTaiSans.length} tài sản tại vị trí này`}</h2>
             <ul className="ds-vi-tri">
-              {viTriPopup.map((ma) => {
+              {viTriPopup.maTaiSans.map((ma) => {
                 const ten = taiSan.find((t) => t.maTaiSan === ma)?.ten ?? ma;
                 return (
                   <li key={ma}>
@@ -260,7 +264,14 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
                 );
               })}
             </ul>
-            <button onClick={() => setViTriPopup(null)}>Đóng</button>
+            <div className="vt-popup-nut">
+              {taiSanGanDuoc.length > 0 && (
+                <button className="cta" onClick={() => { setDraft({ x: viTriPopup.x, y: viTriPopup.y, maTaiSans: [] }); setViTriPopup(null); }}>
+                  + Gán thêm tài sản vào vị trí này
+                </button>
+              )}
+              <button onClick={() => setViTriPopup(null)}>Đóng</button>
+            </div>
           </div>
         </div>
       )}
