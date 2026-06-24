@@ -52,6 +52,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [timCay, setTimCay] = useState("");
   const [bungHetCay, setBungHetCay] = useState(false);
   const [cayKey, setCayKey] = useState(0);
+  const [moCay, setMoCay] = useState(false); // drawer cây trên mobile
 
   // Vệ tinh
   const [formKV, setFormKV] = useState<FormKVState | null>(null);
@@ -172,6 +173,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   return (
     <div className="workspace" data-testid="workspace">
       <header className="ws-header">
+        <button className="nut-ham" aria-label="Mở danh sách khu vực" onClick={() => setMoCay((v) => !v)}>☰</button>
         <h1>Bản đồ tài sản</h1>
         <div className="o-tra-cuu">
           <label htmlFor="tra-cuu">Tra cứu tài sản</label>
@@ -193,7 +195,8 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
       </header>
 
       <div className="ws-body">
-        <aside className="ws-cay">
+        {moCay && <div className="ws-scrim" onClick={() => setMoCay(false)} aria-hidden="true" />}
+        <aside className={`ws-cay ${moCay ? "mo" : ""}`}>
           {vaiTro === "QuanTri" && (
             <button className="cta them-khu-vuc" onClick={() => setFormKV({ nutChaMacDinh: nutChon ?? null })}>+ Thêm khu vực</button>
           )}
@@ -217,7 +220,7 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
                 )}
               </div>
               <AreaTree key={cayKey} nodes={nodes} nutChon={nutChon}
-                onChon={(m) => { setNutChon(m); setPinLamNoi(null); }}
+                onChon={(m) => { setNutChon(m); setPinLamNoi(null); setMoCay(false); }}
                 vaiTro={vaiTro} onMenu={xuLyMenu} onChuyen={keoTha}
                 timKiem={timCay} bungHet={bungHetCay} />
             </>

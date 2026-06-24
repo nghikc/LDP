@@ -182,6 +182,23 @@ describe("Workspace S01 — một vị trí nhiều tài sản (change request)"
   });
 });
 
+describe("Workspace S01 — mobile drawer", () => {
+  it("hamburger mở/đóng drawer cây; chọn nút thì đóng", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Workspace />);
+    expect(container.querySelector(".ws-cay")!.className).not.toContain("mo");
+    await user.click(screen.getByRole("button", { name: "Mở danh sách khu vực" }));
+    expect(container.querySelector(".ws-cay")!.className).toContain("mo");
+    expect(container.querySelector(".ws-scrim")).toBeInTheDocument();
+    await user.click(container.querySelector(".ws-scrim") as HTMLElement);
+    expect(container.querySelector(".ws-cay")!.className).not.toContain("mo");
+    // mở lại rồi chọn nút → tự đóng
+    await user.click(screen.getByRole("button", { name: "Mở danh sách khu vực" }));
+    await user.click(screen.getByRole("button", { name: "Tòa A" }));
+    expect(container.querySelector(".ws-cay")!.className).not.toContain("mo");
+  });
+});
+
 describe("Workspace S01 — kéo-thả pin", () => {
   it("kéo pin A-007 sang điểm mới → cập nhật tọa độ, không mở popup", async () => {
     const user = userEvent.setup();
