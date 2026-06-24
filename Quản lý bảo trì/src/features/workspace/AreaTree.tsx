@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { NutKhuVuc, VaiTro } from "./types";
-import { layNutCon } from "./logic/treeModel";
+import { layNutCon, locCayTheoTen } from "./logic/treeModel";
 
 interface Props {
   nodes: NutKhuVuc[];
@@ -10,11 +10,22 @@ interface Props {
   onMenu?: (maNut: string, hanhDong: "them-con" | "sua" | "xoa" | "anh-so-do") => void;
   /** Kéo-thả nút (chỉ Quản trị, F05) — thả `keo` vào làm con của `dich`. */
   onChuyen?: (keo: string, dich: string) => void;
+  /** Từ khóa lọc cây (tên/mã, không dấu); chỉ hiện nhánh khớp + tổ tiên, tự bung. */
+  timKiem?: string;
+  /** Bung tất cả nhánh. */
+  bungHet?: boolean;
+}
+
+interface NhanhProps extends Props {
+  node: NutKhuVuc;
+  /** Tập nút hiển thị khi đang lọc (null = không lọc). */
+  hienThi: Set<string> | null;
 }
 
 /** Cây khu vực đệ quy, không giới hạn cấp (F04, R-S01-01). */
-export function AreaTree({ nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: Props) {
+export function AreaTree({ nodes, nutChon, onChon, vaiTro, onMenu, onChuyen, timKiem, bungHet }: Props) {
   const goc = layNutCon(nodes, null);
+  const hienThi = useMemo(() => locCayTheoTen(nodes, timKiem ?? ""), [nodes, timKiem]);
   return (
     <ul className="cay-khu-vuc" role="tree" aria-label="Cây khu vực">
       {goc.map((n) => (
@@ -27,18 +38,26 @@ export function AreaTree({ nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: P
           vaiTro={vaiTro}
           onMenu={onMenu}
           onChuyen={onChuyen}
+          timKiem={timKiem}
+          bungHet={bungHet}
+          hienThi={hienThi}
         />
       ))}
     </ul>
   );
 }
 
-function NhanhCay({ node, nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: Props & { node: NutKhuVuc }) {
+function NhanhCay({ node, nodes, nutChon, onChon, vaiTro, onMenu, onChuyen, timKiem, bungHet, hienThi }: NhanhProps) {
   const con = layNutCon(nodes, node.maNut);
   const coCon = con.length > 0;
-  const [mo, setMo] = useState(false);
+  const [moLocal, setMoLocal] = useState(false);
   const [menuMo, setMenuMo] = useState(false);
   const keoThaDuoc = vaiTro === "QuanTri" && !!onChuyen;
+  const dangLoc = hienThi !== null;
+  // Đang lọc hoặc "bung tất cả" thì tự bung; ẩn nút không nằm trong tập hiển thị khi lọc.
+  const mo = dangLoc || bungHet ? true : moLocal;
+  const setMo = setMoLocal;
+  if (dangLoc && !hienThi!.has(node.maNut)) return null;
 
   return (
     <li role="treeitem" aria-expanded={coCon ? mo : undefined} aria-selected={nutChon === node.maNut}>
@@ -124,6 +143,9 @@ function NhanhCay({ node, nodes, nutChon, onChon, vaiTro, onMenu, onChuyen }: Pr
               vaiTro={vaiTro}
               onMenu={onMenu}
               onChuyen={onChuyen}
+              timKiem={timKiem}
+              bungHet={bungHet}
+              hienThi={hienThi}
             />
           ))}
         </ul>

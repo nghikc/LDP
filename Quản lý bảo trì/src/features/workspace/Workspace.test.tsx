@@ -24,6 +24,16 @@ describe("Workspace S01 — cây khu vực", () => {
     expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
   });
 
+  it("tìm cây: gõ 'Phòng 305' → tự bung tới nhánh khớp, ẩn nhánh khác", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.type(screen.getByLabelText("Tìm khu vực"), "Phòng 305");
+    expect(screen.getByRole("button", { name: "Phòng 305" })).toBeInTheDocument(); // match (tự bung)
+    expect(screen.getByRole("button", { name: "Tòa A" })).toBeInTheDocument(); // tổ tiên
+    expect(screen.queryByRole("button", { name: "Tòa B" })).not.toBeInTheDocument(); // không khớp → ẩn
+    expect(screen.queryByRole("button", { name: "Phòng 306" })).not.toBeInTheDocument();
+  });
+
   it("dấu hiệu 'đã có sơ đồ' chỉ hiện ở nút có sơ đồ", async () => {
     const user = userEvent.setup();
     render(<Workspace />);

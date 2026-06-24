@@ -49,6 +49,9 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
   const [timGan, setTimGan] = useState("");
   const [tenGan, setTenGan] = useState("");
   const [tenSuaVt, setTenSuaVt] = useState("");
+  const [timCay, setTimCay] = useState("");
+  const [bungHetCay, setBungHetCay] = useState(false);
+  const [cayKey, setCayKey] = useState(0);
 
   // Vệ tinh
   const [formKV, setFormKV] = useState<FormKVState | null>(null);
@@ -200,9 +203,24 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
               {vaiTro === "QuanTri" && <button className="cta" onClick={() => setFormKV({ nutChaMacDinh: null })}>Tạo khu vực đầu tiên</button>}
             </div>
           ) : (
-            <AreaTree nodes={nodes} nutChon={nutChon}
-              onChon={(m) => { setNutChon(m); setPinLamNoi(null); }}
-              vaiTro={vaiTro} onMenu={xuLyMenu} onChuyen={keoTha} />
+            <>
+              <input className="tim-cay" type="search" placeholder="Tìm khu vực theo tên/mã..."
+                aria-label="Tìm khu vực" value={timCay} onChange={(e) => setTimCay(e.target.value)} />
+              <div className="cay-cong-cu">
+                {timCay ? (
+                  <button onClick={() => setTimCay("")}>✕ Xóa lọc</button>
+                ) : (
+                  <>
+                    <button onClick={() => setBungHetCay(true)}>Bung tất cả</button>
+                    <button onClick={() => { setBungHetCay(false); setCayKey((k) => k + 1); }}>Thu gọn</button>
+                  </>
+                )}
+              </div>
+              <AreaTree key={cayKey} nodes={nodes} nutChon={nutChon}
+                onChon={(m) => { setNutChon(m); setPinLamNoi(null); }}
+                vaiTro={vaiTro} onMenu={xuLyMenu} onChuyen={keoTha}
+                timKiem={timCay} bungHet={bungHetCay} />
+            </>
           )}
         </aside>
 

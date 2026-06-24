@@ -1,4 +1,5 @@
 import type { NutKhuVuc } from "../types";
+import { boChuDau } from "./search";
 
 /** Lấy các nút con trực tiếp của một nút (maCha = null → các nút gốc). */
 export function layNutCon(nodes: NutKhuVuc[], maCha: string | null): NutKhuVuc[] {
@@ -33,6 +34,21 @@ export function layDuongDan(nodes: NutKhuVuc[], maNut: string): NutKhuVuc[] {
     hienTai = hienTai.nutCha ? map.get(hienTai.nutCha) : undefined;
   }
   return duong;
+}
+
+/**
+ * Lọc cây theo từ khóa (tên/mã, không dấu): trả tập mã nút HIỂN THỊ =
+ * các nút khớp + toàn bộ tổ tiên của chúng. Trả null nếu từ khóa rỗng (hiện tất cả).
+ */
+export function locCayTheoTen(nodes: NutKhuVuc[], tuKhoa: string): Set<string> | null {
+  const q = boChuDau(tuKhoa.trim());
+  if (!q) return null;
+  const hienThi = new Set<string>();
+  for (const n of nodes) {
+    const khop = boChuDau(n.tenKhuVuc).includes(q) || (!!n.maKhuVuc && boChuDau(n.maKhuVuc).includes(q));
+    if (khop) for (const a of layDuongDan(nodes, n.maNut)) hienThi.add(a.maNut);
+  }
+  return hienThi;
 }
 
 /** Chuỗi breadcrumb dạng "Tòa A › Tầng 3 › Phòng 305". */
