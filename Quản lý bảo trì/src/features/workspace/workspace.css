@@ -69,6 +69,7 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, system-ui, san
 .nut-ten { background: none; border: none; cursor: pointer; padding: 5px var(--kc-1); border-radius: 4px; font-size: 14px; color: var(--mau-chu); display: inline-flex; align-items: center; gap: 6px; }
 .nut-ten.dang-chon { background: var(--mau-chinh-nhat); color: var(--mau-chinh); font-weight: 600; }
 .nut-ten.dang-chon::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--mau-chinh); display: inline-block; }
+.nut-co-so-do { display: inline-flex; align-items: center; color: var(--mau-chinh); margin-left: 4px; flex-shrink: 0; }
 .nut-menu { position: relative; margin-left: auto; }
 .nut-menu > button { background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
 .nut-menu-list { position: absolute; right: 0; top: 100%; z-index: 8; list-style: none; margin: 2px 0 0; padding: 4px 0; background: #fff; border: 1px solid var(--mau-vien); border-radius: var(--r); box-shadow: 0 6px 24px rgba(0,0,0,.14); min-width: 160px; animation: hien-xuong var(--t-vao) ease-out; }

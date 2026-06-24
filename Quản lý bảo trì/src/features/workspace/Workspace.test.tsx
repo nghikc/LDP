@@ -24,6 +24,17 @@ describe("Workspace S01 — cây khu vực", () => {
     expect(screen.queryByRole("button", { name: "Tầng 3" })).not.toBeInTheDocument();
   });
 
+  it("dấu hiệu 'đã có sơ đồ' chỉ hiện ở nút có sơ đồ", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await user.click(screen.getByRole("button", { name: "Mở Tòa A" }));
+    await user.click(screen.getByRole("button", { name: "Mở Tầng 3" }));
+    const hang305 = screen.getByRole("button", { name: "Phòng 305" }).closest(".nut-hang") as HTMLElement;
+    const hang306 = screen.getByRole("button", { name: "Phòng 306" }).closest(".nut-hang") as HTMLElement;
+    expect(within(hang305).getByTitle("Đã có sơ đồ mặt bằng")).toBeInTheDocument();
+    expect(within(hang306).queryByTitle("Đã có sơ đồ mặt bằng")).not.toBeInTheDocument();
+  });
+
   it("TC-S01-02: mở/đóng nhánh hiện/ẩn con", async () => {
     const user = userEvent.setup();
     render(<Workspace />);
