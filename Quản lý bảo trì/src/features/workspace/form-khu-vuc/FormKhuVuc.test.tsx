@@ -2,9 +2,17 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { FormKhuVuc } from "./FormKhuVuc";
-import { nutKhuVucMau } from "../sampleData";
+import type { NutKhuVuc } from "../types";
 
-const nodes = nutKhuVucMau.map((n) => (n.maNut === "phong-305" ? { ...n, maKhuVuc: "P305", loaiKhuVuc: "Phòng" } : n));
+// Fixture cố định (độc lập với sampleData để không vỡ khi thêm data demo).
+const nodes: NutKhuVuc[] = [
+  { maNut: "toa-a", tenKhuVuc: "Tòa A", nutCha: null },
+  { maNut: "tang-3", tenKhuVuc: "Tầng 3", nutCha: "toa-a" },
+  { maNut: "phong-305", tenKhuVuc: "Phòng 305", nutCha: "tang-3", maKhuVuc: "P305", loaiKhuVuc: "Phòng" },
+  { maNut: "phong-306", tenKhuVuc: "Phòng 306", nutCha: "tang-3" },
+  { maNut: "tang-4", tenKhuVuc: "Tầng 4", nutCha: "toa-a" },
+  { maNut: "toa-b", tenKhuVuc: "Tòa B", nutCha: null },
+];
 
 describe("FormKhuVuc — Tạo (F01)", () => {
   it("TC-S02-01: mở 'Thêm con' Tầng 3 → tiêu đề Thêm, Nút cha đặt sẵn", () => {

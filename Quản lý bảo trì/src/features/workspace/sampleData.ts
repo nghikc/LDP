@@ -4,6 +4,37 @@ import { SO_DO_MAU } from "./soDoPlaceholder";
 // Dữ liệu mẫu khớp Test Data trong test.md S01.
 // Cây: Tòa A › (Tầng 3 › Phòng 305, Phòng 306) , Tầng 4 ; Tòa B.
 
+// Sinh cây lớn demo: 3 Chi nhánh → Tòa → Tầng → Phòng (~120 nút) để thử tìm/lọc cây.
+function sinhCayLon(): NutKhuVuc[] {
+  const ds: NutKhuVuc[] = [];
+  for (let cn = 1; cn <= 3; cn++) {
+    const cnId = `cn-${cn}`;
+    ds.push({ maNut: cnId, tenKhuVuc: `Chi nhánh ${cn}`, maKhuVuc: `CN${cn}`, loaiKhuVuc: "Site", nutCha: null });
+    const soToa = 2 + (cn % 2); // 2–3 tòa
+    for (let t = 1; t <= soToa; t++) {
+      const toaId = `${cnId}-toa-${t}`;
+      ds.push({ maNut: toaId, tenKhuVuc: `Tòa ${String.fromCharCode(64 + t)}`, loaiKhuVuc: "Tòa", nutCha: cnId });
+      for (let tg = 1; tg <= 3; tg++) {
+        const tangId = `${toaId}-tang-${tg}`;
+        ds.push({ maNut: tangId, tenKhuVuc: `Tầng ${tg}`, loaiKhuVuc: "Tầng", nutCha: toaId });
+        const soPhong = 3 + (tg % 2); // 3–4 phòng
+        for (let p = 1; p <= soPhong; p++) {
+          const coSoDo = (cn + t + tg + p) % 3 === 0; // ~1/3 phòng có sơ đồ
+          ds.push({
+            maNut: `${tangId}-p-${p}`,
+            tenKhuVuc: `Phòng ${tg}0${p}`,
+            maKhuVuc: `${cnId.toUpperCase()}-P${tg}0${p}`,
+            loaiKhuVuc: "Phòng",
+            nutCha: tangId,
+            soDoUrl: coSoDo ? SO_DO_MAU : undefined,
+          });
+        }
+      }
+    }
+  }
+  return ds;
+}
+
 export const nutKhuVucMau: NutKhuVuc[] = [
   { maNut: "toa-a", tenKhuVuc: "Tòa A", nutCha: null },
   { maNut: "tang-3", tenKhuVuc: "Tầng 3", nutCha: "toa-a" },
@@ -15,6 +46,7 @@ export const nutKhuVucMau: NutKhuVuc[] = [
   { maNut: "tang-b1", tenKhuVuc: "Tầng 1", nutCha: "toa-b" },
   { maNut: "kho-b01", tenKhuVuc: "Kho B-01", nutCha: "tang-b1", soDoUrl: SO_DO_MAU },
   { maNut: "kho-b02", tenKhuVuc: "Kho B-02", nutCha: "tang-b1", soDoUrl: SO_DO_MAU },
+  ...sinhCayLon(),
 ];
 
 // 50 tài sản demo (TS-001..TS-050) để minh họa di dời.
