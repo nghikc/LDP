@@ -27,6 +27,8 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
   const canvasRef = useRef<HTMLDivElement>(null);
   const vuaKeoRef = useRef(false);
   const [keo, setKeo] = useState<TrangThaiKeo | null>(null);
+  // Tỉ lệ khung của ảnh thật → hộp chứa khớp tỉ lệ ảnh, pin định vị theo hộp (dính đúng điểm khi co giãn).
+  const [tyLeAnh, setTyLeAnh] = useState("3 / 2");
 
   useEffect(() => {
     if (!keo) return;
@@ -89,12 +91,14 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
       <nav className="breadcrumb" aria-label="Đường dẫn khu vực">
         {breadcrumb}
       </nav>
-      <div
+      <div className="canvas-anh">
+       <div
         ref={canvasRef}
-        className="canvas-anh"
+        className="so-do-box"
         data-testid="khung-so-do"
         role="application"
         aria-label={`Sơ đồ ${nutChon.tenKhuVuc}`}
+        style={{ aspectRatio: tyLeAnh }}
         onClick={(e) => {
           const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
           const x = ((e.clientX - r.left) / r.width) * 100;
@@ -106,6 +110,10 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
           src={nutChon.soDoUrl}
           alt={`Sơ đồ ${nutChon.tenKhuVuc}`}
           className="anh-so-do"
+          onLoad={(e) => {
+            const im = e.currentTarget;
+            if (im.naturalWidth && im.naturalHeight) setTyLeAnh(`${im.naturalWidth} / ${im.naturalHeight}`);
+          }}
           onError={(e) => {
             const img = e.currentTarget;
             if (img.src !== SO_DO_FALLBACK) img.src = SO_DO_FALLBACK;
@@ -145,6 +153,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
             </button>
           );
         })}
+       </div>
         <div className="chu-thich-mau" onClick={(e) => e.stopPropagation()} aria-label="Chú thích màu vị trí">
           <span><i className="ct-cham ct-binhthuong" /> Bình thường</span>
           <span><i className="ct-cham ct-khoa" /> Đang khóa</span>
