@@ -91,3 +91,67 @@
 - Hậu điều kiện: Sơ đồ + pin của nút hiển thị.
 - Đảm bảo: thành công → sơ đồ hiển thị < 2s; tối thiểu → trạng thái rỗng/lỗi rõ ràng.
 - Trace: R-S01-01, R-S01-02, R-S01-04, R-S01-05
+
+## UC-S01-07: Gán nhiều tài sản vào một vị trí
+- Tác nhân: Quản trị, Giám sát
+- Trigger: Người dùng click một điểm trống trên sơ đồ (hoặc bấm "+ Gán thêm tài sản vào vị trí này" trong popup vị trí)
+- Tiền điều kiện: Nút khu vực đang chọn đã có ảnh sơ đồ; tồn tại ≥1 tài sản chưa có vị trí
+- Luồng chính:
+  1. Người dùng click điểm trống → mở ô gán đa chọn (trường "Tên vị trí (tùy chọn)", ô tìm, danh sách checkbox tài sản chưa có vị trí).
+  2. (Tùy chọn) Người dùng gõ ô tìm (mã/tên, không dấu) → danh sách thu hẹp; hiển thị tối đa 50 dòng; dòng đếm "N kết quả · Đã chọn M".
+  3. Người dùng tích chọn ≥1 tài sản (M tăng); (tùy chọn) nhập Tên vị trí.
+  4. Người dùng bấm "Gán vị trí (M)".
+  5. Hệ thống tạo M pin tại cùng tọa độ click, ghi nhật ký kiểm toán mỗi tài sản, lưu tên vị trí (nếu có), hiện toast "Đã gán vị trí cho M tài sản".
+- Luồng thay thế / ngoại lệ:
+  - Chưa chọn tài sản nào (M=0) → nút "Gán vị trí" disable.
+  - Ô tìm không khớp → "Không tìm thấy tài sản phù hợp".
+  - Không còn tài sản chưa có vị trí → ô gán hiện "Không còn tài sản chưa có vị trí.".
+  - Một số tài sản vừa bị người khác khóa → chỉ gán được phần hợp lệ; nếu không gán được cái nào → báo "Tài sản đang được người khác chỉnh sửa".
+  - Người dùng hủy → đóng ô, không tạo pin.
+- Hậu điều kiện: M tài sản về trạng thái "đã có vị trí" tại cùng một vị trí; marker hiển thị "M tài sản" (hoặc tên vị trí).
+- Đảm bảo: thành công → M pin lưu + M bản ghi nhật ký; tối thiểu → không tạo pin nếu chưa xác nhận / không chọn.
+- Trace: R-S01-12, R-S01-14, BRule-S01-07
+
+## UC-S01-08: Đặt/đổi tên vị trí
+- Tác nhân: Quản trị, Giám sát
+- Trigger: Người dùng nhập "Tên vị trí" trong ô gán, hoặc mở popup vị trí và sửa tên
+- Tiền điều kiện: Đang gán vị trí (luồng UC-S01-07) hoặc vị trí đã tồn tại (có ≥1 tài sản)
+- Luồng chính:
+  1. Người dùng nhập tên vào ô "Tên vị trí" (khi gán) hoặc ô tên trong popup vị trí.
+  2. Người dùng xác nhận (gán xong / bấm "Lưu tên").
+  3. Hệ thống lưu tên theo cặp (nút + tọa độ); marker hiển thị tên; toast "Đã đặt tên vị trí".
+- Luồng thay thế / ngoại lệ:
+  - Để trống và "Lưu tên" → xóa tên; marker trở về nhãn mặc định (mã / "N tài sản"); toast "Đã xóa tên vị trí".
+- Hậu điều kiện: Tên vị trí được lưu/xóa; nhãn marker cập nhật.
+- Đảm bảo: thành công → tên gắn đúng vị trí, không lẫn vị trí khác; tối thiểu → không đổi nếu không lưu.
+- Trace: R-S01-14, BRule-S01-09
+
+## UC-S01-09: Kéo-thả marker dời vị trí trong cùng sơ đồ
+- Tác nhân: Quản trị, Giám sát
+- Trigger: Người dùng giữ và kéo một marker trên sơ đồ
+- Tiền điều kiện: Sơ đồ đang mở; marker tồn tại
+- Luồng chính:
+  1. Người dùng nhấn giữ trên marker (chuột nút trái hoặc chạm).
+  2. Người dùng kéo con trỏ; hệ thống dịch marker theo (dùng Pointer Events).
+  3. Người dùng thả; nếu đã dịch > 0,5% → hệ thống cập nhật tọa độ % cho **mọi tài sản tại vị trí đó**; tên vị trí đi theo. Thao tác này **không** sinh lịch sử di chuyển.
+- Luồng thay thế / ngoại lệ:
+  - Dịch ≤ 0,5% (xem là click) → mở popup danh sách tài sản tại vị trí, không dời.
+  - pointercancel (rời vùng/cử chỉ bị hủy) → hủy kéo, giữ tọa độ cũ.
+- Hậu điều kiện: Mọi tài sản tại vị trí đó mang tọa độ mới; không có bản ghi lịch sử.
+- Đảm bảo: thành công → tọa độ + tên đồng bộ tại vị trí mới; tối thiểu → phân biệt rõ click với kéo, không tạo lịch sử nhầm.
+- Trace: R-S01-15, BRule-S01-08, BRule-S01-09
+
+## UC-S01-10: Tìm/lọc cây khu vực theo tên/mã
+- Tác nhân: Quản trị, Giám sát
+- Trigger: Người dùng gõ vào ô "Tìm khu vực theo tên/mã..." hoặc bấm "Bung tất cả"/"Thu gọn"
+- Tiền điều kiện: Cây khu vực có ≥1 nút
+- Luồng chính:
+  1. Người dùng gõ từ khóa (tên/mã, không dấu).
+  2. Hệ thống chỉ hiển thị nhánh khớp + toàn bộ tổ tiên của chúng, tự bung các nhánh này.
+  3. Người dùng chọn một nút trong kết quả → mở sơ đồ.
+- Luồng thay thế / ngoại lệ:
+  - Không khớp → cây trống nhánh; người dùng bấm "✕ Xóa lọc" để khôi phục.
+  - Bấm "Bung tất cả" → mở mọi nhánh; "Thu gọn" → đóng hết (cây mặc định thu gọn).
+- Hậu điều kiện: Cây hiển thị đúng nhánh theo bộ lọc / trạng thái bung-thu.
+- Đảm bảo: thành công → định vị nhanh nút cần tìm; tối thiểu → luôn khôi phục được cây đầy đủ.
+- Trace: R-S01-17, R-S01-18

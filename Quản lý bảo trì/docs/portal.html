@@ -280,7 +280,7 @@ li > ul, li > ol { margin: 0.2em 0; }
     <span></span><span></span><span></span>
   </button>
   <h1>docs — Documentation Portal</h1>
-  <span class="timestamp">Generated: 2026-06-23T04:46:53.027Z</span>
+  <span class="timestamp">Generated: 2026-06-24T07:04:05.915Z</span>
 </header>
 <div id="layout">
   <div id="sidebar-overlay" hidden></div>
@@ -623,6 +623,7 @@ li > ul, li > ol { margin: 0.2em 0; }
 </thead>
 <tbody>
 <tr><td>G02</td><td>🟡 Quan trọng</td><td>S01–S08</td><td><strong>Chưa có <code>test.md</code></strong> cho cả 8 màn → mọi R-S/GWT/luồng use case chưa có TC truy vết. Đây là <strong>bước kế tiếp đúng tiến độ</strong> (chưa chạy <code>ba-test</code>), không phải lỗi đặc tả.</td><td><code>docs/**/</code> (8 màn)</td><td><code>ba-test</code></td></tr>
+<tr><td>G03</td><td>🟢 Nhỏ (✅ đã xử lý 2026-06-23)</td><td>S01</td><td><strong>Tính khám phá (discoverability) của thao tác tạo vị trí:</strong> F11 chỉ mô tả "click điểm trống" — một cử chỉ ẩn, không có nút/affordance/hint nào trên màn báo cho người dùng cách tạo vị trí. Người dùng phản hồi "không thấy chỗ bấm".</td><td><code>BanDoTaiSan/Workspace/{srs,design-spec,ascii-screen}.md</code></td><td><strong>Đã bổ sung:</strong> CTA <code>+ Gán vị trí</code> trên thanh công cụ (bật <em>chế độ đặt pin</em> + dải hướng dẫn + nút Thoát) <strong>R-S01-06</strong>, và empty-state "sơ đồ có ảnh nhưng chưa có pin" <strong>R-S01-11</strong> + <strong>BRule-S01-06</strong>; vẽ lại Figma S01</td></tr>
 <tr><td>G01</td><td>🟢 Nhỏ</td><td>requirements</td><td>NFR-06 ("pin lưu tọa độ tương đối %") gắn nhãn <em>Khả dụng</em> nhưng không có số đo — bản chất là ràng buộc thiết kế. Người dùng đã <strong>quyết định bỏ qua</strong>.</td><td><code>01-requirements.md</code> §4.2</td><td><code>ba-requirements</code></td></tr>
 </tbody>
 </table>
@@ -703,6 +704,13 @@ li > ul, li > ol { margin: 0.2em 0; }
 <tr><td>Quản trị / Quản lý tài sản</td><td>Vai trò toàn quyền, gồm quản lý cấu trúc cây + ảnh sơ đồ</td></tr>
 <tr><td>Giám sát / Quản lý</td><td>Vai trò làm mọi việc trừ quản lý cấu trúc (cây + ảnh sơ đồ)</td></tr>
 <tr><td>Workspace (hub)</td><td>Màn trung tâm tích hợp cây khu vực + sơ đồ + pin, làm điểm vào chính của phân hệ</td></tr>
+<tr><td>Vị trí (gom nhiều tài sản)</td><td>Một tọa độ trên sơ đồ mặt bằng có thể chứa nhiều tài sản; mỗi tài sản vẫn chỉ thuộc một vị trí</td></tr>
+<tr><td>Tên vị trí</td><td>Nhãn tùy chọn đặt cho một vị trí, lưu theo (nút khu vực + tọa độ), hiển thị trên marker</td></tr>
+<tr><td>Marker</td><td>Chấm tròn + số tài sản + nhãn thể hiện một vị trí trên sơ đồ; màu theo trạng thái</td></tr>
+<tr><td>Kéo-thả pin (marker)</td><td>Giữ + kéo marker để dời tọa độ mọi tài sản tại vị trí đó trong cùng sơ đồ; không sinh lịch sử</td></tr>
+<tr><td>Drawer</td><td>Ngăn trượt chứa cây khu vực, mở bằng hamburger trên màn hẹp (≤768px), kèm nền tối (scrim)</td></tr>
+<tr><td>Scrim</td><td>Lớp nền tối phủ sau drawer/modal; chạm vào để đóng</td></tr>
+<tr><td>Pointer Events</td><td>Sự kiện con trỏ hợp nhất chuột + cảm ứng, dùng cho thao tác kéo-thả marker</td></tr>
 <tr><td>Breadcrumb</td><td>Dải đường dẫn thể hiện vị trí một nút trong cây khu vực (vd Tòa A › Tầng 3 › Phòng 305)</td></tr>
 <tr><td>Đường dẫn khu vực</td><td>Chuỗi nút khu vực từ gốc tới nút chứa tài sản (vd Tòa A › Tầng 3 › Phòng 305)</td></tr>
 <tr><td>Nút cha</td><td>Nút khu vực đứng trên một cấp, quyết định vị trí của nút trong cây; để trống = nút gốc</td></tr>
@@ -737,7 +745,7 @@ li > ul, li > ol { margin: 0.2em 0; }
 <tr><th>Mã CN</th><th>Chức năng</th><th>Nhóm</th><th>Màn hình</th><th>Folder</th><th>ascii</th><th>brainstorm</th><th>srs</th><th>usecase</th><th>userstory</th><th>design-spec</th><th>html</th><th>test</th><th>plan</th><th>dev</th><th>Trạng thái</th><th>Cập nhật cuối</th></tr>
 </thead>
 <tbody>
-<tr><td>F04, F05, F09, F10, F11, F14, F16, F03</td><td>Bản đồ tài sản (Workspace)</td><td>BanDoTaiSan</td><td>Workspace</td><td><code>docs/BanDoTaiSan/Workspace/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (24 TC Auto Pass)</td><td>2026-06-23</td></tr>
+<tr><td>F04, F05, F09, F10, F11, F14, F16, F03</td><td>Bản đồ tài sản (Workspace)</td><td>BanDoTaiSan</td><td>Workspace</td><td><code>docs/BanDoTaiSan/Workspace/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong + CR đồng bộ (35/70 TC Pass)</td><td>2026-06-24</td></tr>
 <tr><td>F01, F02</td><td>Form khu vực (Tạo/Sửa nút)</td><td>BanDoTaiSan</td><td>FormKhuVuc</td><td><code>docs/BanDoTaiSan/FormKhuVuc/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (26 TC Auto Pass)</td><td>2026-06-23</td></tr>
 <tr><td>F06, F07, F08</td><td>Quản lý ảnh sơ đồ mặt bằng</td><td>BanDoTaiSan</td><td>QuanLySoDo</td><td><code>docs/BanDoTaiSan/QuanLySoDo/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (22 TC Auto Pass)</td><td>2026-06-23</td></tr>
 <tr><td>F12, F13</td><td>Di dời tài sản</td><td>BanDoTaiSan</td><td>DiDoiTaiSan</td><td><code>docs/BanDoTaiSan/DiDoiTaiSan/</code></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>Dev xong (16 TC Auto Pass)</td><td>2026-06-23</td></tr>
@@ -4311,40 +4319,71 @@ Chú thích các thành phần:
 <div class="doc-section-title">BanDoTaiSan/Workspace/ascii-screen.md</div>
 <h1 id="wireframe-bn-ti-sn-workspace">Wireframe — Bản đồ tài sản (Workspace)</h1>
 <pre><code>+----------------------------------------------------------------------------------+
-| Bản đồ tài sản            [ 🔍 Tra cứu mã/tên tài sản... ]            [Avatar ▾]  |
+| ☰  Bản đồ tài sản         [ 🔍 Tra cứu mã/tên tài sản... ]    [Nhật ký] [Avatar ▾]|
 +------------------+---------------------------------------------------------------+
-| CÂY KHU VỰC      | Tòa A › Tầng 3 › Phòng 305        [Lọc pin ▾] [Di dời hàng loạt]|
-| [+ Thêm khu vực] |                                                  [Xuất báo cáo] |
-|                  | +-----------------------------------------------------------+ |
+| CÂY KHU VỰC      | Tòa A › Tầng 3 › Phòng 305  [+ Gán vị trí] [Lọc pin ▾]         |
+| [+ Thêm khu vực] |                             [Di dời hàng loạt] [Xuất báo cáo]  |
+| [🔍 Tìm khu vực…]| +-----------------------------------------------------------+ |
+| [Bung tất cả]    | |                                       Chú thích vị trí:    | |
+| [Thu gọn]        | |        (Ảnh sơ đồ mặt bằng — zoom/pan) [●xanh ●xám ●vàng]  | |
 | ▾ Tòa A          | |                                                           | |
-|   ▾ Tầng 3   ⋮   | |        (Ảnh sơ đồ mặt bằng — zoom/pan)                    | |
-|     • Phòng 305  | |                                                           | |
-|     • Phòng 306  | |     📍A-001        📍A-014                                 | |
-|   ▸ Tầng 4       | |              📍A-007        ⨁(cụm 23)                      | |
-| ▸ Tòa B          | |                       📍A-009                              | |
-|                  | |                                                           | |
-|                  | +-----------------------------------------------------------+ |
+|   ▾ Tầng 3   ⋮   | |     (①A-001)        (①A-014)                              | |
+|     • Phòng 305🗺| |              (①A-007)      (㉓ cụm 23)                     | |
+|     • Phòng 306  | |                    (③ Khu máy nén)  ← marker 3 tài sản    | |
+|   ▸ Tầng 4       | |                                                           | |
+| ▸ Tòa B          | +-----------------------------------------------------------+ |
 |                  | ⚠ 3 pin cần đặt lại vị trí  →                                  |
 +------------------+---------------------------------------------------------------+
+(🗺 = icon &quot;đã có sơ đồ&quot;, tooltip &quot;Đã có sơ đồ mặt bằng&quot; · marker = chấm tròn + số + nhãn)
 
-[Popup khi click pin]                    [Ô chọn tài sản khi click điểm trống]
-+-------------------------------+        +-------------------------------------+
-| A-007 · Máy nén khí           |        | Gán vị trí tại điểm đã chọn         |
-| Trạng thái: Đang dùng         |        | [ 🔍 Tìm tài sản chưa có vị trí... ]|
-| Tòa A › Tầng 3 › Phòng 305    |        |  ○ B-021 · Máy bơm                  |
-| [Xem lịch sử] [Di dời] [Gỡ]   |        |  ○ B-045 · Tủ điện                  |
-+-------------------------------+        |            [Hủy] [Gán vị trí]       |
-                                         +-------------------------------------+
+[Popup khi click một VỊ TRÍ]                [Ô gán khi click điểm trống — ĐA CHỌN]
++-----------------------------------+      +-------------------------------------+
+| Khu máy nén  (3 tài sản tại đây)  |      | Gán vị trí tại điểm đã chọn         |
+| [ Tên vị trí ........] [Lưu tên]  |      | Tên vị trí (tùy chọn)               |
+| ─────────────────────────────────|      | [ vd Khu máy nén ................. ]|
+| A-007 · Máy nén khí               |      | Chọn tài sản (chưa có vị trí)       |
+|   [Xem lịch sử][Di dời][Gỡ vị trí]|      | [ 🔍 Tìm theo mã/tên tài sản... ]   |
+| A-031 · Bơm dầu                   |      | 12 kết quả · Đã chọn 2              |
+|   [Xem lịch sử][Di dời][Gỡ vị trí]|      | [✓] B-021 · Máy bơm                 |
+| A-052 · Quạt hút                  |      | [✓] B-045 · Tủ điện                 |
+|   [Xem lịch sử][Di dời][Gỡ vị trí]|      | [ ] B-077 · Máy hàn                 |
+| [+ Gán thêm tài sản vào vị trí]   |      |   … (hiện 50 đầu — gõ để thu hẹp)   |
+| [Đóng]                            |      |            [Hủy] [Gán vị trí (2)]    |
++-----------------------------------+      +-------------------------------------+
+(Kéo marker (giữ + di chuyển &gt;0.5%) → dời tọa độ MỌI tài sản tại vị trí; tên đi theo; KHÔNG ghi lịch sử)
+
+[Chế độ đặt pin — sau khi bấm &quot;+ Gán vị trí&quot;]
++---------------------------------------------------------------+
+| 📌 Click lên sơ đồ để đặt tài sản            [ Thoát ]         |
+| (con trỏ đổi dạng &quot;đặt pin&quot;; click điểm bất kỳ → ô chọn tài sản)|
++---------------------------------------------------------------+
+
+[Empty-state — sơ đồ ĐÃ có ảnh nhưng CHƯA có pin nào]
++-----------------------------------------------------------+
+|                  ( minh họa 📍 )                          |
+|        Chưa có tài sản nào trên sơ đồ.                    |
+|  Bấm [+ Gán vị trí] rồi click lên sơ đồ để đặt             |
+|  tài sản đầu tiên.                                         |
++-----------------------------------------------------------+
 
 Chú thích các thành phần:
-- Ô tra cứu (header): gõ mã/tên → gợi ý → chọn → nhảy tới sơ đồ + làm nổi pin + breadcrumb.
-- Cây khu vực (trái): click mở sơ đồ; ▾/▸ mở-đóng nhánh; kéo-thả đổi nhánh; nút [+ Thêm khu vực]; icon ⋮ = menu (Thêm con/Sửa/Xóa/Quản lý ảnh sơ đồ).
+- Nút hamburger ☰ (header, chỉ màn hẹp ≤768px): mở **drawer** cây khu vực + nền tối (scrim); chọn một nút → drawer tự đóng.
+- Ô tra cứu (header): gõ mã/tên → gợi ý → chọn → nhảy tới sơ đồ + làm nổi pin + breadcrumb; trên mobile chiếm full-width.
+- Cây khu vực (trái):
+  - **Ô [🔍 Tìm khu vực…]** (không dấu): gõ → chỉ hiện nhánh khớp + tổ tiên, tự bung; [✕ Xóa lọc] để trở lại.
+  - **[Bung tất cả] / [Thu gọn]**: mở/đóng mọi nhánh (cây mặc định thu gọn).
+  - **Icon 🗺 cạnh tên nút** = &quot;đã có sơ đồ mặt bằng&quot; (tooltip).
+  - Click mở sơ đồ; ▾/▸ mở-đóng nhánh; kéo-thả đổi nhánh; nút [+ Thêm khu vực]; icon ⋮ = menu (Thêm con/Sửa/Xóa/Quản lý ảnh sơ đồ).
 - Breadcrumb (trên khung): đường dẫn nút đang chọn.
-- Thanh công cụ: [Lọc pin], [Di dời hàng loạt] → S04, [Xuất báo cáo] → S08.
-- Khung sơ đồ (giữa): ảnh + pin 📍; cụm ⨁ khi &gt;500 điểm; click điểm trống → ô chọn tài sản (gán); click pin → popup chi tiết.
-- Popup pin: thông tin tóm tắt + [Xem lịch sử]→S06, [Di dời]→S04, [Gỡ vị trí] (dialog xác nhận).
+- Thanh công cụ: [+ Gán vị trí] (điểm vào tạo vị trí — bật chế độ đặt pin), [Lọc pin], [Di dời hàng loạt] → S04, [Xuất báo cáo] → S08.
+- Khung sơ đồ (giữa): ảnh + **marker** (chấm tròn + số + nhãn) cho cả 1 và nhiều tài sản; cụm ⨁ khi &gt;500 điểm; **chú thích màu vị trí** (●xanh Bình thường / ●xám Đang khóa / ●vàng Cần đặt lại) ở góc khung. Tạo vị trí bằng 2 cách: (a) [+ Gán vị trí] → chế độ đặt pin → click lên sơ đồ; (b) click thẳng điểm trống → **ô gán đa chọn**; click một marker → popup danh sách tài sản tại vị trí đó.
+- **Marker**: nhãn = tên vị trí (nếu đặt) / mã tài sản (nếu 1) / &quot;N tài sản&quot; (nếu nhiều); **giữ + kéo** marker dời tọa độ mọi tài sản tại vị trí (Pointer Events: chuột + cảm ứng); dịch &gt;0.5% = kéo, ≤0.5% = click. Kéo-thả **không** ghi lịch sử (khác [Di dời]).
+- **Ô gán (đa chọn)**: trường &quot;Tên vị trí (tùy chọn)&quot; ở đầu; ô tìm (mã/tên không dấu) lọc tài sản chưa có vị trí; danh sách **checkbox** giới hạn 50 dòng đầu (gõ để thu hẹp); dòng đếm &quot;N kết quả · Đã chọn M&quot;; nút [Gán vị trí (M)] disable khi M=0.
+- **Popup vị trí**: tiêu đề = tên vị trí hoặc &quot;N tài sản tại vị trí này&quot;; ô [Tên vị trí] + [Lưu tên]; mỗi tài sản có [Xem lịch sử]→S06, [Di dời]→S04, [Gỡ vị trí] (xác nhận); nút [+ Gán thêm tài sản vào vị trí này] (ẩn khi hết tài sản chưa có vị trí).
+- Chế độ đặt pin: dải hướng dẫn &quot;Click lên sơ đồ để đặt tài sản&quot; + [Thoát]; con trỏ đổi dạng đặt pin.
 - Dải cảnh báo &quot;N pin cần đặt lại&quot; → S05.
-- Trạng thái rỗng: cây trống → CTA tạo khu vực; nút chưa có sơ đồ → CTA tải ảnh (→ S03).</code></pre>
+- Trạng thái rỗng: cây trống → CTA tạo khu vực; nút chưa có sơ đồ → CTA tải ảnh (→ S03); **nút đã có sơ đồ nhưng chưa có pin → lớp gợi ý &quot;Chưa có tài sản nào trên sơ đồ — bấm [+ Gán vị trí]…&quot;**.
+- Responsive (≤768px): hamburger ☰ + drawer cây + scrim; ô tra cứu full-width; modal/panel chiếm gần full màn.</code></pre>
 </section>
 <section class="doc-section" id="doc-BanDoTaiSan-Workspace-brainstorm-md">
 <div class="doc-section-title">BanDoTaiSan/Workspace/brainstorm.md</div>
@@ -4391,12 +4430,12 @@ Chú thích các thành phần:
 </ul>
 <h2 id="2-cu-trc-layout-anatomy">2. Cấu trúc layout (anatomy)</h2>
 <ul>
-<li>Header: tiêu đề "Bản đồ tài sản" · <strong>ô tra cứu nhanh</strong> (trung tâm) · avatar/menu tài khoản.</li>
+<li>Header: nút <strong>hamburger ☰</strong> (màn hẹp) · tiêu đề "Bản đồ tài sản" · <strong>ô tra cứu nhanh</strong> (trung tâm) · nút Nhật ký kiểm toán (Quản trị) · avatar/menu tài khoản.</li>
 <li>Body (3 vùng):
 <ul>
-<li><strong>Cột trái — Cây khu vực:</strong> nút "+ Thêm khu vực" (chỉ Quản trị), cây mở/đóng nhánh, menu ngữ cảnh mỗi nút, kéo-thả (Quản trị).</li>
-<li><strong>Vùng giữa — Khung sơ đồ:</strong> breadcrumb đường dẫn + thanh công cụ (Lọc pin, Di dời hàng loạt, Xuất báo cáo) ở trên; ảnh sơ đồ zoom/pan + pin/cụm; dải cảnh báo "N pin cần đặt lại" ở dưới.</li>
-<li><strong>Lớp nổi:</strong> popup chi tiết pin; ô chọn tài sản khi gán; dialog xác nhận xóa.</li>
+<li><strong>Cột trái — Cây khu vực:</strong> nút "+ Thêm khu vực" (chỉ Quản trị); <strong>ô tìm khu vực</strong> (tên/mã, không dấu) + nút <strong>Bung tất cả / Thu gọn</strong>; cây mở/đóng nhánh (mặc định thu gọn), <strong>icon "đã có sơ đồ"</strong> cạnh tên nút, menu ngữ cảnh mỗi nút, kéo-thả đổi nhánh (Quản trị). Trên màn hẹp cột này thành <strong>drawer</strong> mở từ hamburger.</li>
+<li><strong>Vùng giữa — Khung sơ đồ:</strong> breadcrumb đường dẫn + thanh công cụ (<strong>+ Gán vị trí</strong>, Lọc pin, Di dời hàng loạt, Xuất báo cáo) ở trên; ảnh sơ đồ zoom/pan + <strong>marker</strong> (chấm tròn + số + nhãn) / cụm; <strong>chú thích màu vị trí</strong> ở góc khung; khi đã có ảnh nhưng chưa có pin → lớp gợi ý đặt tài sản đầu tiên; dải cảnh báo "N pin cần đặt lại" ở dưới.</li>
+<li><strong>Lớp nổi:</strong> popup danh sách tài sản tại một vị trí (+ đổi tên + Gán thêm); ô gán đa chọn (tên vị trí + ô tìm); dialog xác nhận gỡ/xóa.</li>
 </ul>
 </li>
 <li>Footer: không có footer cố định (workspace toàn màn).</li>
@@ -4408,34 +4447,49 @@ Chú thích các thành phần:
 </thead>
 <tbody>
 <tr><td>Ô tra cứu nhanh</td><td>Input + dropdown gợi ý</td><td>Gõ → gợi ý khớp một phần, không phân biệt dấu, &lt; 1s; chọn → nhảy tới pin</td><td>1–100 ký tự</td><td>R-S01-03</td></tr>
-<tr><td>Cây khu vực</td><td>Tree</td><td>Mở/đóng nhánh, click mở sơ đồ, kéo-thả đổi nhánh</td><td>Chặn thả vào nhánh con của chính nó</td><td>R-S01-01, R-S01-08</td></tr>
+<tr><td>Cây khu vực</td><td>Tree</td><td>Mở/đóng nhánh (mặc định thu gọn), click mở sơ đồ, kéo-thả đổi nhánh</td><td>Chặn thả vào nhánh con của chính nó</td><td>R-S01-01, R-S01-08</td></tr>
+<tr><td>Ô tìm khu vực</td><td>Input search</td><td>Gõ tên/mã (không dấu) → chỉ hiện nhánh khớp + tổ tiên, tự bung; [✕ Xóa lọc] để khôi phục</td><td>0–100 ký tự</td><td>R-S01-17</td></tr>
+<tr><td>Nút Bung tất cả / Thu gọn</td><td>Toggle buttons</td><td>Mở/đóng mọi nhánh cây</td><td>Ẩn khi đang lọc (thay bằng Xóa lọc)</td><td>R-S01-17</td></tr>
+<tr><td>Icon "đã có sơ đồ"</td><td>Badge/icon</td><td>Hiện cạnh tên nút có ảnh sơ đồ; tooltip "Đã có sơ đồ mặt bằng"</td><td>Chỉ hiện khi nút có soDoUrl</td><td>R-S01-18</td></tr>
 <tr><td>Nút "+ Thêm khu vực"</td><td>Secondary CTA</td><td>Mở S02 (Form khu vực)</td><td>Chỉ hiện với Quản trị</td><td>R-S01-10</td></tr>
 <tr><td>Menu ngữ cảnh nút</td><td>Menu</td><td>Thêm con / Sửa (→S02) / Xóa (dialog) / Quản lý ảnh (→S03)</td><td>Mục cấu trúc ẩn với Giám sát</td><td>R-S01-09, R-S01-10</td></tr>
-<tr><td>Khung sơ đồ</td><td>Canvas ảnh</td><td>Hiển thị ảnh + pin theo tọa độ %; zoom/pan; click trống → gán</td><td>Pin trong vùng 0–100%</td><td>R-S01-02, R-S01-04</td></tr>
-<tr><td>Pin / Cụm pin</td><td>Marker</td><td>Pin đơn click → popup; cụm (&gt;500) click → tách/zoom</td><td>Gom cụm khi &gt; 500 điểm</td><td>R-S01-04, R-S01-05</td></tr>
-<tr><td>Bộ lọc pin</td><td>Filter</td><td>Thu hẹp pin hiển thị theo tiêu chí</td><td>—</td><td>R-S01-05</td></tr>
-<tr><td>Ô chọn tài sản (gán)</td><td>Search modal</td><td>Chỉ liệt kê tài sản chưa có vị trí</td><td>Bắt buộc chọn 1 tài sản</td><td>R-S01-06</td></tr>
-<tr><td>Popup chi tiết pin</td><td>Popover</td><td>Mã/tên/trạng thái/đường dẫn + [Xem lịch sử]→S06, [Di dời]→S04, [Gỡ vị trí]</td><td>Gỡ/Di dời chặn khi bị khóa</td><td>R-S01-04, R-S01-07</td></tr>
+<tr><td>Nút "+ Gán vị trí"</td><td>Secondary CTA (toolbar)</td><td><strong>Điểm vào trực quan</strong> để tạo vị trí: bấm → vào <em>chế độ đặt pin</em> (con trỏ đổi + dải hướng dẫn "Click lên sơ đồ để đặt tài sản", có nút Thoát)</td><td>Hiện cho cả Quản trị &amp; Giám sát</td><td>R-S01-06</td></tr>
+<tr><td>Khung sơ đồ</td><td>Canvas ảnh</td><td>Hiển thị ảnh + pin theo tọa độ %; zoom/pan; click trống (hoặc đang ở chế độ đặt pin) → gán</td><td>Pin trong vùng 0–100%</td><td>R-S01-02, R-S01-04, R-S01-06</td></tr>
+<tr><td>Lớp gợi ý đặt pin đầu tiên</td><td>Empty overlay</td><td>Khi sơ đồ có ảnh nhưng 0 pin → "Chưa có tài sản nào trên sơ đồ — bấm '+ Gán vị trí' rồi click lên sơ đồ"; ẩn khi có ≥1 pin</td><td>Chỉ hiện khi N pin = 0</td><td>R-S01-11</td></tr>
+<tr><td>Marker vị trí</td><td>Marker (chấm tròn + số + nhãn)</td><td>1 và nhiều tài sản đều cùng dạng; nhãn = tên vị trí / mã / "N tài sản"; vòng mờ ngoài; màu theo trạng thái (xanh/xám/vàng). Click → popup vị trí; cụm (&gt;500) click → tách/zoom; <strong>giữ + kéo → dời tọa độ</strong> (Pointer Events)</td><td>Gom cụm khi &gt; 500 điểm; kéo dịch &gt;0.5% = kéo, ≤0.5% = click</td><td>R-S01-04, R-S01-05, R-S01-16</td></tr>
+<tr><td>Bộ lọc pin</td><td>Filter</td><td>Thu hẹp pin hiển thị theo trạng thái (Đã gán / Đang khóa / Cần đặt lại)</td><td>—</td><td>R-S01-05</td></tr>
+<tr><td>Chú thích màu vị trí</td><td>Legend</td><td>Góc khung sơ đồ: ●xanh Bình thường · ●xám Đang khóa · ●vàng Cần đặt lại</td><td>Không che vùng đặt pin</td><td>R-S01-19</td></tr>
+<tr><td>Ô gán đa chọn</td><td>Search modal + checkbox</td><td>Trường "Tên vị trí (tùy chọn)" + ô tìm (mã/tên không dấu) + danh sách checkbox tài sản <strong>chưa có vị trí</strong>, giới hạn 50 dòng; dòng đếm "N kết quả · Đã chọn M"; Gán → tạo M pin cùng tọa độ</td><td>Chọn ≥1 tài sản; nút Gán disable khi M=0</td><td>R-S01-06, R-S01-12, R-S01-14</td></tr>
+<tr><td>Popup vị trí (danh sách)</td><td>Popover/Modal</td><td>Tiêu đề = tên vị trí / "N tài sản"; ô [Tên vị trí]+[Lưu tên]; mỗi tài sản: [Xem lịch sử]→S06, [Di dời]→S04, [Gỡ vị trí]; nút [+ Gán thêm tài sản vào vị trí này]</td><td>Gỡ/Di dời chặn khi bị khóa; Gán thêm ẩn khi hết tài sản chưa có vị trí; gỡ hết → popup đóng</td><td>R-S01-04, R-S01-07, R-S01-13, R-S01-14</td></tr>
 <tr><td>Dialog xác nhận xóa</td><td>Modal</td><td>Hiện số tài sản bị gỡ + số khu con bị xóa</td><td>Phải xác nhận mới xóa</td><td>R-S01-09</td></tr>
 <tr><td>Nút Di dời hàng loạt</td><td>Secondary CTA</td><td>Mở S04</td><td>—</td><td>R-S01-10</td></tr>
 <tr><td>Nút Xuất báo cáo</td><td>Secondary CTA</td><td>Mở S08</td><td>—</td><td>R-S01-10</td></tr>
 <tr><td>Dải "N pin cần đặt lại"</td><td>Banner</td><td>Đếm pin cần đặt lại → S05</td><td>Ẩn khi N=0</td><td>R-S01-10</td></tr>
+<tr><td>Hamburger ☰ + Drawer cây</td><td>Nav toggle + Drawer</td><td>Màn hẹp (≤768px): ☰ mở drawer cây khu vực + scrim; chọn nút → đóng</td><td>Chỉ hiển thị/áp dụng ở ≤768px</td><td>R-S01-N06</td></tr>
 </tbody>
 </table>
 <h2 id="4-trng-thi-giao-din-ui-states">4. Trạng thái giao diện (UI States)</h2>
 <ul>
-<li>⚪ Empty: cây trống → minh họa + CTA "Tạo khu vực đầu tiên" (Quản trị); nút chưa có ảnh → khung giữa "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị) / thông báo nhờ Quản trị (Giám sát).</li>
+<li>⚪ Empty: cây trống → minh họa + CTA "Tạo khu vực đầu tiên" (Quản trị); nút chưa có ảnh → khung giữa "Chưa có sơ đồ" + CTA "Tải ảnh sơ đồ" (Quản trị) / thông báo nhờ Quản trị (Giám sát); <strong>nút đã có ảnh nhưng chưa có pin nào → lớp gợi ý "Chưa có tài sản nào trên sơ đồ — bấm '+ Gán vị trí' rồi click lên sơ đồ để đặt tài sản đầu tiên"</strong>.</li>
 <li>🔄 Loading: skeleton cho cây; spinner/placeholder mờ cho khung sơ đồ khi đang tải ảnh + pin.</li>
 <li>🔴 Error: tải ảnh thất bại → thông báo "Không tải được sơ đồ" + nút "Thử lại"; tra cứu lỗi → "Không tìm thấy tài sản".</li>
-<li>🟢 Success: gán → toast "Đã gán vị trí cho tài sản"; gỡ → toast "Đã gỡ vị trí"; xóa → toast "Đã xóa khu vực".</li>
+<li>🟢 Success: gán 1 → toast "Đã gán vị trí cho tài sản"; gán nhiều → toast "Đã gán vị trí cho M tài sản"; gỡ → toast "Đã gỡ vị trí"; đặt tên → toast "Đã đặt tên vị trí" (rỗng → "Đã xóa tên vị trí"); xóa → toast "Đã xóa khu vực".</li>
+<li>🔍 Lọc cây: gõ ô tìm khu vực không khớp → các nhánh không khớp bị ẩn (cây trống nhánh) → gợi ý xóa lọc; ô tìm trong ô gán không khớp → "Không tìm thấy tài sản phù hợp".</li>
+<li>📱 Mobile (≤768px): cây ẩn trong drawer (mở bằng ☰ + scrim); ô tra cứu full-width; modal/panel chiếm gần full màn.</li>
 </ul>
 <h2 id="5-cta-copywriting-microcopy">5. CTA &amp; Copywriting (microcopy)</h2>
 <ul>
-<li>CTA Primary: <code>Gán vị trí</code> · CTA Secondary: <code>Hủy</code>, <code>+ Thêm khu vực</code>, <code>Di dời hàng loạt</code>, <code>Xuất báo cáo</code></li>
+<li>CTA Primary: <code>Gán vị trí (M)</code> · CTA Secondary: <code>+ Gán vị trí</code>, <code>+ Gán thêm tài sản vào vị trí này</code>, <code>Lưu tên</code>, <code>Hủy</code>, <code>+ Thêm khu vực</code>, <code>Bung tất cả</code>, <code>Thu gọn</code>, <code>Di dời hàng loạt</code>, <code>Xuất báo cáo</code></li>
+<li>Microcopy ô gán đa chọn: nhãn <code>Tên vị trí (tùy chọn)</code>, placeholder <code>vd Khu máy nén</code>; nhãn <code>Chọn tài sản (chưa có vị trí)</code>, placeholder ô tìm <code>Tìm theo mã/tên tài sản...</code>; dòng đếm <code>N kết quả · Đã chọn M</code> (vượt 50 → <code>... (hiện 50 đầu — gõ để thu hẹp)</code>); danh sách rỗng <code>Không tìm thấy tài sản phù hợp.</code> / <code>Không còn tài sản chưa có vị trí.</code></li>
+<li>Microcopy cây khu vực: placeholder <code>Tìm khu vực theo tên/mã...</code>; tooltip icon sơ đồ <code>Đã có sơ đồ mặt bằng</code>.</li>
+<li>Microcopy popup vị trí: tiêu đề <code>N tài sản tại vị trí này</code> (hoặc tên vị trí); placeholder đổi tên <code>Đặt tên vị trí (vd Khu máy nén)</code>.</li>
+<li>Microcopy chế độ đặt pin: dải hướng dẫn <code>Click lên sơ đồ để đặt tài sản</code> + nút <code>Thoát</code>; empty-state sơ đồ chưa có pin: <code>Chưa có tài sản nào trên sơ đồ — bấm &quot;+ Gán vị trí&quot; rồi click lên sơ đồ để đặt tài sản đầu tiên.</code></li>
 <li>Title: <code>Bản đồ tài sản</code> · Helper text ô tra cứu: <code>Tra cứu mã/tên tài sản...</code></li>
 <li>Wording lỗi/thành công (chính xác):
 <ul>
-<li><code>Đã gán vị trí cho tài sản.</code></li>
+<li><code>Đã gán vị trí cho tài sản.</code> / <code>Đã gán vị trí cho {m} tài sản.</code></li>
+<li><code>Đã đặt tên vị trí.</code> / <code>Đã xóa tên vị trí.</code></li>
+<li><code>Vui lòng chọn ít nhất một tài sản chưa có vị trí.</code></li>
 <li><code>Tài sản đang được người khác chỉnh sửa. Vui lòng thử lại sau.</code></li>
 <li><code>Không thể di chuyển khu vực vào chính nhánh con của nó.</code></li>
 <li><code>Xóa khu vực này sẽ gỡ vị trí của {n} tài sản và xóa {m} khu vực con. Tiếp tục?</code></li>
@@ -4470,20 +4524,32 @@ Chú thích các thành phần:
 <tr><th>Thành phần</th><th>Sự kiện</th><th>Hiệu ứng IN</th><th>Hiệu ứng OUT</th><th>Thời lượng · easing</th></tr>
 </thead>
 <tbody>
-<tr><td>Popup chi tiết pin</td><td>click pin / đóng</td><td>fade + scale-up từ pin</td><td>fade + scale-down về pin</td><td>180ms · ease-out/in</td></tr>
-<tr><td>Ô chọn tài sản (gán)</td><td>click điểm trống / hủy</td><td>fade + slide-up</td><td>fade-out</td><td>180ms · ease-out/in</td></tr>
-<tr><td>Dialog xác nhận xóa</td><td>mở / đóng</td><td>fade nền + scale-up dialog</td><td>fade + scale-down</td><td>200ms · ease-out/in</td></tr>
+<tr><td>Popup vị trí (danh sách)</td><td>click marker / đóng</td><td>fade + scale-up từ marker</td><td>fade + scale-down về marker</td><td>180ms · ease-out/in</td></tr>
+<tr><td>Ô gán đa chọn</td><td>click điểm trống / hủy</td><td>fade + slide-up</td><td>fade-out</td><td>180ms · ease-out/in</td></tr>
+<tr><td>Dialog xác nhận gỡ/xóa</td><td>mở / đóng</td><td>fade nền + scale-up dialog</td><td>fade + scale-down</td><td>200ms · ease-out/in</td></tr>
 <tr><td>Nhánh cây</td><td>mở/đóng nhánh</td><td>slide-down + fade các con</td><td>slide-up + fade</td><td>160ms · ease-out/in</td></tr>
 <tr><td>Toast thành công</td><td>hiện/ẩn</td><td>slide-in + fade từ trên</td><td>fade-out</td><td>150ms · ease-out</td></tr>
 <tr><td>Pin làm nổi (tra cứu)</td><td>sau khi nhảy tới</td><td>nhấp nháy/scale pulse 2 nhịp</td><td>tắt pulse</td><td>600ms · ease-in-out</td></tr>
 <tr><td>Cụm pin</td><td>tách khi zoom</td><td>các pin tỏa ra từ tâm cụm</td><td>gộp về tâm</td><td>200ms · ease-out/in</td></tr>
+<tr><td><strong>Drawer cây (mobile)</strong></td><td>☰ mở / chọn nút / chạm scrim</td><td>drawer trượt vào từ trái + <strong>scrim</strong> fade vào</td><td>drawer trượt ra trái + scrim fade ra</td><td>250ms · ease-out/in</td></tr>
+<tr><td><strong>Kéo-thả marker</strong></td><td>giữ + kéo / thả</td><td>marker bám con trỏ tức thì (transform, không transition khi kéo) + bóng/scale nhẹ báo "đang kéo"; thả → marker settle về tọa độ mới</td><td>trở lại trạng thái thường</td><td>bám real-time · settle 120ms ease-out</td></tr>
+<tr><td><strong>Đổi tên vị trí / nhãn marker</strong></td><td>lưu tên</td><td>nhãn marker cross-fade sang tên mới</td><td>—</td><td>150ms · ease-out</td></tr>
 </tbody>
 </table>
-<h2 id="8-ghi-ch-cho-designer">8. Ghi chú cho Designer</h2>
+<h2 id="8-responsive-768px-bt-buc">8. Responsive (≤768px) — BẮT BUỘC</h2>
 <ul>
-<li>Accessibility: tương phản pin/nền sơ đồ đủ rõ; pin có nhãn text khi focus; thao tác cây dùng được bằng bàn phím (mũi tên mở/đóng, Enter mở sơ đồ); thứ tự focus: ô tra cứu → cây → thanh công cụ → sơ đồ.</li>
-<li>Phân biệt trạng thái pin bằng cả hình dạng/icon, không chỉ màu (đang dùng / đang khóa / cần đặt lại) để hỗ trợ người mù màu.</li>
-<li>Khu vực chạm (touch target) của pin đủ lớn khi dùng trên màn cảm ứng/laptop touchpad.</li>
+<li><strong>Cây khu vực → drawer:</strong> ẩn cột trái, đưa vào drawer mở từ nút <strong>hamburger ☰</strong> ở header; mở kèm <strong>scrim</strong> (nền tối) phủ nội dung; <strong>chọn một nút → drawer tự đóng</strong>; chạm scrim cũng đóng.</li>
+<li><strong>Ô tra cứu:</strong> chiếm <strong>full-width</strong> dưới header.</li>
+<li><strong>Modal/panel</strong> (ô gán, popup vị trí, dialog, các màn vệ tinh): chiếm gần <strong>full màn</strong> (tránh popover hẹp khó thao tác bằng ngón tay).</li>
+<li><strong>Marker &amp; kéo-thả:</strong> touch target đủ lớn; dùng Pointer Events nên kéo-thả chạy được bằng ngón tay; phân biệt chạm (mở popup) với kéo (&gt;0.5%).</li>
+<li>Chặn cuộn ngang (overflow-x hidden) để không lộ "vạch trắng" mép phải.</li>
+</ul>
+<h2 id="9-ghi-ch-cho-designer">9. Ghi chú cho Designer</h2>
+<ul>
+<li>Accessibility: tương phản marker/nền sơ đồ đủ rõ; marker có nhãn text khi focus; thao tác cây dùng được bằng bàn phím (mũi tên mở/đóng, Enter mở sơ đồ); thứ tự focus: ô tra cứu → cây → thanh công cụ → sơ đồ.</li>
+<li>Phân biệt trạng thái vị trí bằng cả số/hình dạng + nhãn, không chỉ màu (bình thường / đang khóa / cần đặt lại) để hỗ trợ người mù màu; kèm chú thích màu ở góc khung.</li>
+<li><strong>Pin dính đúng điểm khi co giãn:</strong> ảnh + marker trong hộp khớp tỉ lệ ảnh thật (aspect-ratio theo kích thước tự nhiên), tọa độ tương đối % của hộp → không lệch ở mọi kích thước/zoom.</li>
+<li>Khu vực chạm (touch target) của marker đủ lớn khi dùng trên màn cảm ứng/laptop touchpad.</li>
 </ul>
 </section>
 <section class="doc-section" id="doc-BanDoTaiSan-Workspace-plan-md">
@@ -4648,6 +4714,7 @@ Chú thích các thành phần:
 <li>F14 Gỡ vị trí tài sản → FR-03 → BR-01</li>
 <li>F16 Tra cứu nhanh tài sản → FR-04 → BR-01</li>
 <li>F03 Xóa nút khu vực → FR-01, FR-12 → BR-04</li>
+<li>F04 Tìm/lọc cây khu vực theo tên/mã → FR-01 → BR-04 (bổ sung: ô tìm nhánh)</li>
 </ul>
 <h2 id="yu-cu-chc-nng-functional">Yêu cầu chức năng (Functional)</h2>
 <table>
@@ -4660,11 +4727,20 @@ Chú thích các thành phần:
 <tr><td>R-S01-03</td><td>Cho phép tra cứu tài sản theo mã/tên và nhảy tới làm nổi pin</td><td>F16 / FR-04</td><td>Gõ ≥1 ký tự → gợi ý khớp một phần, không phân biệt dấu, trả về &lt; 1s; chọn kết quả → tự mở sơ đồ, làm nổi pin, hiện breadcrumb đường dẫn</td><td>Must</td></tr>
 <tr><td>R-S01-04</td><td>Hiển thị pin tài sản trên sơ đồ theo tọa độ tương đối</td><td>F09 / FR-02</td><td>Mỗi pin đúng vị trí tương đối (%) khi zoom/pan/đổi kích thước; click pin → popup chi tiết (mã, tên, trạng thái, đường dẫn)</td><td>Must</td></tr>
 <tr><td>R-S01-05</td><td>Gom cụm pin khi sơ đồ vượt 500 điểm và cho lọc pin</td><td>F10 / FR-13</td><td>Khi &gt; 500 pin/sơ đồ, pin gần nhau gộp thành cụm hiển thị số lượng; click cụm → tách/zoom; bộ lọc thu hẹp pin hiển thị</td><td>Should</td></tr>
-<tr><td>R-S01-06</td><td>Gán vị trí: click điểm trống → chọn tài sản chưa có vị trí → tạo pin</td><td>F11 / FR-03</td><td>Click điểm trống mở ô tìm chỉ liệt kê tài sản <strong>chưa có vị trí</strong>; chọn + xác nhận → pin xuất hiện tại tọa độ click; ghi nhật ký kiểm toán</td><td>Must</td></tr>
+<tr><td>R-S01-06</td><td>Gán vị trí: có <strong>nút "+ Gán vị trí"</strong> trên thanh công cụ (điểm vào trực quan, bật <em>chế độ đặt pin</em>) <strong>và/hoặc</strong> click trực tiếp điểm trống → chọn tài sản chưa có vị trí → tạo pin</td><td>F11 / FR-03</td><td>Thanh công cụ có CTA <strong>"+ Gán vị trí"</strong>; bấm → vào <em>chế độ đặt vị trí</em>: con trỏ đổi dạng "đặt pin" + dải hướng dẫn "Click lên sơ đồ để đặt tài sản" (có nút <strong>Thoát</strong>). Trong chế độ này, hoặc khi click thẳng điểm trống, → mở ô tìm chỉ liệt kê tài sản <strong>chưa có vị trí</strong>; chọn + xác nhận → pin xuất hiện tại tọa độ click; ghi nhật ký kiểm toán</td><td>Must</td></tr>
 <tr><td>R-S01-07</td><td>Gỡ vị trí tài sản qua popup pin (có xác nhận)</td><td>F14 / FR-03</td><td>Popup pin có nút Gỡ; xác nhận → pin biến mất, tài sản về "chưa có vị trí"; ghi nhật ký kiểm toán</td><td>Should</td></tr>
 <tr><td>R-S01-08</td><td>Di chuyển nút trong cây bằng kéo-thả, chặn tạo vòng lặp</td><td>F05 / FR-01</td><td>Kéo nút sang nhánh khác → cập nhật cha; <strong>chặn</strong> thả nút vào chính nó hoặc nhánh con của nó, báo lỗi</td><td>Should</td></tr>
 <tr><td>R-S01-09</td><td>Xóa nút khu vực với hộp xác nhận cảnh báo số lượng bị ảnh hưởng</td><td>F03 / FR-12</td><td>Chọn Xóa → dialog hiện số tài sản bị gỡ vị trí + số khu con bị xóa; xác nhận → xóa nhánh, gỡ vị trí tài sản (không xóa hồ sơ); ghi nhật ký kiểm toán</td><td>Must</td></tr>
 <tr><td>R-S01-10</td><td>Điều hướng tới các màn vệ tinh từ workspace</td><td>F09 / FR-02</td><td>Có lối vào S02 (thêm/sửa nút), S03 (ảnh sơ đồ), S04 (di dời/di dời hàng loạt), S05 (pin cần đặt lại), S06 (lịch sử), S08 (xuất báo cáo)</td><td>Must</td></tr>
+<tr><td>R-S01-11</td><td>Empty-state khi sơ đồ <strong>đã có ảnh nhưng chưa có pin nào</strong>: gợi ý cách đặt tài sản đầu tiên</td><td>F11 / FR-03</td><td>Nút đã có ảnh sơ đồ và <strong>0 pin</strong> → khung sơ đồ hiện lớp gợi ý "Chưa có tài sản nào trên sơ đồ — bấm <strong>'+ Gán vị trí'</strong> rồi click lên sơ đồ để đặt tài sản đầu tiên"; lớp ẩn ngay khi có ≥1 pin. (Giám sát vẫn thấy — vai trò này được phép gán)</td><td>Should</td></tr>
+<tr><td>R-S01-12</td><td><strong>Một vị trí chứa nhiều tài sản</strong>: click điểm trống → ô gán <strong>đa chọn</strong> (checkbox) có <strong>ô tìm</strong> (mã/tên không dấu) + giới hạn hiển thị 50 + dòng đếm "N kết quả · Đã chọn M"; chọn ≥1 tài sản + Gán → mọi tài sản gắn vào <strong>cùng tọa độ</strong></td><td>F11 / FR-03</td><td>Ô gán hiện checkbox đa chọn; gõ ô tìm → lọc danh sách tài sản chưa có vị trí (không dấu); chỉ hiển thị tối đa 50 dòng đầu kèm chú thích "gõ để thu hẹp"; dòng đếm "N kết quả · Đã chọn M" cập nhật theo thao tác; nút "Gán vị trí (M)" disable khi M=0; xác nhận → tạo M pin cùng tọa độ, ghi nhật ký kiểm toán mỗi tài sản; toast "Đã gán vị trí cho M tài sản"</td><td>Must</td></tr>
+<tr><td>R-S01-13</td><td><strong>Popup danh sách tài sản tại một vị trí</strong>: click một vị trí → popup liệt kê mọi tài sản tại đó, mỗi tài sản có <strong>Xem lịch sử / Di dời / Gỡ vị trí</strong>; có nút <strong>"+ Gán thêm tài sản vào vị trí này"</strong></td><td>F11, F14 / FR-03</td><td>Click marker → popup liệt kê đủ N tài sản tại tọa độ đó; mỗi dòng có 3 thao tác (Xem lịch sử→S06, Di dời→S04, Gỡ vị trí có xác nhận); nút "+ Gán thêm…" mở lại ô gán tại đúng tọa độ (ẩn khi không còn tài sản chưa có vị trí); gỡ hết tài sản → popup tự đóng</td><td>Must</td></tr>
+<tr><td>R-S01-14</td><td><strong>Đặt/đổi tên vị trí</strong>: ô "Tên vị trí (tùy chọn)" ở đầu ô gán; đổi tên trong popup vị trí (ô + nút <strong>"Lưu tên"</strong>); tên lưu theo <strong>(nút + tọa độ)</strong> và hiển thị trên marker</td><td>F11 / FR-03</td><td>Ô gán có trường "Tên vị trí (tùy chọn)"; popup vị trí có ô tên + "Lưu tên"; lưu → tên thành nhãn marker; tên rỗng khi lưu → xóa tên (toast "Đã xóa tên vị trí"); tên gắn theo cặp (maNut, x, y), không lẫn giữa các vị trí</td><td>Should</td></tr>
+<tr><td>R-S01-15</td><td><strong>Kéo-thả marker dời tọa độ trong cùng sơ đồ</strong>: giữ + kéo marker → cập nhật tọa độ <strong>mọi tài sản tại vị trí đó</strong> (tên đi theo); hỗ trợ chuột + cảm ứng (Pointer Events); phân biệt click (mở popup) với kéo (dịch &gt; 0,5%); <strong>không</strong> sinh lịch sử di chuyển</td><td>F11 / FR-03</td><td>Giữ + kéo marker → mọi pin cùng tọa độ dời theo; thả → tọa độ % cập nhật, tên vị trí đi kèm; dịch ≤ 0,5% xem là click (mở popup), &gt; 0,5% xem là kéo (không mở popup); chạy cả chuột (nút trái) lẫn chạm; thao tác này <strong>không</strong> ghi lịch sử di chuyển (khác "Di dời" đổi nút khu vực)</td><td>Should</td></tr>
+<tr><td>R-S01-16</td><td><strong>Marker nhất quán</strong>: 1 và nhiều tài sản đều hiển thị "chấm tròn + số bên trong + nhãn"; nhãn = tên vị trí / mã tài sản / "N tài sản"; có vòng mờ ngoài; màu theo trạng thái (xanh=bình thường, xám=đang khóa, vàng=cần đặt lại)</td><td>F09, F10 / FR-02</td><td>Marker đơn và marker nhiều tài sản dùng chung dạng chấm tròn có số ở giữa + nhãn dưới; nhãn ưu tiên tên vị trí, kế đến mã tài sản (khi 1), cuối cùng "N tài sản" (khi &gt;1); màu chấm đổi theo trạng thái; có vòng mờ bao quanh</td><td>Should</td></tr>
+<tr><td>R-S01-17</td><td><strong>Tìm/lọc cây khu vực theo tên/mã</strong> (không dấu): ô "Tìm khu vực theo tên/mã..." → chỉ hiện nhánh khớp + tổ tiên, <strong>tự bung</strong>; nút <strong>"Bung tất cả" / "Thu gọn"</strong>; cây mặc định thu gọn</td><td>F04 / FR-01</td><td>Gõ ô tìm → ẩn nhánh không khớp, hiện nhánh khớp + toàn bộ tổ tiên, các nhánh này tự bung; xóa lọc → trở về trạng thái mặc định (thu gọn); "Bung tất cả" mở mọi nhánh, "Thu gọn" đóng hết; khớp không phân biệt dấu trên tên và mã khu vực</td><td>Should</td></tr>
+<tr><td>R-S01-18</td><td><strong>Dấu hiệu "đã có sơ đồ"</strong> trong cây: nút đã gắn ảnh sơ đồ hiện icon bản đồ cạnh tên (tooltip "Đã có sơ đồ mặt bằng")</td><td>F04, F09 / FR-02</td><td>Mỗi nút có <code>soDoUrl</code> hiển thị icon bản đồ nhỏ cạnh tên; hover icon → tooltip "Đã có sơ đồ mặt bằng"; nút chưa có ảnh không hiện icon</td><td>Could</td></tr>
+<tr><td>R-S01-19</td><td><strong>Chú thích màu vị trí</strong> ở góc khung sơ đồ: Bình thường / Đang khóa / Cần đặt lại</td><td>F09 / FR-02</td><td>Khung sơ đồ có chú thích cố định 3 màu (xanh/ xám/ vàng) kèm nhãn tương ứng; không che thao tác đặt pin</td><td>Could</td></tr>
 </tbody>
 </table>
 <h2 id="yu-cu-phi-chc-nng-non-functional">Yêu cầu phi chức năng (Non-functional)</h2>
@@ -4677,6 +4753,8 @@ Chú thích các thành phần:
 <tr><td>R-S01-N02</td><td>Hiệu năng</td><td>Tra cứu trả gợi ý trong <strong>&lt; 1 giây</strong></td><td>NFR-02 / BR-01</td></tr>
 <tr><td>R-S01-N03</td><td>Bảo mật &amp; truy vết</td><td>Mọi thao tác gán/gỡ/xóa ghi nhật ký kiểm toán đầy đủ; áp quyền 2 vai trò</td><td>NFR-03 / BR-03</td></tr>
 <tr><td>R-S01-N04</td><td>Toàn vẹn đồng thời</td><td>Tài sản đang được người khác sửa bị khóa; pin hiển thị trạng thái khóa; tự mở sau 5 phút</td><td>NFR-05 / BR-03</td></tr>
+<tr><td>R-S01-N05</td><td>Hiển thị — pin dính đúng điểm khi co giãn</td><td>Ảnh + pin nằm trong hộp khớp <strong>tỉ lệ ảnh thật</strong> (aspect-ratio theo kích thước tự nhiên của ảnh); pin định vị bằng <strong>tọa độ tương đối %</strong> của hộp → <strong>không lệch</strong> ở mọi kích thước màn/zoom</td><td>NFR-01 / BR-02</td></tr>
+<tr><td>R-S01-N06</td><td>Responsive — mobile (≤768px)</td><td>Màn hẹp: nút <strong>hamburger ☰</strong> mở <strong>drawer</strong> cây khu vực phủ trên nội dung + <strong>nền tối (scrim)</strong>; chọn một nút → drawer tự đóng; ô tra cứu chiếm <strong>full-width</strong>; modal/panel chiếm gần <strong>full màn</strong></td><td>NFR-04 / BR-02</td></tr>
 </tbody>
 </table>
 <h2 id="quy-tc-nghip-v-business-rules">Quy tắc nghiệp vụ (Business Rules)</h2>
@@ -4690,6 +4768,10 @@ Chú thích các thành phần:
 <tr><td>BRule-S01-03</td><td>Xóa nút còn tài sản/khu con: cho xóa, gỡ vị trí tài sản (về "chưa có vị trí"), không xóa hồ sơ tài sản</td><td>R-S01-09</td></tr>
 <tr><td>BRule-S01-04</td><td>Vai trò <strong>Giám sát</strong> không thấy thao tác quản lý cấu trúc (Thêm/Sửa/Xóa nút, tải/thay/xóa ảnh); vẫn gán/gỡ/di dời/tra cứu</td><td>R-S01-01, R-S01-09</td></tr>
 <tr><td>BRule-S01-05</td><td>Pin lưu <strong>tọa độ tương đối (%)</strong>; pin tràn ngoài vùng ảnh mới bị đánh dấu "cần đặt lại"</td><td>R-S01-04</td></tr>
+<tr><td>BRule-S01-06</td><td>Nút "+ Gán vị trí" và <em>chế độ đặt pin</em> chỉ là <strong>điểm vào trực quan</strong> cho cùng thao tác gán; vẫn áp BRule-S01-01 (ô chọn chỉ liệt kê tài sản chưa có vị trí). Gán cho tài sản <strong>đã có vị trí</strong> = di dời (ghi lịch sử, BRule-02 cấp dự án)</td><td>R-S01-06, R-S01-11</td></tr>
+<tr><td>BRule-S01-07</td><td><strong>Một vị trí gom được nhiều tài sản</strong> (cùng một cặp tọa độ trên một nút) — vẫn tương thích BRule-S01-01: mỗi tài sản chỉ thuộc <strong>một</strong> vị trí, nhưng nhiều tài sản được phép chia sẻ cùng một vị trí</td><td>R-S01-12, R-S01-13</td></tr>
+<tr><td>BRule-S01-08</td><td><strong>Kéo-thả marker</strong> chỉ chỉnh tọa độ trong <strong>cùng một nút khu vực</strong> → <strong>không</strong> sinh lịch sử di chuyển. Khác hẳn "Di dời" (đổi nút khu vực) — thao tác đổi nút mới ghi lịch sử (BRule-02 cấp dự án)</td><td>R-S01-15</td></tr>
+<tr><td>BRule-S01-09</td><td><strong>Tên vị trí</strong> lưu theo cặp <strong>(nút khu vực + tọa độ x,y %)</strong>; khi kéo-thả dời tọa độ, tên <strong>đi theo</strong> vị trí mới; tên rỗng = không đặt tên (marker hiển thị nhãn mặc định: mã tài sản / "N tài sản")</td><td>R-S01-14, R-S01-15</td></tr>
 </tbody>
 </table>
 <h2 id="yu-cu-d-liu-validation-tng-field">Yêu cầu dữ liệu — Validation từng field</h2>
@@ -4701,7 +4783,10 @@ Chú thích các thành phần:
 <tr><td>tu<em>khoa</em>tra_cuu</td><td>chuỗi</td><td>Không</td><td>khớp một phần mã/tên, không phân biệt dấu</td><td>1–100 ký tự</td><td>"Nhập tối đa 100 ký tự"</td></tr>
 <tr><td>toa<em>do</em>pin_x</td><td>số (%)</td><td>Có (khi gán)</td><td>trong khoảng vùng ảnh</td><td>0–100</td><td>"Vị trí nằm ngoài sơ đồ"</td></tr>
 <tr><td>toa<em>do</em>pin_y</td><td>số (%)</td><td>Có (khi gán)</td><td>trong khoảng vùng ảnh</td><td>0–100</td><td>"Vị trí nằm ngoài sơ đồ"</td></tr>
-<tr><td>tai<em>san</em>chon</td><td>tham chiếu</td><td>Có (khi gán)</td><td>thuộc danh sách tài sản <strong>chưa có vị trí</strong></td><td>—</td><td>"Vui lòng chọn một tài sản chưa có vị trí"</td></tr>
+<tr><td>tai<em>san</em>chon</td><td>tập tham chiếu (đa chọn)</td><td>Có (khi gán)</td><td>mỗi phần tử thuộc danh sách tài sản <strong>chưa có vị trí</strong>; ≥1 phần tử</td><td>1–N</td><td>"Vui lòng chọn ít nhất một tài sản chưa có vị trí"</td></tr>
+<tr><td>tim_gan (ô tìm trong ô gán)</td><td>chuỗi</td><td>Không</td><td>khớp một phần mã/tên tài sản chưa có vị trí, không phân biệt dấu</td><td>0–100 ký tự</td><td>— (chỉ thu hẹp danh sách; không khớp → "Không tìm thấy tài sản phù hợp")</td></tr>
+<tr><td>ten<em>vi</em>tri</td><td>chuỗi</td><td>Không</td><td>tên hiển thị cho vị trí; rỗng = xóa tên</td><td>0–100 ký tự</td><td>—</td></tr>
+<tr><td>tim_cay (ô tìm cây khu vực)</td><td>chuỗi</td><td>Không</td><td>khớp một phần tên/mã khu vực, không phân biệt dấu</td><td>0–100 ký tự</td><td>— (không khớp → cây trống nhánh; xóa lọc để hiện lại)</td></tr>
 </tbody>
 </table>
 <ul>
@@ -4723,6 +4808,8 @@ Chú thích các thành phần:
   actor U as Người dùng
   participant FE as Giao diện workspace
   participant BE as Hệ thống
+  U-&gt;&gt;FE: Bấm &quot;+ Gán vị trí&quot; (vào chế độ đặt pin) — hoặc click thẳng điểm trống
+  FE--&gt;&gt;U: Con trỏ &quot;đặt pin&quot; + dải hướng dẫn &quot;Click lên sơ đồ để đặt tài sản&quot;
   U-&gt;&gt;FE: Click điểm trống trên sơ đồ
   FE--&gt;&gt;U: Mở ô tìm tài sản chưa có vị trí
   U-&gt;&gt;FE: Chọn tài sản + Xác nhận gán
@@ -4749,11 +4836,38 @@ Chú thích các thành phần:
   CanDatLai --&gt; DaGanViTri: đặt lại tọa độ
   DaGanViTri --&gt; ChuaGanViTri: gỡ vị trí
   DaGanViTri --&gt; [*]: tài sản/nút bị xóa (gỡ vị trí)</pre>
+<h3 id="lung-5-gn-nhiu-ti-sn-vo-mt-v-tr-activity">Luồng 5 — Gán nhiều tài sản vào một vị trí (Activity)</h3>
+<pre class="mermaid">flowchart TD
+  A([Click điểm trống trên sơ đồ]) --&gt; B[Mở ô gán: trường Tên vị trí + ô tìm + danh sách checkbox]
+  B --&gt; C[Ô tìm lọc tài sản CHƯA có vị trí, không dấu, hiển thị tối đa 50]
+  C --&gt; D{Đã chọn ≥1 tài sản?}
+  D -- Không --&gt; E[Nút 'Gán vị trí' disable] --&gt; C
+  D -- Có --&gt; F[Dòng đếm 'N kết quả · Đã chọn M']
+  F --&gt; G[Bấm 'Gán vị trí (M)']
+  G --&gt; H[Tạo M pin CÙNG tọa độ + ghi nhật ký mỗi tài sản]
+  H --&gt; I{Có nhập Tên vị trí?}
+  I -- Có --&gt; J[Lưu tên theo nút+tọa độ → nhãn marker]
+  I -- Không --&gt; K[Marker nhãn mặc định 'M tài sản']
+  J --&gt; L([Toast 'Đã gán vị trí cho M tài sản'])
+  K --&gt; L</pre>
+<h3 id="lung-6-ko-th-marker-di-v-tr-trong-cng-s-state">Luồng 6 — Kéo-thả marker dời vị trí trong cùng sơ đồ (State)</h3>
+<pre class="mermaid">stateDiagram-v2
+  [*] --&gt; NghiNgoi
+  NghiNgoi --&gt; NhanGiu: pointerdown trên marker
+  NhanGiu --&gt; NhanGiu: pointermove, dịch ≤ 0.5%
+  NhanGiu --&gt; DangKeo: pointermove, dịch &gt; 0.5%
+  DangKeo --&gt; DangKeo: pointermove (marker đi theo con trỏ)
+  NhanGiu --&gt; MoPopup: pointerup (xem là CLICK)
+  DangKeo --&gt; CapNhatToaDo: pointerup (xem là KÉO)
+  CapNhatToaDo --&gt; NghiNgoi: dời mọi pin cùng tọa độ + tên đi theo · KHÔNG ghi lịch sử
+  MoPopup --&gt; NghiNgoi: đóng popup
+  DangKeo --&gt; NghiNgoi: pointercancel (hủy kéo)</pre>
 <h2 id="m-hnh-d-liu-mn-hnh-erd">Mô hình dữ liệu màn hình (ERD)</h2>
 <pre class="mermaid">erDiagram
   NUT_KHU_VUC ||--o{ NUT_KHU_VUC : &quot;có con&quot;
   NUT_KHU_VUC ||--o| SO_DO_MAT_BANG : &quot;gắn&quot;
-  NUT_KHU_VUC ||--o{ VI_TRI_PIN : &quot;chứa&quot;
+  NUT_KHU_VUC ||--o{ VI_TRI : &quot;chứa&quot;
+  VI_TRI ||--|{ VI_TRI_PIN : &quot;gom nhiều tài sản&quot;
   TAI_SAN ||--o| VI_TRI_PIN : &quot;được đặt tại&quot;
   VI_TRI_PIN ||--o{ LICH_SU_DI_CHUYEN : &quot;sinh&quot;
   NUT_KHU_VUC {
@@ -4765,6 +4879,12 @@ Chú thích các thành phần:
   SO_DO_MAT_BANG {
     string ma_so_do
     string duong_dan_anh
+  }
+  VI_TRI {
+    string ma_nut
+    float toa_do_x_phan_tram
+    float toa_do_y_phan_tram
+    string ten_vi_tri
   }
   VI_TRI_PIN {
     string ma_tai_san
@@ -4794,6 +4914,13 @@ Chú thích các thành phần:
 <tr><td>Pin</td><td>Điểm đánh dấu vị trí tài sản trên sơ đồ mặt bằng</td></tr>
 <tr><td>Breadcrumb</td><td>Dải đường dẫn thể hiện vị trí nút trong cây khu vực</td></tr>
 <tr><td>Clustering (gom cụm)</td><td>Gộp nhiều pin gần nhau thành một cụm khi vượt 500 điểm</td></tr>
+<tr><td>Vị trí (gom nhiều tài sản)</td><td>Một điểm tọa độ trên sơ đồ; có thể chứa nhiều tài sản, mỗi tài sản vẫn chỉ thuộc một vị trí</td></tr>
+<tr><td>Tên vị trí</td><td>Nhãn tùy chọn đặt cho một vị trí, lưu theo (nút khu vực + tọa độ), hiển thị trên marker</td></tr>
+<tr><td>Marker</td><td>Chấm tròn + số tài sản + nhãn, thay cho "pin"; màu theo trạng thái vị trí</td></tr>
+<tr><td>Kéo-thả pin (marker)</td><td>Giữ + kéo marker để dời tọa độ mọi tài sản tại vị trí đó trong cùng sơ đồ; không sinh lịch sử</td></tr>
+<tr><td>Drawer</td><td>Ngăn trượt chứa cây khu vực, mở bằng nút hamburger trên màn hẹp (≤768px), kèm nền tối (scrim)</td></tr>
+<tr><td>Scrim</td><td>Lớp nền tối phủ sau drawer/modal; chạm vào để đóng</td></tr>
+<tr><td>Pointer Events</td><td>Sự kiện con trỏ hợp nhất chuột + cảm ứng, dùng cho thao tác kéo-thả marker</td></tr>
 </tbody>
 </table>
 <blockquote><p>Từ điển đầy đủ toàn dự án: <code>docs/00-glossary.md</code>.</p></blockquote>
@@ -4810,10 +4937,10 @@ Chú thích các thành phần:
 <tr><th>Tổng TC</th><th>Pass</th><th>Fail</th><th>Blocked</th><th>Skip</th><th>Chưa chạy</th><th>% Pass</th><th>Lần chạy cuối</th></tr>
 </thead>
 <tbody>
-<tr><td>42</td><td>24</td><td>0</td><td>0</td><td>0</td><td>18</td><td>57%</td><td>2026-06-23</td></tr>
+<tr><td>70</td><td>35</td><td>0</td><td>0</td><td>0</td><td>35</td><td>50%</td><td>2026-06-24</td></tr>
 </tbody>
 </table>
-<blockquote><p>24 TC <code>Auto</code> đã Pass (Vitest: 46 test / 7 file). 18 TC <code>Manual</code> còn <code>Chưa chạy</code> → checklist test tay ở báo cáo dev. Một số TC Manual (TC-18 gán khi khóa, TC-21 biên tọa độ, TC-25 gỡ khi khóa, TC-35 kéo nút vào chính nó) đã phủ gián tiếp ở tầng logic.</p></blockquote>
+<blockquote><p>35 TC <code>Auto</code> đã Pass (Vitest 267 test xanh). 35 TC <code>Manual</code> còn <code>Chưa chạy</code> → checklist test tay ở báo cáo dev. <strong>Change request "một vị trí nhiều tài sản"</strong> bổ sung TC-S01-43..70 (28 TC mới). Các TC có test tự động tương ứng đã <code>Pass</code>: TC-43/44/45/46/47/48 (gán đa chọn + popup vị trí + gán thêm), TC-52 (tên vị trí), TC-55 (kéo-thả pin), TC-62/66 (tìm cây + dấu hiệu sơ đồ), TC-67 (drawer mobile). Còn lại để <code>Chưa chạy</code> (test tay). Một số TC Manual (TC-18 gán khi khóa, TC-21 biên tọa độ, TC-25 gỡ khi khóa, TC-35 kéo nút vào chính nó) đã phủ gián tiếp ở tầng logic.</p></blockquote>
 <h2 id="chc-nng-xemduyt-cy-khu-vc-f04-risk-cao">Chức năng: Xem/duyệt cây khu vực (F04) — Risk: Cao</h2>
 <table>
 <thead>
@@ -4928,6 +5055,82 @@ Chú thích các thành phần:
 <tr><td>TC-S01-42</td><td>Positive</td><td>EP</td><td>R-S01-10 / Design-spec banner</td><td>Trung bình</td><td>Medium</td><td>Có 3 pin cần đặt lại</td><td>1. Quan sát dải cảnh báo dưới sơ đồ&lt;br&gt;2. Click dải</td><td>3 pin cần đặt lại (A-031, A-052, A-077)</td><td>Dải "⚠ 3 pin cần đặt lại vị trí" hiện; click → điều hướng tới S05; ẩn khi N=0; có lối vào S02/S03/S04/S06/S08</td><td>Manual</td><td>Chưa chạy</td></tr>
 </tbody>
 </table>
+<h2 id="chc-nng-mt-v-tr-nhiu-ti-sn-gn-a-chn-f11-r-s01-1213-risk-cao">Chức năng: Một vị trí nhiều tài sản — gán đa chọn (F11, R-S01-12/13) — Risk: Cao</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-43</td><td>Positive</td><td>EP</td><td>R-S01-12 / US-S01-07 GWT-1 / UC-S01-07</td><td>Cao</td><td>Critical</td><td>Nút "Phòng 305" có sơ đồ; ≥1 tài sản chưa có vị trí</td><td>1. Click điểm trống (40%,55%)&lt;br&gt;2. Quan sát ô gán</td><td>Tài sản chưa vị trí: B-021, B-045, B-077</td><td>Ô gán mở với trường "Tên vị trí (tùy chọn)" + ô tìm + danh sách checkbox; dòng đếm "3 kết quả · Đã chọn 0"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-44</td><td>Positive</td><td>EP</td><td>R-S01-12 / US-S01-07 GWT-2 / UC-S01-07</td><td>Cao</td><td>High</td><td>Ô gán đang mở</td><td>1. Gõ "tu" vào ô tìm trong ô gán</td><td>Từ khóa <code>tu</code> (không dấu)</td><td>Danh sách thu hẹp còn "B-045 · Tủ điện"; khớp không dấu</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-45</td><td>Positive</td><td>ST</td><td>R-S01-12 / US-S01-07 GWT-3 / UC-S01-07 / BRule-S01-07</td><td>Cao</td><td>Critical</td><td>Ô gán mở tại (40%,55%)</td><td>1. Tích B-021 và B-045&lt;br&gt;2. Bấm "Gán vị trí (2)"</td><td>2 tài sản tại cùng (40%,55%)</td><td>Tạo 2 pin cùng tọa độ, marker hiển thị "2 tài sản", toast "Đã gán vị trí cho 2 tài sản."</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-46</td><td>Negative</td><td>DT</td><td>R-S01-12 / yêu cầu dữ liệu <code>tai<em>san</em>chon</code></td><td>Cao</td><td>High</td><td>Ô gán mở, M=0</td><td>1. Quan sát nút "Gán vị trí"&lt;br&gt;2. Thử bấm</td><td>Chưa tích tài sản nào</td><td>Nút "Gán vị trí" disable; không tạo pin</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-47</td><td>Positive</td><td>ST</td><td>R-S01-13 / US-S01-10 GWT-1 / UC-S01-07</td><td>Cao</td><td>Critical</td><td>Một vị trí có 2 tài sản (B-021, B-045)</td><td>1. Click marker vị trí đó</td><td>Marker "2 tài sản" tại (40%,55%)</td><td>Popup liệt kê đủ B-021 và B-045; mỗi dòng có "Xem lịch sử / Di dời / Gỡ vị trí"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-48</td><td>Positive</td><td>EP</td><td>R-S01-13 / US-S01-10 GWT-2 / UC-S01-07</td><td>Cao</td><td>High</td><td>Popup vị trí mở; còn tài sản chưa có vị trí</td><td>1. Bấm "+ Gán thêm tài sản vào vị trí này"&lt;br&gt;2. Chọn B-077 + Gán</td><td>Vị trí (40%,55%) đang có 2 tài sản; thêm B-077</td><td>Ô gán mở tại đúng tọa độ; sau gán vị trí gom 3 tài sản, marker "3 tài sản"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-49</td><td>Edge</td><td>ST</td><td>R-S01-13 / US-S01-10 GWT-3</td><td>Trung bình</td><td>Medium</td><td>Vị trí có đúng 1 tài sản</td><td>1. Mở popup&lt;br&gt;2. Gỡ tài sản cuối cùng → xác nhận</td><td>Vị trí 1 tài sản (B-021)</td><td>Pin biến mất; popup tự đóng</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-50</td><td>Edge</td><td>BVA</td><td>R-S01-12 / Design-spec (giới hạn 50)</td><td>Trung bình</td><td>Medium</td><td>&gt;50 tài sản chưa có vị trí</td><td>1. Mở ô gán không gõ ô tìm</td><td>60 tài sản chưa có vị trí</td><td>Hiển thị 50 dòng đầu + chú thích "(hiện 50 đầu — gõ để thu hẹp)"; dòng đếm "60 kết quả · Đã chọn 0"</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-51</td><td>Negative</td><td>EP</td><td>R-S01-12 / UC-S01-07 (ngoại lệ)</td><td>Thấp</td><td>Low</td><td>Đã gán hết tài sản</td><td>1. Mở ô gán khi không còn tài sản chưa có vị trí</td><td>0 tài sản chưa có vị trí</td><td>Ô gán hiện "Không còn tài sản chưa có vị trí."</td><td>Manual</td><td>Chưa chạy</td></tr>
+</tbody>
+</table>
+<h2 id="chc-nng-ti-tn-v-tr-f11-r-s01-14-risk-trung-bnh">Chức năng: Đặt/đổi tên vị trí (F11, R-S01-14) — Risk: Trung bình</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-52</td><td>Positive</td><td>EP</td><td>R-S01-14 / US-S01-08 GWT-1 / UC-S01-08</td><td>Trung bình</td><td>High</td><td>Ô gán đang mở</td><td>1. Nhập "Khu máy nén" vào "Tên vị trí"&lt;br&gt;2. Chọn 1 tài sản + Gán</td><td>Tên <code>Khu máy nén</code>, tài sản B-021</td><td>Marker hiển thị nhãn "Khu máy nén" thay cho mã/"N tài sản"</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-53</td><td>Positive</td><td>EP</td><td>R-S01-14 / US-S01-08 GWT-2 / UC-S01-08 / BRule-S01-09</td><td>Trung bình</td><td>Medium</td><td>Popup vị trí mở</td><td>1. Sửa ô tên thành "Khu A1"&lt;br&gt;2. Bấm "Lưu tên"</td><td>Tên mới <code>Khu A1</code></td><td>Nhãn marker đổi "Khu A1"; toast "Đã đặt tên vị trí."</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-54</td><td>Negative</td><td>EP</td><td>R-S01-14 / US-S01-08 GWT-3 / UC-S01-08 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Vị trí đang có tên</td><td>1. Xóa trống ô tên&lt;br&gt;2. Bấm "Lưu tên"</td><td>Tên = (trống)</td><td>Marker về nhãn mặc định ("N tài sản"/mã); toast "Đã xóa tên vị trí."</td><td>Manual</td><td>Chưa chạy</td></tr>
+</tbody>
+</table>
+<h2 id="chc-nng-ko-th-marker-di-v-tr-f11-r-s01-15-risk-trung-bnh">Chức năng: Kéo-thả marker dời vị trí (F11, R-S01-15) — Risk: Trung bình</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-55</td><td>Positive</td><td>ST</td><td>R-S01-15 / US-S01-09 GWT-1 / UC-S01-09</td><td>Trung bình</td><td>High</td><td>Marker A-007 đang ở (30%,40%)</td><td>1. pointerdown trên marker&lt;br&gt;2. pointermove tới (60%,70%) (dịch &gt;0.5%)&lt;br&gt;3. pointerup</td><td>Marker A-007, từ (30%,40%) → (60%,70%)</td><td>Tọa độ mọi tài sản tại vị trí cập nhật (60%,70%); KHÔNG mở popup</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-56</td><td>Negative</td><td>BVA</td><td>R-S01-15 / US-S01-09 GWT-2 / UC-S01-09 (ngoại lệ)</td><td>Trung bình</td><td>High</td><td>Marker đang hiển thị</td><td>1. pointerdown&lt;br&gt;2. pointermove dịch ≤0.5%&lt;br&gt;3. pointerup</td><td>Dịch 0.3% (dưới ngưỡng 0.5%)</td><td>Xem là CLICK → mở popup danh sách tài sản; KHÔNG dời tọa độ</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-57</td><td>Negative</td><td>DT</td><td>R-S01-15 / US-S01-09 GWT-3 / BRule-S01-08</td><td>Trung bình</td><td>Medium</td><td>Vừa kéo-thả marker xong</td><td>1. Kéo-thả marker&lt;br&gt;2. Mở "Xem lịch sử" tài sản đó</td><td>Tài sản A-007 vừa kéo-thả</td><td>KHÔNG có bản ghi lịch sử di chuyển mới (khác "Di dời")</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-58</td><td>Edge</td><td>EP</td><td>R-S01-15 / UC-S01-09 (ngoại lệ pointercancel)</td><td>Thấp</td><td>Low</td><td>Đang kéo marker</td><td>1. pointerdown + pointermove&lt;br&gt;2. pointercancel (rời vùng)</td><td>Cử chỉ bị hủy giữa chừng</td><td>Hủy kéo, giữ tọa độ cũ</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-59</td><td>Positive</td><td>ST</td><td>R-S01-15 / BRule-S01-09</td><td>Trung bình</td><td>Medium</td><td>Vị trí "Khu máy nén" có 2 tài sản</td><td>1. Kéo marker sang điểm mới</td><td>Vị trí có tên "Khu máy nén", 2 tài sản</td><td>Cả 2 tài sản dời theo; tên "Khu máy nén" đi cùng vị trí mới</td><td>Manual</td><td>Chưa chạy</td></tr>
+</tbody>
+</table>
+<h2 id="chc-nng-marker-nht-qun-ch-thch-mu-r-s01-1619-risk-thp">Chức năng: Marker nhất quán &amp; chú thích màu (R-S01-16/19) — Risk: Thấp</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-60</td><td>Positive</td><td>DT</td><td>R-S01-16</td><td>Thấp</td><td>Medium</td><td>Sơ đồ có vị trí 1 và nhiều tài sản</td><td>1. Quan sát marker</td><td>1 vị trí 1 tài sản (A-007); 1 vị trí 3 tài sản</td><td>Cả hai cùng dạng "chấm tròn + số + nhãn"; nhãn = mã (A-007) / "3 tài sản"; có vòng mờ ngoài</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-61</td><td>Positive</td><td>DT</td><td>R-S01-16 / R-S01-19</td><td>Thấp</td><td>Low</td><td>Sơ đồ có pin các trạng thái</td><td>1. Quan sát màu marker + chú thích góc khung</td><td>A-007 bình thường, A-009 đang khóa, A-031 cần đặt lại</td><td>Màu xanh/xám/vàng đúng trạng thái; chú thích góc khung ghi "Bình thường / Đang khóa / Cần đặt lại"</td><td>Manual</td><td>Chưa chạy</td></tr>
+</tbody>
+</table>
+<h2 id="chc-nng-tmlc-cy-du-hiu-s-f04-r-s01-1718-risk-trung-bnh">Chức năng: Tìm/lọc cây + dấu hiệu sơ đồ (F04, R-S01-17/18) — Risk: Trung bình</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-62</td><td>Positive</td><td>EP</td><td>R-S01-17 / US-S01-11 GWT-1 / UC-S01-10</td><td>Trung bình</td><td>High</td><td>Cây mặc định thu gọn</td><td>1. Gõ "Phòng 305" vào ô tìm khu vực</td><td>Từ khóa <code>Phòng 305</code></td><td>Chỉ nhánh khớp + tổ tiên hiện ra và tự bung; nhánh khác ẩn</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-63</td><td>Positive</td><td>EP</td><td>R-S01-17 / UC-S01-10</td><td>Trung bình</td><td>Medium</td><td>Đang lọc cây</td><td>1. Bấm "✕ Xóa lọc"</td><td>(đang lọc "Phòng 305")</td><td>Cây khôi phục đầy đủ về trạng thái thu gọn mặc định</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-64</td><td>Edge</td><td>EP</td><td>R-S01-17 / UC-S01-10 (ngoại lệ)</td><td>Trung bình</td><td>Medium</td><td>Cây có dữ liệu</td><td>1. Gõ "khong-ton-tai"</td><td>Từ khóa không khớp nút nào</td><td>Cây trống nhánh; gợi ý xóa lọc để hiện lại</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-65</td><td>Positive</td><td>ST</td><td>R-S01-17 / UC-S01-10</td><td>Trung bình</td><td>Medium</td><td>Cây có nhiều nhánh</td><td>1. Bấm "Bung tất cả"&lt;br&gt;2. Bấm "Thu gọn"</td><td>Cây "Tòa A › Tầng 3 › Phòng 305…"</td><td>Bung tất cả → mọi nhánh mở; Thu gọn → đóng hết</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-66</td><td>Positive</td><td>DT</td><td>R-S01-18 / US-S01-11 GWT-2</td><td>Trung bình</td><td>Medium</td><td>Có nút đã/chưa gắn sơ đồ</td><td>1. Quan sát cây</td><td>"Phòng 305" có sơ đồ; "Phòng 306" chưa</td><td>Icon "đã có sơ đồ" chỉ hiện cạnh "Phòng 305" (tooltip "Đã có sơ đồ mặt bằng"), không hiện ở "Phòng 306"</td><td>Auto</td><td>Pass</td></tr>
+</tbody>
+</table>
+<h2 id="chc-nng-responsive-mobile-pin-dnh-khi-co-gin-r-s01-n05n06-risk-trung-bnh">Chức năng: Responsive mobile &amp; pin dính khi co giãn (R-S01-N05/N06) — Risk: Trung bình</h2>
+<table>
+<thead>
+<tr><th>Mã TC</th><th>Loại</th><th>Kỹ thuật</th><th>Nguồn</th><th>Risk</th><th>Priority</th><th>Tiền điều kiện</th><th>Các bước</th><th>Test Data</th><th>Kết quả mong đợi</th><th>Cách chạy</th><th>Trạng thái</th></tr>
+</thead>
+<tbody>
+<tr><td>TC-S01-67</td><td>Positive</td><td>ST</td><td>R-S01-N06 / US-S01-11 GWT-3 / UC-S01-10</td><td>Trung bình</td><td>High</td><td>Màn ≤768px</td><td>1. Bấm hamburger ☰&lt;br&gt;2. Quan sát&lt;br&gt;3. Chạm scrim</td><td>Viewport rộng 375px</td><td>Drawer cây + scrim hiện; chạm scrim → drawer đóng</td><td>Auto</td><td>Pass</td></tr>
+<tr><td>TC-S01-68</td><td>Positive</td><td>ST</td><td>R-S01-N06 / US-S01-11 GWT-3</td><td>Trung bình</td><td>Medium</td><td>Drawer đang mở (mobile)</td><td>1. Chọn một nút trong drawer</td><td>Viewport 375px, nút "Phòng 305"</td><td>Drawer tự đóng sau khi chọn nút; sơ đồ hiển thị</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-69</td><td>Edge</td><td>BVA</td><td>R-S01-N05</td><td>Trung bình</td><td>High</td><td>Sơ đồ có pin</td><td>1. Đổi kích thước khung (thu nhỏ rồi phóng to)</td><td>Pin tại (40%,55%); ảnh tỉ lệ 1920×1080</td><td>Pin luôn dính đúng điểm tương đối ở mọi kích thước (hộp khớp aspect-ratio ảnh), không lệch</td><td>Manual</td><td>Chưa chạy</td></tr>
+<tr><td>TC-S01-70</td><td>Edge</td><td>EP</td><td>R-S01-N06 / Design-spec mobile</td><td>Thấp</td><td>Low</td><td>Màn ≤768px</td><td>1. Quan sát ô tra cứu + modal</td><td>Viewport 375px</td><td>Ô tra cứu full-width; modal/panel chiếm gần full màn; không có cuộn ngang (vạch trắng)</td><td>Manual</td><td>Chưa chạy</td></tr>
+</tbody>
+</table>
 <blockquote><p>Mẹo: mỗi luật/điều kiện trong <code>srs.md</code> áp 1 kỹ thuật phù hợp — input rời rạc → EP; có ngưỡng số/độ dài → BVA; tổ hợp nhiều điều kiện → DT; có luồng trạng thái → ST. Khi chạy test: cập nhật cột <strong>Trạng thái</strong> từng TC + bảng <strong>roll-up</strong> ở đầu file (Fail thì ghi mã lỗi/ghi chú vào cột Kết quả mong đợi).</p></blockquote>
 <h2 id="thut-ng">Thuật ngữ</h2>
 <table>
@@ -4947,6 +5150,11 @@ Chú thích các thành phần:
 <tr><td>Breadcrumb</td><td>Dải đường dẫn thể hiện vị trí nút trong cây khu vực</td></tr>
 <tr><td>Clustering (gom cụm)</td><td>Gộp nhiều pin gần nhau thành một cụm khi vượt 500 điểm</td></tr>
 <tr><td>Nhật ký kiểm toán (audit log)</td><td>Bản ghi ai/làm gì/khi nào cho thao tác gán/gỡ/xóa</td></tr>
+<tr><td>Vị trí (gom nhiều tài sản)</td><td>Một tọa độ trên sơ đồ chứa được nhiều tài sản; mỗi tài sản vẫn chỉ thuộc 1 vị trí</td></tr>
+<tr><td>Tên vị trí</td><td>Nhãn tùy chọn của vị trí, lưu theo (nút + tọa độ), hiển thị trên marker</td></tr>
+<tr><td>Marker</td><td>Chấm tròn + số + nhãn thể hiện một vị trí; màu theo trạng thái</td></tr>
+<tr><td>Kéo-thả pin (marker)</td><td>Giữ + kéo marker dời tọa độ mọi tài sản tại vị trí; không sinh lịch sử</td></tr>
+<tr><td>Drawer</td><td>Ngăn trượt chứa cây khu vực trên màn hẹp (≤768px), kèm scrim</td></tr>
 </tbody>
 </table>
 <blockquote><p>Từ điển đầy đủ toàn dự án: <code>docs/00-glossary.md</code>.</p></blockquote>
@@ -5088,6 +5296,98 @@ Chú thích các thành phần:
 <li>Đảm bảo: thành công → sơ đồ hiển thị &lt; 2s; tối thiểu → trạng thái rỗng/lỗi rõ ràng.</li>
 <li>Trace: R-S01-01, R-S01-02, R-S01-04, R-S01-05</li>
 </ul>
+<h2 id="uc-s01-07-gn-nhiu-ti-sn-vo-mt-v-tr">UC-S01-07: Gán nhiều tài sản vào một vị trí</h2>
+<ul>
+<li>Tác nhân: Quản trị, Giám sát</li>
+<li>Trigger: Người dùng click một điểm trống trên sơ đồ (hoặc bấm "+ Gán thêm tài sản vào vị trí này" trong popup vị trí)</li>
+<li>Tiền điều kiện: Nút khu vực đang chọn đã có ảnh sơ đồ; tồn tại ≥1 tài sản chưa có vị trí</li>
+<li>Luồng chính:
+<ol>
+<li>Người dùng click điểm trống → mở ô gán đa chọn (trường "Tên vị trí (tùy chọn)", ô tìm, danh sách checkbox tài sản chưa có vị trí).</li>
+<li>(Tùy chọn) Người dùng gõ ô tìm (mã/tên, không dấu) → danh sách thu hẹp; hiển thị tối đa 50 dòng; dòng đếm "N kết quả · Đã chọn M".</li>
+<li>Người dùng tích chọn ≥1 tài sản (M tăng); (tùy chọn) nhập Tên vị trí.</li>
+<li>Người dùng bấm "Gán vị trí (M)".</li>
+<li>Hệ thống tạo M pin tại cùng tọa độ click, ghi nhật ký kiểm toán mỗi tài sản, lưu tên vị trí (nếu có), hiện toast "Đã gán vị trí cho M tài sản".</li>
+</ol>
+</li>
+<li>Luồng thay thế / ngoại lệ:
+<ul>
+<li>Chưa chọn tài sản nào (M=0) → nút "Gán vị trí" disable.</li>
+<li>Ô tìm không khớp → "Không tìm thấy tài sản phù hợp".</li>
+<li>Không còn tài sản chưa có vị trí → ô gán hiện "Không còn tài sản chưa có vị trí.".</li>
+<li>Một số tài sản vừa bị người khác khóa → chỉ gán được phần hợp lệ; nếu không gán được cái nào → báo "Tài sản đang được người khác chỉnh sửa".</li>
+<li>Người dùng hủy → đóng ô, không tạo pin.</li>
+</ul>
+</li>
+<li>Hậu điều kiện: M tài sản về trạng thái "đã có vị trí" tại cùng một vị trí; marker hiển thị "M tài sản" (hoặc tên vị trí).</li>
+<li>Đảm bảo: thành công → M pin lưu + M bản ghi nhật ký; tối thiểu → không tạo pin nếu chưa xác nhận / không chọn.</li>
+<li>Trace: R-S01-12, R-S01-14, BRule-S01-07</li>
+</ul>
+<h2 id="uc-s01-08-ti-tn-v-tr">UC-S01-08: Đặt/đổi tên vị trí</h2>
+<ul>
+<li>Tác nhân: Quản trị, Giám sát</li>
+<li>Trigger: Người dùng nhập "Tên vị trí" trong ô gán, hoặc mở popup vị trí và sửa tên</li>
+<li>Tiền điều kiện: Đang gán vị trí (luồng UC-S01-07) hoặc vị trí đã tồn tại (có ≥1 tài sản)</li>
+<li>Luồng chính:
+<ol>
+<li>Người dùng nhập tên vào ô "Tên vị trí" (khi gán) hoặc ô tên trong popup vị trí.</li>
+<li>Người dùng xác nhận (gán xong / bấm "Lưu tên").</li>
+<li>Hệ thống lưu tên theo cặp (nút + tọa độ); marker hiển thị tên; toast "Đã đặt tên vị trí".</li>
+</ol>
+</li>
+<li>Luồng thay thế / ngoại lệ:
+<ul>
+<li>Để trống và "Lưu tên" → xóa tên; marker trở về nhãn mặc định (mã / "N tài sản"); toast "Đã xóa tên vị trí".</li>
+</ul>
+</li>
+<li>Hậu điều kiện: Tên vị trí được lưu/xóa; nhãn marker cập nhật.</li>
+<li>Đảm bảo: thành công → tên gắn đúng vị trí, không lẫn vị trí khác; tối thiểu → không đổi nếu không lưu.</li>
+<li>Trace: R-S01-14, BRule-S01-09</li>
+</ul>
+<h2 id="uc-s01-09-ko-th-marker-di-v-tr-trong-cng-s">UC-S01-09: Kéo-thả marker dời vị trí trong cùng sơ đồ</h2>
+<ul>
+<li>Tác nhân: Quản trị, Giám sát</li>
+<li>Trigger: Người dùng giữ và kéo một marker trên sơ đồ</li>
+<li>Tiền điều kiện: Sơ đồ đang mở; marker tồn tại</li>
+<li>Luồng chính:
+<ol>
+<li>Người dùng nhấn giữ trên marker (chuột nút trái hoặc chạm).</li>
+<li>Người dùng kéo con trỏ; hệ thống dịch marker theo (dùng Pointer Events).</li>
+<li>Người dùng thả; nếu đã dịch &gt; 0,5% → hệ thống cập nhật tọa độ % cho <strong>mọi tài sản tại vị trí đó</strong>; tên vị trí đi theo. Thao tác này <strong>không</strong> sinh lịch sử di chuyển.</li>
+</ol>
+</li>
+<li>Luồng thay thế / ngoại lệ:
+<ul>
+<li>Dịch ≤ 0,5% (xem là click) → mở popup danh sách tài sản tại vị trí, không dời.</li>
+<li>pointercancel (rời vùng/cử chỉ bị hủy) → hủy kéo, giữ tọa độ cũ.</li>
+</ul>
+</li>
+<li>Hậu điều kiện: Mọi tài sản tại vị trí đó mang tọa độ mới; không có bản ghi lịch sử.</li>
+<li>Đảm bảo: thành công → tọa độ + tên đồng bộ tại vị trí mới; tối thiểu → phân biệt rõ click với kéo, không tạo lịch sử nhầm.</li>
+<li>Trace: R-S01-15, BRule-S01-08, BRule-S01-09</li>
+</ul>
+<h2 id="uc-s01-10-tmlc-cy-khu-vc-theo-tnm">UC-S01-10: Tìm/lọc cây khu vực theo tên/mã</h2>
+<ul>
+<li>Tác nhân: Quản trị, Giám sát</li>
+<li>Trigger: Người dùng gõ vào ô "Tìm khu vực theo tên/mã..." hoặc bấm "Bung tất cả"/"Thu gọn"</li>
+<li>Tiền điều kiện: Cây khu vực có ≥1 nút</li>
+<li>Luồng chính:
+<ol>
+<li>Người dùng gõ từ khóa (tên/mã, không dấu).</li>
+<li>Hệ thống chỉ hiển thị nhánh khớp + toàn bộ tổ tiên của chúng, tự bung các nhánh này.</li>
+<li>Người dùng chọn một nút trong kết quả → mở sơ đồ.</li>
+</ol>
+</li>
+<li>Luồng thay thế / ngoại lệ:
+<ul>
+<li>Không khớp → cây trống nhánh; người dùng bấm "✕ Xóa lọc" để khôi phục.</li>
+<li>Bấm "Bung tất cả" → mở mọi nhánh; "Thu gọn" → đóng hết (cây mặc định thu gọn).</li>
+</ul>
+</li>
+<li>Hậu điều kiện: Cây hiển thị đúng nhánh theo bộ lọc / trạng thái bung-thu.</li>
+<li>Đảm bảo: thành công → định vị nhanh nút cần tìm; tối thiểu → luôn khôi phục được cây đầy đủ.</li>
+<li>Trace: R-S01-17, R-S01-18</li>
+</ul>
 </section>
 <section class="doc-section" id="doc-BanDoTaiSan-Workspace-userstory-md">
 <div class="doc-section-title">BanDoTaiSan/Workspace/userstory.md</div>
@@ -5169,6 +5469,76 @@ Chú thích các thành phần:
 <li>GWT-1: <strong>Given</strong> tôi chọn một nút có ảnh sơ đồ, <strong>When</strong> sơ đồ mở, <strong>Then</strong> ảnh + pin hiển thị trong &lt; 2 giây với breadcrumb đường dẫn.</li>
 <li>GWT-2: <strong>Given</strong> sơ đồ có hơn 500 pin, <strong>When</strong> hiển thị, <strong>Then</strong> các pin gần nhau gộp thành cụm có số đếm; click cụm sẽ tách/zoom.</li>
 <li>GWT-3: <strong>Given</strong> nút chưa có ảnh sơ đồ, <strong>When</strong> tôi chọn nút, <strong>Then</strong> khung giữa hiện "Chưa có sơ đồ".</li>
+</ul>
+</li>
+<li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>
+</ul>
+<h2 id="us-s01-07-bn-ti-sn---gn-nhiu-ti-sn-vo-mt-v-tr">US-S01-07: Bản đồ tài sản - Gán nhiều tài sản vào một vị trí</h2>
+<p>Là người quản lý tài sản, tôi muốn chọn nhiều tài sản cùng lúc và gán vào một điểm trên sơ đồ, để đánh dấu cụm thiết bị đặt chung một chỗ mà không phải làm từng cái.</p>
+<ul>
+<li>Trace: R-S01-12, R-S01-14 / F11</li>
+<li>Story point: 5</li>
+<li>Tiêu chí chấp nhận (Given-When-Then):
+<ul>
+<li>GWT-1: <strong>Given</strong> tôi click một điểm trống, <strong>When</strong> ô gán mở, <strong>Then</strong> tôi thấy ô tìm + danh sách checkbox tài sản chưa có vị trí (tối đa 50 dòng) và dòng đếm "N kết quả · Đã chọn 0".</li>
+<li>GWT-2: <strong>Given</strong> tôi gõ "may" vào ô tìm, <strong>When</strong> danh sách lọc, <strong>Then</strong> chỉ hiện tài sản khớp (không dấu) và nút "Gán vị trí" disable khi chưa chọn.</li>
+<li>GWT-3: <strong>Given</strong> tôi tích 3 tài sản và bấm "Gán vị trí (3)", <strong>When</strong> gán thành công, <strong>Then</strong> 3 marker chồng tại điểm đã click hiển thị "3 tài sản" và toast "Đã gán vị trí cho 3 tài sản.".</li>
+</ul>
+</li>
+<li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>
+</ul>
+<h2 id="us-s01-08-bn-ti-sn---t-tn-cho-v-tr">US-S01-08: Bản đồ tài sản - Đặt tên cho vị trí</h2>
+<p>Là người quản lý tài sản, tôi muốn đặt tên cho một vị trí trên sơ đồ, để gọi nó bằng tên dễ nhớ (vd "Khu máy nén") thay vì nhìn mã tài sản.</p>
+<ul>
+<li>Trace: R-S01-14 / F11</li>
+<li>Story point: 2</li>
+<li>Tiêu chí chấp nhận (Given-When-Then):
+<ul>
+<li>GWT-1: <strong>Given</strong> tôi đang gán, <strong>When</strong> tôi nhập "Khu máy nén" vào "Tên vị trí" rồi gán, <strong>Then</strong> marker hiển thị nhãn "Khu máy nén".</li>
+<li>GWT-2: <strong>Given</strong> một vị trí đã có tài sản, <strong>When</strong> tôi mở popup, sửa tên thành "Khu A1" và bấm "Lưu tên", <strong>Then</strong> nhãn marker đổi sang "Khu A1" và toast "Đã đặt tên vị trí.".</li>
+<li>GWT-3: <strong>Given</strong> vị trí đang có tên, <strong>When</strong> tôi xóa trống tên và "Lưu tên", <strong>Then</strong> marker về nhãn mặc định ("N tài sản"/mã) và toast "Đã xóa tên vị trí.".</li>
+</ul>
+</li>
+<li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>
+</ul>
+<h2 id="us-s01-09-bn-ti-sn---ko-th-marker-chnh-v-tr">US-S01-09: Bản đồ tài sản - Kéo-thả marker chỉnh vị trí</h2>
+<p>Là người quản lý tài sản, tôi muốn kéo một marker tới đúng điểm trên sơ đồ, để chỉnh vị trí cho khớp thực tế mà không tạo bản ghi di dời thừa.</p>
+<ul>
+<li>Trace: R-S01-15 / F11</li>
+<li>Story point: 3</li>
+<li>Tiêu chí chấp nhận (Given-When-Then):
+<ul>
+<li>GWT-1: <strong>Given</strong> một marker có 2 tài sản, <strong>When</strong> tôi giữ và kéo nó sang điểm mới (dịch &gt; 0,5%) rồi thả, <strong>Then</strong> cả 2 tài sản nhận tọa độ mới và tên vị trí đi theo.</li>
+<li>GWT-2: <strong>Given</strong> tôi nhấn marker nhưng gần như không di chuyển (≤ 0,5%), <strong>When</strong> tôi thả, <strong>Then</strong> popup danh sách tài sản mở (xem là click), không dời vị trí.</li>
+<li>GWT-3: <strong>Given</strong> tôi vừa kéo-thả một marker, <strong>When</strong> kiểm tra lịch sử di chuyển của tài sản, <strong>Then</strong> <strong>không</strong> có bản ghi mới (khác với "Di dời").</li>
+</ul>
+</li>
+<li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>
+</ul>
+<h2 id="us-s01-10-bn-ti-sn---qun-l-nhiu-ti-sn-ti-mt-v-tr">US-S01-10: Bản đồ tài sản - Quản lý nhiều tài sản tại một vị trí</h2>
+<p>Là người quản lý tài sản, tôi muốn xem danh sách mọi tài sản tại một vị trí và thao tác từng cái, để xử lý đúng tài sản khi nhiều thứ nằm chung một chỗ.</p>
+<ul>
+<li>Trace: R-S01-13 / F11, F14</li>
+<li>Story point: 3</li>
+<li>Tiêu chí chấp nhận (Given-When-Then):
+<ul>
+<li>GWT-1: <strong>Given</strong> một vị trí có 3 tài sản, <strong>When</strong> tôi click marker, <strong>Then</strong> popup liệt kê đủ 3 tài sản, mỗi cái có "Xem lịch sử / Di dời / Gỡ vị trí".</li>
+<li>GWT-2: <strong>Given</strong> popup đang mở và còn tài sản chưa có vị trí, <strong>When</strong> tôi bấm "+ Gán thêm tài sản vào vị trí này", <strong>Then</strong> ô gán mở tại đúng tọa độ vị trí đó.</li>
+<li>GWT-3: <strong>Given</strong> tôi gỡ lần lượt cả 3 tài sản, <strong>When</strong> tài sản cuối bị gỡ, <strong>Then</strong> popup tự đóng và marker biến mất.</li>
+</ul>
+</li>
+<li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>
+</ul>
+<h2 id="us-s01-11-bn-ti-sn---tm-nhnh-dng-trn-mobile">US-S01-11: Bản đồ tài sản - Tìm nhánh &amp; dùng trên mobile</h2>
+<p>Là người dùng, tôi muốn tìm nhanh một khu vực trong cây và thao tác gọn trên điện thoại, để không phải cuộn cây dài hay vật lộn với màn hẹp.</p>
+<ul>
+<li>Trace: R-S01-17, R-S01-18, R-S01-N06 / F04</li>
+<li>Story point: 5</li>
+<li>Tiêu chí chấp nhận (Given-When-Then):
+<ul>
+<li>GWT-1: <strong>Given</strong> cây mặc định thu gọn, <strong>When</strong> tôi gõ "tang 3" vào ô tìm khu vực, <strong>Then</strong> chỉ nhánh khớp + tổ tiên hiện ra và tự bung.</li>
+<li>GWT-2: <strong>Given</strong> một nút đã có ảnh sơ đồ, <strong>When</strong> cây hiển thị, <strong>Then</strong> cạnh tên nút có icon "đã có sơ đồ" (tooltip "Đã có sơ đồ mặt bằng").</li>
+<li>GWT-3: <strong>Given</strong> tôi mở app trên màn ≤768px, <strong>When</strong> tôi bấm hamburger ☰, <strong>Then</strong> drawer cây trượt vào kèm nền tối (scrim); chọn một nút thì drawer tự đóng.</li>
 </ul>
 </li>
 <li>INVEST: [x] Independent [x] Negotiable [x] Valuable [x] Estimable [x] Small [x] Testable</li>

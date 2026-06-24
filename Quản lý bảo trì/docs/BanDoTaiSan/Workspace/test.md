@@ -13,9 +13,11 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 
 | Tổng TC | Pass | Fail | Blocked | Skip | Chưa chạy | % Pass | Lần chạy cuối |
 |---------|------|------|---------|------|-----------|--------|---------------|
-| 42 | 24 | 0 | 0 | 0 | 18 | 57% | 2026-06-23 |
+| 70 | 35 | 0 | 0 | 0 | 35 | 50% | 2026-06-24 |
 
-> 24 TC `Auto` đã Pass (Vitest: 46 test / 7 file). 18 TC `Manual` còn `Chưa chạy` → checklist test tay ở báo cáo dev. Một số TC Manual (TC-18 gán khi khóa, TC-21 biên tọa độ, TC-25 gỡ khi khóa, TC-35 kéo nút vào chính nó) đã phủ gián tiếp ở tầng logic.
+> 35 TC `Auto` đã Pass (Vitest 267 test xanh). 35 TC `Manual` còn `Chưa chạy` → checklist test tay ở báo cáo dev.
+> **Change request "một vị trí nhiều tài sản"** bổ sung TC-S01-43..70 (28 TC mới). Các TC có test tự động tương ứng đã `Pass`: TC-43/44/45/46/47/48 (gán đa chọn + popup vị trí + gán thêm), TC-52 (tên vị trí), TC-55 (kéo-thả pin), TC-62/66 (tìm cây + dấu hiệu sơ đồ), TC-67 (drawer mobile). Còn lại để `Chưa chạy` (test tay).
+> Một số TC Manual (TC-18 gán khi khóa, TC-21 biên tọa độ, TC-25 gỡ khi khóa, TC-35 kéo nút vào chính nó) đã phủ gián tiếp ở tầng logic.
 
 ## Chức năng: Xem/duyệt cây khu vực (F04) — Risk: Cao
 
@@ -104,6 +106,64 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 | TC-S01-41 | Negative | DT | BRule-S01-04 / R-S01-01 | Trung bình | High | Vai trò Giám sát | 1. Đăng nhập Giám sát<br>2. Mở menu ⋮ một nút | Vai trò = Giám sát | Các mục "Thêm con / Sửa / Xóa / Quản lý ảnh" bị ẩn (không chỉ disable); vẫn gán/gỡ/di dời/tra cứu được | Manual | Chưa chạy |
 | TC-S01-42 | Positive | EP | R-S01-10 / Design-spec banner | Trung bình | Medium | Có 3 pin cần đặt lại | 1. Quan sát dải cảnh báo dưới sơ đồ<br>2. Click dải | 3 pin cần đặt lại (A-031, A-052, A-077) | Dải "⚠ 3 pin cần đặt lại vị trí" hiện; click → điều hướng tới S05; ẩn khi N=0; có lối vào S02/S03/S04/S06/S08 | Manual | Chưa chạy |
 
+## Chức năng: Một vị trí nhiều tài sản — gán đa chọn (F11, R-S01-12/13) — Risk: Cao
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-43 | Positive | EP | R-S01-12 / US-S01-07 GWT-1 / UC-S01-07 | Cao | Critical | Nút "Phòng 305" có sơ đồ; ≥1 tài sản chưa có vị trí | 1. Click điểm trống (40%,55%)<br>2. Quan sát ô gán | Tài sản chưa vị trí: B-021, B-045, B-077 | Ô gán mở với trường "Tên vị trí (tùy chọn)" + ô tìm + danh sách checkbox; dòng đếm "3 kết quả · Đã chọn 0" | Auto | Pass |
+| TC-S01-44 | Positive | EP | R-S01-12 / US-S01-07 GWT-2 / UC-S01-07 | Cao | High | Ô gán đang mở | 1. Gõ "tu" vào ô tìm trong ô gán | Từ khóa `tu` (không dấu) | Danh sách thu hẹp còn "B-045 · Tủ điện"; khớp không dấu | Auto | Pass |
+| TC-S01-45 | Positive | ST | R-S01-12 / US-S01-07 GWT-3 / UC-S01-07 / BRule-S01-07 | Cao | Critical | Ô gán mở tại (40%,55%) | 1. Tích B-021 và B-045<br>2. Bấm "Gán vị trí (2)" | 2 tài sản tại cùng (40%,55%) | Tạo 2 pin cùng tọa độ, marker hiển thị "2 tài sản", toast "Đã gán vị trí cho 2 tài sản." | Auto | Pass |
+| TC-S01-46 | Negative | DT | R-S01-12 / yêu cầu dữ liệu `tai_san_chon` | Cao | High | Ô gán mở, M=0 | 1. Quan sát nút "Gán vị trí"<br>2. Thử bấm | Chưa tích tài sản nào | Nút "Gán vị trí" disable; không tạo pin | Auto | Pass |
+| TC-S01-47 | Positive | ST | R-S01-13 / US-S01-10 GWT-1 / UC-S01-07 | Cao | Critical | Một vị trí có 2 tài sản (B-021, B-045) | 1. Click marker vị trí đó | Marker "2 tài sản" tại (40%,55%) | Popup liệt kê đủ B-021 và B-045; mỗi dòng có "Xem lịch sử / Di dời / Gỡ vị trí" | Auto | Pass |
+| TC-S01-48 | Positive | EP | R-S01-13 / US-S01-10 GWT-2 / UC-S01-07 | Cao | High | Popup vị trí mở; còn tài sản chưa có vị trí | 1. Bấm "+ Gán thêm tài sản vào vị trí này"<br>2. Chọn B-077 + Gán | Vị trí (40%,55%) đang có 2 tài sản; thêm B-077 | Ô gán mở tại đúng tọa độ; sau gán vị trí gom 3 tài sản, marker "3 tài sản" | Auto | Pass |
+| TC-S01-49 | Edge | ST | R-S01-13 / US-S01-10 GWT-3 | Trung bình | Medium | Vị trí có đúng 1 tài sản | 1. Mở popup<br>2. Gỡ tài sản cuối cùng → xác nhận | Vị trí 1 tài sản (B-021) | Pin biến mất; popup tự đóng | Manual | Chưa chạy |
+| TC-S01-50 | Edge | BVA | R-S01-12 / Design-spec (giới hạn 50) | Trung bình | Medium | >50 tài sản chưa có vị trí | 1. Mở ô gán không gõ ô tìm | 60 tài sản chưa có vị trí | Hiển thị 50 dòng đầu + chú thích "(hiện 50 đầu — gõ để thu hẹp)"; dòng đếm "60 kết quả · Đã chọn 0" | Manual | Chưa chạy |
+| TC-S01-51 | Negative | EP | R-S01-12 / UC-S01-07 (ngoại lệ) | Thấp | Low | Đã gán hết tài sản | 1. Mở ô gán khi không còn tài sản chưa có vị trí | 0 tài sản chưa có vị trí | Ô gán hiện "Không còn tài sản chưa có vị trí." | Manual | Chưa chạy |
+
+## Chức năng: Đặt/đổi tên vị trí (F11, R-S01-14) — Risk: Trung bình
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-52 | Positive | EP | R-S01-14 / US-S01-08 GWT-1 / UC-S01-08 | Trung bình | High | Ô gán đang mở | 1. Nhập "Khu máy nén" vào "Tên vị trí"<br>2. Chọn 1 tài sản + Gán | Tên `Khu máy nén`, tài sản B-021 | Marker hiển thị nhãn "Khu máy nén" thay cho mã/"N tài sản" | Auto | Pass |
+| TC-S01-53 | Positive | EP | R-S01-14 / US-S01-08 GWT-2 / UC-S01-08 / BRule-S01-09 | Trung bình | Medium | Popup vị trí mở | 1. Sửa ô tên thành "Khu A1"<br>2. Bấm "Lưu tên" | Tên mới `Khu A1` | Nhãn marker đổi "Khu A1"; toast "Đã đặt tên vị trí." | Manual | Chưa chạy |
+| TC-S01-54 | Negative | EP | R-S01-14 / US-S01-08 GWT-3 / UC-S01-08 (ngoại lệ) | Trung bình | Medium | Vị trí đang có tên | 1. Xóa trống ô tên<br>2. Bấm "Lưu tên" | Tên = (trống) | Marker về nhãn mặc định ("N tài sản"/mã); toast "Đã xóa tên vị trí." | Manual | Chưa chạy |
+
+## Chức năng: Kéo-thả marker dời vị trí (F11, R-S01-15) — Risk: Trung bình
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-55 | Positive | ST | R-S01-15 / US-S01-09 GWT-1 / UC-S01-09 | Trung bình | High | Marker A-007 đang ở (30%,40%) | 1. pointerdown trên marker<br>2. pointermove tới (60%,70%) (dịch >0.5%)<br>3. pointerup | Marker A-007, từ (30%,40%) → (60%,70%) | Tọa độ mọi tài sản tại vị trí cập nhật (60%,70%); KHÔNG mở popup | Auto | Pass |
+| TC-S01-56 | Negative | BVA | R-S01-15 / US-S01-09 GWT-2 / UC-S01-09 (ngoại lệ) | Trung bình | High | Marker đang hiển thị | 1. pointerdown<br>2. pointermove dịch ≤0.5%<br>3. pointerup | Dịch 0.3% (dưới ngưỡng 0.5%) | Xem là CLICK → mở popup danh sách tài sản; KHÔNG dời tọa độ | Manual | Chưa chạy |
+| TC-S01-57 | Negative | DT | R-S01-15 / US-S01-09 GWT-3 / BRule-S01-08 | Trung bình | Medium | Vừa kéo-thả marker xong | 1. Kéo-thả marker<br>2. Mở "Xem lịch sử" tài sản đó | Tài sản A-007 vừa kéo-thả | KHÔNG có bản ghi lịch sử di chuyển mới (khác "Di dời") | Manual | Chưa chạy |
+| TC-S01-58 | Edge | EP | R-S01-15 / UC-S01-09 (ngoại lệ pointercancel) | Thấp | Low | Đang kéo marker | 1. pointerdown + pointermove<br>2. pointercancel (rời vùng) | Cử chỉ bị hủy giữa chừng | Hủy kéo, giữ tọa độ cũ | Manual | Chưa chạy |
+| TC-S01-59 | Positive | ST | R-S01-15 / BRule-S01-09 | Trung bình | Medium | Vị trí "Khu máy nén" có 2 tài sản | 1. Kéo marker sang điểm mới | Vị trí có tên "Khu máy nén", 2 tài sản | Cả 2 tài sản dời theo; tên "Khu máy nén" đi cùng vị trí mới | Manual | Chưa chạy |
+
+## Chức năng: Marker nhất quán & chú thích màu (R-S01-16/19) — Risk: Thấp
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-60 | Positive | DT | R-S01-16 | Thấp | Medium | Sơ đồ có vị trí 1 và nhiều tài sản | 1. Quan sát marker | 1 vị trí 1 tài sản (A-007); 1 vị trí 3 tài sản | Cả hai cùng dạng "chấm tròn + số + nhãn"; nhãn = mã (A-007) / "3 tài sản"; có vòng mờ ngoài | Manual | Chưa chạy |
+| TC-S01-61 | Positive | DT | R-S01-16 / R-S01-19 | Thấp | Low | Sơ đồ có pin các trạng thái | 1. Quan sát màu marker + chú thích góc khung | A-007 bình thường, A-009 đang khóa, A-031 cần đặt lại | Màu xanh/xám/vàng đúng trạng thái; chú thích góc khung ghi "Bình thường / Đang khóa / Cần đặt lại" | Manual | Chưa chạy |
+
+## Chức năng: Tìm/lọc cây + dấu hiệu sơ đồ (F04, R-S01-17/18) — Risk: Trung bình
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-62 | Positive | EP | R-S01-17 / US-S01-11 GWT-1 / UC-S01-10 | Trung bình | High | Cây mặc định thu gọn | 1. Gõ "Phòng 305" vào ô tìm khu vực | Từ khóa `Phòng 305` | Chỉ nhánh khớp + tổ tiên hiện ra và tự bung; nhánh khác ẩn | Auto | Pass |
+| TC-S01-63 | Positive | EP | R-S01-17 / UC-S01-10 | Trung bình | Medium | Đang lọc cây | 1. Bấm "✕ Xóa lọc" | (đang lọc "Phòng 305") | Cây khôi phục đầy đủ về trạng thái thu gọn mặc định | Manual | Chưa chạy |
+| TC-S01-64 | Edge | EP | R-S01-17 / UC-S01-10 (ngoại lệ) | Trung bình | Medium | Cây có dữ liệu | 1. Gõ "khong-ton-tai" | Từ khóa không khớp nút nào | Cây trống nhánh; gợi ý xóa lọc để hiện lại | Manual | Chưa chạy |
+| TC-S01-65 | Positive | ST | R-S01-17 / UC-S01-10 | Trung bình | Medium | Cây có nhiều nhánh | 1. Bấm "Bung tất cả"<br>2. Bấm "Thu gọn" | Cây "Tòa A › Tầng 3 › Phòng 305…" | Bung tất cả → mọi nhánh mở; Thu gọn → đóng hết | Manual | Chưa chạy |
+| TC-S01-66 | Positive | DT | R-S01-18 / US-S01-11 GWT-2 | Trung bình | Medium | Có nút đã/chưa gắn sơ đồ | 1. Quan sát cây | "Phòng 305" có sơ đồ; "Phòng 306" chưa | Icon "đã có sơ đồ" chỉ hiện cạnh "Phòng 305" (tooltip "Đã có sơ đồ mặt bằng"), không hiện ở "Phòng 306" | Auto | Pass |
+
+## Chức năng: Responsive mobile & pin dính khi co giãn (R-S01-N05/N06) — Risk: Trung bình
+
+| Mã TC | Loại | Kỹ thuật | Nguồn | Risk | Priority | Tiền điều kiện | Các bước | Test Data | Kết quả mong đợi | Cách chạy | Trạng thái |
+|-------|------|----------|-------|------|----------|----------------|----------|-----------|------------------|-----------|------------|
+| TC-S01-67 | Positive | ST | R-S01-N06 / US-S01-11 GWT-3 / UC-S01-10 | Trung bình | High | Màn ≤768px | 1. Bấm hamburger ☰<br>2. Quan sát<br>3. Chạm scrim | Viewport rộng 375px | Drawer cây + scrim hiện; chạm scrim → drawer đóng | Auto | Pass |
+| TC-S01-68 | Positive | ST | R-S01-N06 / US-S01-11 GWT-3 | Trung bình | Medium | Drawer đang mở (mobile) | 1. Chọn một nút trong drawer | Viewport 375px, nút "Phòng 305" | Drawer tự đóng sau khi chọn nút; sơ đồ hiển thị | Manual | Chưa chạy |
+| TC-S01-69 | Edge | BVA | R-S01-N05 | Trung bình | High | Sơ đồ có pin | 1. Đổi kích thước khung (thu nhỏ rồi phóng to) | Pin tại (40%,55%); ảnh tỉ lệ 1920×1080 | Pin luôn dính đúng điểm tương đối ở mọi kích thước (hộp khớp aspect-ratio ảnh), không lệch | Manual | Chưa chạy |
+| TC-S01-70 | Edge | EP | R-S01-N06 / Design-spec mobile | Thấp | Low | Màn ≤768px | 1. Quan sát ô tra cứu + modal | Viewport 375px | Ô tra cứu full-width; modal/panel chiếm gần full màn; không có cuộn ngang (vạch trắng) | Manual | Chưa chạy |
+
 > Mẹo: mỗi luật/điều kiện trong `srs.md` áp 1 kỹ thuật phù hợp — input rời rạc → EP; có ngưỡng số/độ dài → BVA; tổ hợp nhiều điều kiện → DT; có luồng trạng thái → ST.
 > Khi chạy test: cập nhật cột **Trạng thái** từng TC + bảng **roll-up** ở đầu file (Fail thì ghi mã lỗi/ghi chú vào cột Kết quả mong đợi).
 
@@ -122,5 +182,10 @@ Risk: Cao / Trung bình / Thấp · Priority: Critical / High / Medium / Low.
 | Breadcrumb | Dải đường dẫn thể hiện vị trí nút trong cây khu vực |
 | Clustering (gom cụm) | Gộp nhiều pin gần nhau thành một cụm khi vượt 500 điểm |
 | Nhật ký kiểm toán (audit log) | Bản ghi ai/làm gì/khi nào cho thao tác gán/gỡ/xóa |
+| Vị trí (gom nhiều tài sản) | Một tọa độ trên sơ đồ chứa được nhiều tài sản; mỗi tài sản vẫn chỉ thuộc 1 vị trí |
+| Tên vị trí | Nhãn tùy chọn của vị trí, lưu theo (nút + tọa độ), hiển thị trên marker |
+| Marker | Chấm tròn + số + nhãn thể hiện một vị trí; màu theo trạng thái |
+| Kéo-thả pin (marker) | Giữ + kéo marker dời tọa độ mọi tài sản tại vị trí; không sinh lịch sử |
+| Drawer | Ngăn trượt chứa cây khu vực trên màn hẹp (≤768px), kèm scrim |
 
 > Từ điển đầy đủ toàn dự án: `docs/00-glossary.md`.

@@ -6,7 +6,7 @@ Cột `dev` = trạng thái code của màn (do `dev-run` quản: ⚠️ đang d
 
 | Mã CN | Chức năng | Nhóm | Màn hình | Folder | ascii | brainstorm | srs | usecase | userstory | design-spec | html | test | plan | dev | Trạng thái | Cập nhật cuối |
 |-------|-----------|------|----------|--------|-------|------------|-----|---------|-----------|-------------|------|------|------|-----|-----------|---------------|
-| F04, F05, F09, F10, F11, F14, F16, F03 | Bản đồ tài sản (Workspace) | BanDoTaiSan | Workspace | `docs/BanDoTaiSan/Workspace/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (24 TC Auto Pass) | 2026-06-23 |
+| F04, F05, F09, F10, F11, F14, F16, F03 | Bản đồ tài sản (Workspace) | BanDoTaiSan | Workspace | `docs/BanDoTaiSan/Workspace/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong + CR đồng bộ (35/70 TC Pass) | 2026-06-24 |
 | F01, F02 | Form khu vực (Tạo/Sửa nút) | BanDoTaiSan | FormKhuVuc | `docs/BanDoTaiSan/FormKhuVuc/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (26 TC Auto Pass) | 2026-06-23 |
 | F06, F07, F08 | Quản lý ảnh sơ đồ mặt bằng | BanDoTaiSan | QuanLySoDo | `docs/BanDoTaiSan/QuanLySoDo/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (22 TC Auto Pass) | 2026-06-23 |
 | F12, F13 | Di dời tài sản | BanDoTaiSan | DiDoiTaiSan | `docs/BanDoTaiSan/DiDoiTaiSan/` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Dev xong (16 TC Auto Pass) | 2026-06-23 |

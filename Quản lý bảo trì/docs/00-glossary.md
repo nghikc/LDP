@@ -58,6 +58,13 @@
 | Quản trị / Quản lý tài sản | Vai trò toàn quyền, gồm quản lý cấu trúc cây + ảnh sơ đồ |
 | Giám sát / Quản lý | Vai trò làm mọi việc trừ quản lý cấu trúc (cây + ảnh sơ đồ) |
 | Workspace (hub) | Màn trung tâm tích hợp cây khu vực + sơ đồ + pin, làm điểm vào chính của phân hệ |
+| Vị trí (gom nhiều tài sản) | Một tọa độ trên sơ đồ mặt bằng có thể chứa nhiều tài sản; mỗi tài sản vẫn chỉ thuộc một vị trí |
+| Tên vị trí | Nhãn tùy chọn đặt cho một vị trí, lưu theo (nút khu vực + tọa độ), hiển thị trên marker |
+| Marker | Chấm tròn + số tài sản + nhãn thể hiện một vị trí trên sơ đồ; màu theo trạng thái |
+| Kéo-thả pin (marker) | Giữ + kéo marker để dời tọa độ mọi tài sản tại vị trí đó trong cùng sơ đồ; không sinh lịch sử |
+| Drawer | Ngăn trượt chứa cây khu vực, mở bằng hamburger trên màn hẹp (≤768px), kèm nền tối (scrim) |
+| Scrim | Lớp nền tối phủ sau drawer/modal; chạm vào để đóng |
+| Pointer Events | Sự kiện con trỏ hợp nhất chuột + cảm ứng, dùng cho thao tác kéo-thả marker |
 | Breadcrumb | Dải đường dẫn thể hiện vị trí một nút trong cây khu vực (vd Tòa A › Tầng 3 › Phòng 305) |
 | Đường dẫn khu vực | Chuỗi nút khu vực từ gốc tới nút chứa tài sản (vd Tòa A › Tầng 3 › Phòng 305) |
 | Nút cha | Nút khu vực đứng trên một cấp, quyết định vị trí của nút trong cây; để trống = nút gốc |
