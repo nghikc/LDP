@@ -182,6 +182,22 @@ describe("Workspace S01 — một vị trí nhiều tài sản (change request)"
   });
 });
 
+describe("Workspace S01 — kéo-thả pin", () => {
+  it("kéo pin A-007 sang điểm mới → cập nhật tọa độ, không mở popup", async () => {
+    const user = userEvent.setup();
+    render(<Workspace />);
+    await moNhanhToiPhong305(user);
+    const pin = screen.getByRole("button", { name: "Tài sản A-007" });
+    fireEvent.mouseDown(pin, { button: 0 });
+    fireEvent.mouseMove(window, { clientX: 70, clientY: 75 });
+    fireEvent.mouseUp(window);
+    const pinSau = screen.getByRole("button", { name: "Tài sản A-007" });
+    expect(pinSau.style.left).toBe("70%");
+    expect(pinSau.style.top).toBe("75%");
+    expect(screen.queryByRole("dialog", { name: "Tài sản tại vị trí" })).not.toBeInTheDocument();
+  });
+});
+
 describe("Workspace S01 — gỡ vị trí", () => {
   it("TC-S01-23: gỡ pin A-007 → xác nhận → pin biến mất", async () => {
     const user = userEvent.setup();

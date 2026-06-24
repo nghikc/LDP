@@ -242,7 +242,8 @@ export function Workspace({ vaiTro: vaiTroProp }: { vaiTro?: VaiTro } = {}) {
           <FloorPlanCanvas nodes={nodes} nutChon={nodeChon} pins={pinTrongNut} pinLamNoi={pinLamNoi}
             onClickTrong={(x, y) => { if (nodeChon?.soDoUrl) { setDraft({ x, y, maTaiSans: [] }); setTimGan(""); } }}
             onClickViTri={(ds, x, y) => { setViTriPopup({ maTaiSans: ds, x, y }); setTenSuaVt((nutChon && ws.layTenViTri(nutChon, x, y)) || ""); }}
-            tenViTri={(x, y) => (nutChon ? ws.layTenViTri(nutChon, x, y) : undefined)} />
+            tenViTri={(x, y) => (nutChon ? ws.layTenViTri(nutChon, x, y) : undefined)}
+            onDiChuyenViTri={(_ds, xCu, yCu, xMoi, yMoi) => { if (nodeChon) ws.dichChuyenViTri(nodeChon.maNut, xCu, yCu, xMoi, yMoi); }} />
           {soCanDatLai > 0 && (
             <button className="dai-canh-bao" aria-label={`${soCanDatLai} pin cần đặt lại vị trí`} onClick={() => setMoS05(true)}>
               ⚠ {soCanDatLai} pin cần đặt lại vị trí

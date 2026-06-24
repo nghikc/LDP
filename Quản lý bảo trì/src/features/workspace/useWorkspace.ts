@@ -132,6 +132,23 @@ export function useWorkspace(
     [viTriTen],
   );
 
+  /** Kéo-thả: dời mọi pin tại (xCu,yCu) trong nút sang (xMoi,yMoi); tên vị trí đi theo. */
+  const dichChuyenViTri = useCallback((maNut: string, xCu: number, yCu: number, xMoi: number, yMoi: number) => {
+    setPins((ps) =>
+      ps.map((p) =>
+        p.maNut === maNut && p.toaDoX === xCu && p.toaDoY === yCu ? { ...p, toaDoX: xMoi, toaDoY: yMoi } : p,
+      ),
+    );
+    setViTriTen((m) => {
+      const kCu = khoaViTri(maNut, xCu, yCu);
+      if (!m[kCu]) return m;
+      const n = { ...m };
+      n[khoaViTri(maNut, xMoi, yMoi)] = m[kCu];
+      delete n[kCu];
+      return n;
+    });
+  }, []);
+
   // ---- S02: tạo / sửa nút khu vực ----
   const themNut = useCallback(
     (data: DuLieuForm) => {
@@ -203,6 +220,6 @@ export function useWorkspace(
   return {
     nodes, taiSan, pins, auditLog, lichSu, viTriTen, vaiTro, nguoi: NGUOI_HIEN_TAI,
     gan, ganNhieu, go, xoa, chuyen, anhHuongXoa,
-    themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin, datTenViTri, layTenViTri,
+    themNut, suaNut, apDungDiDoi, apDungSoDo, datLaiPin, datTenViTri, layTenViTri, dichChuyenViTri,
   };
 }
