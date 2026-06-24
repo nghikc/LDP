@@ -32,7 +32,7 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
 
   useEffect(() => {
     if (!keo) return;
-    function di(e: MouseEvent) {
+    function di(e: PointerEvent) {
       const r = canvasRef.current?.getBoundingClientRect();
       if (!r || !r.width || !r.height) return;
       const x = kep(((e.clientX - r.left) / r.width) * 100);
@@ -48,11 +48,14 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
         return null;
       });
     }
-    window.addEventListener("mousemove", di);
-    window.addEventListener("mouseup", tha);
+    // Pointer events: chạy cho cả chuột lẫn cảm ứng (mobile).
+    window.addEventListener("pointermove", di);
+    window.addEventListener("pointerup", tha);
+    window.addEventListener("pointercancel", tha);
     return () => {
-      window.removeEventListener("mousemove", di);
-      window.removeEventListener("mouseup", tha);
+      window.removeEventListener("pointermove", di);
+      window.removeEventListener("pointerup", tha);
+      window.removeEventListener("pointercancel", tha);
     };
   }, [keo !== null, onDiChuyenViTri]);
 
@@ -137,8 +140,9 @@ export function FloorPlanCanvas({ nodes, nutChon, pins, pinLamNoi, onClickTrong,
               style={{ left: `${x}%`, top: `${y}%` }}
               aria-label={moTa}
               data-trangthai={c.pins[0].trangThai}
-              onMouseDown={(e) => {
-                if (!onDiChuyenViTri || e.button !== 0) return;
+              onPointerDown={(e) => {
+                if (!onDiChuyenViTri) return;
+                if (e.pointerType === "mouse" && e.button !== 0) return; // chuột: chỉ nút trái
                 e.stopPropagation();
                 setKeo({ maTaiSans: dsMa, xCu: c.toaDoX, yCu: c.toaDoY, x: c.toaDoX, y: c.toaDoY, moved: false });
               }}

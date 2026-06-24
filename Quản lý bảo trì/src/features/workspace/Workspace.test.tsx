@@ -205,9 +205,10 @@ describe("Workspace S01 — kéo-thả pin", () => {
     render(<Workspace />);
     await moNhanhToiPhong305(user);
     const pin = screen.getByRole("button", { name: "Tài sản A-007" });
-    fireEvent.mouseDown(pin, { button: 0 });
-    fireEvent.mouseMove(window, { clientX: 70, clientY: 75 });
-    fireEvent.mouseUp(window);
+    fireEvent.pointerDown(pin, { button: 0 });
+    // jsdom PointerEvent không mang clientX → dùng MouseEvent type pointermove/up.
+    fireEvent(window, new MouseEvent("pointermove", { clientX: 70, clientY: 75, bubbles: true }));
+    fireEvent(window, new MouseEvent("pointerup", { bubbles: true }));
     const pinSau = screen.getByRole("button", { name: "Tài sản A-007" });
     expect(pinSau.style.left).toBe("70%");
     expect(pinSau.style.top).toBe("75%");
